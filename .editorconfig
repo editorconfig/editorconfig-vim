@@ -1,0 +1,3 @@
+[*.vim]
+indent_style = space
+tab_width = 4
