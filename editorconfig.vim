@@ -1,6 +1,6 @@
-augroup editconfig
-autocmd! editconfig
-autocmd editconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
+augroup editorconfig
+autocmd! editorconfig
+autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 
 let s:this_file = expand("%")
 let s:this_dir = expand("%:p:h")
