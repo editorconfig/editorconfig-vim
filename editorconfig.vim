@@ -37,12 +37,12 @@ endfunction
 function! s:ApplyConfig(config)
     if has_key(a:config, "indent_style")
         if a:config["indent_style"] == "tab"
-            set noexpandtab
+            setl noexpandtab
         elseif a:config["indent_style"] == "space"
             let tab_width = a:config["tab_width"] + 0
-            set expandtab
-            let &shiftwidth = tab_width
-            let &softtabstop = tab_width
+            setl expandtab
+            let &l:shiftwidth = tab_width
+            let &l:softtabstop = tab_width
         endif
     endif
 endfunction
