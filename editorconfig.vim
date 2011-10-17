@@ -2,9 +2,6 @@ augroup editorconfig
 autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 
-let s:this_file = expand("%")
-let s:this_dir = expand("%:p:h")
-
 " Find all config files in this directory and parent directories.  Apply any
 " matching patterns in each config file found (starting with furthest file).
 function! s:UseConfigFiles()
@@ -24,9 +21,11 @@ endfunction
 
 " Return 1 if pattern describes current file and 0 otherwise
 function! s:FilePatternMatches(pattern)
-    let matched_files = split(glob(a:pattern, s:this_dir))
+    let this_file = expand("%")
+    let this_dir = expand("%:p:h")
+    let matched_files = split(glob(a:pattern, this_dir))
     for found_file in matched_files
-        if found_file == s:this_file
+        if found_file == this_file
             return 1
         endif
     endfor
