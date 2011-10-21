@@ -5,14 +5,14 @@ autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 " Find all config files in this directory and parent directories.  Apply any
 " matching patterns in each config file found (starting with furthest file).
 function! s:UseConfigFiles()
-    let config_files = reverse(findfile('.editorconfig', ".;", -1))
+    let l:config_files = reverse(findfile('.editorconfig', ".;", -1))
 
-    for file in config_files
+    for file in l:config_files
         if filereadable(file)
-            let parsed_ini = IniParser#Read(file)
-            for file_pattern in keys(parsed_ini)
+            let l:parsed_ini = IniParser#Read(file)
+            for file_pattern in keys(l:parsed_ini)
                 if s:FilePatternMatches(file_pattern)
-                    call s:ApplyConfig(parsed_ini[file_pattern])
+                    call s:ApplyConfig(l:parsed_ini[file_pattern])
                 endif
             endfor
         endif
@@ -21,11 +21,11 @@ endfunction
 
 " Return 1 if pattern describes current file and 0 otherwise
 function! s:FilePatternMatches(pattern)
-    let this_file = expand("%")
-    let this_dir = expand("%:p:h")
-    let matched_files = split(glob(a:pattern, this_dir))
-    for found_file in matched_files
-        if found_file == this_file
+    let l:this_file = expand("%")
+    let l:this_dir = expand("%:p:h")
+    let l:matched_files = split(glob(a:pattern, l:this_dir))
+    for found_file in l:matched_files
+        if found_file == l:this_file
             return 1
         endif
     endfor
@@ -38,10 +38,10 @@ function! s:ApplyConfig(config)
         if a:config["indent_style"] == "tab"
             setl noexpandtab
         elseif a:config["indent_style"] == "space"
-            let tab_width = a:config["tab_width"] + 0
+            let l:tab_width = a:config["tab_width"] + 0
             setl expandtab
-            let &l:shiftwidth = tab_width
-            let &l:softtabstop = tab_width
+            let &l:shiftwidth = l:tab_width
+            let &l:softtabstop = l:tab_width
         endif
     endif
 endfunction
