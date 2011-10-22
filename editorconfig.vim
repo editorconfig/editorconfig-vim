@@ -2,10 +2,30 @@ augroup editorconfig
 autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 
+" wrapper for 'findfile()', a version that eliminates the affect of
+" 'suffixesadd'
+function! s:FindFile(name, ...)
+
+    let l:old_suffixesadd = &l:suffixesadd
+    let &l:suffixesadd = ''
+
+    if a:0 == 1
+        let l:ret = findfile(a:name, a:1)
+    elseif a:0 == 2
+        let l:ret = findfile(a:name, a:1, a:2)
+    else
+        let l:ret = findfile(a:name)
+    endif
+
+    let &l:suffixesadd = l:old_suffixesadd
+
+    return l:ret
+endfunction
+
 " Find all config files in this directory and parent directories.  Apply any
 " matching patterns in each config file found (starting with furthest file).
 function! s:UseConfigFiles()
-    let l:config_files = reverse(findfile('.editorconfig', ".;", -1))
+    let l:config_files = reverse(s:FindFile('.editorconfig', ".;", -1))
 
     for file in l:config_files
         if filereadable(file)
