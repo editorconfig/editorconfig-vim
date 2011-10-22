@@ -28,10 +28,13 @@ function! s:UseConfigFiles()
     let l:config_files = reverse(s:FindFile('.editorconfig', ".;", -1))
 
     for file in l:config_files
+        if file !~ "/"
+            let l:file = expand("%:p:h")."/".file
+        endif
         if filereadable(file)
             let l:parsed_ini = IniParser#Read(file)
             for file_pattern in keys(l:parsed_ini)
-                if s:FilePatternMatches(file_pattern)
+                if s:FilePatternMatches(file_pattern, file)
                     call s:ApplyConfig(l:parsed_ini[file_pattern])
                 endif
             endfor
@@ -40,12 +43,20 @@ function! s:UseConfigFiles()
 endfunction
 
 " Return 1 if pattern describes current file and 0 otherwise
-function! s:FilePatternMatches(pattern)
-    let l:this_file = expand("%")
-    let l:this_dir = expand("%:p:h")
-    let l:matched_files = split(glob(a:pattern, l:this_dir))
+function! s:FilePatternMatches(pattern, config_file)
+    let l:this_file = expand("%:p")
+
+    if a:pattern =~ "/"
+        " Use current directory as path prefix for pattern
+        let l:path_prefix = strpart(a:config_file, 0, strridx(a:config_file, "/"))
+    else
+        " Use directory of .editorconfig file as path prefix for pattern
+        let l:path_prefix = expand("%:p:h")
+    endif
+
+    let l:matched_files = split(globpath(l:path_prefix, a:pattern))
     for found_file in l:matched_files
-        if found_file == l:this_file
+        if simplify(found_file) == l:this_file
             return 1
         endif
     endfor
