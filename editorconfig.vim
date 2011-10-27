@@ -25,6 +25,44 @@ endfunction
 " Find all config files in this directory and parent directories.  Apply any
 " matching patterns in each config file found (starting with furthest file).
 function! s:UseConfigFiles()
+
+    " if editorconfig is present, we use this as our parser
+    if executable('editorconfig')
+        let l:config = {}
+
+        let l:cmd = 'editorconfig ' . shellescape(expand('%:p'))
+        let l:parsing_result = split(system(l:cmd), '\n')
+
+        " if editorconfig core's exit code is not zero, give out an error
+        " message
+        if v:shell_error != 0
+            echohl ErrorMsg
+            echo 'Failed to execute "' . l:cmd . '"'
+            echohl None
+            return
+        endif
+
+        for one_line in l:parsing_result
+            let l:eq_pos = stridx(one_line, '=')
+
+            if l:eq_pos == -1 " = is not found. Skip this line
+                continue
+            endif
+
+            let l:eq_left = strpart(one_line, 0, l:eq_pos)
+            if l:eq_pos + 1 < strlen(one_line)
+                let l:eq_right = strpart(one_line, l:eq_pos + 1)
+            else
+                let l:eq_right = ''
+            endif
+
+            let l:config[l:eq_left] = l:eq_right
+        endfor
+
+        call s:ApplyConfig(l:config)
+        return
+    endif
+
     let l:config_files = reverse(s:FindFile('.editorconfig', ".;", -1))
 
     for file in l:config_files
