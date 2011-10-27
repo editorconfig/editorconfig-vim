@@ -1,3 +1,6 @@
+let s:saved_cpo = &cpo
+set cpo&vim
+
 augroup editorconfig
 autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
@@ -114,3 +117,7 @@ function! s:ApplyConfig(config)
         endif
     endif
 endfunction
+
+let &cpo = s:saved_cpo
+unlet! s:saved_cpo
+
