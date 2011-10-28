@@ -29,11 +29,24 @@ endfunction
 " matching patterns in each config file found (starting with furthest file).
 function! s:UseConfigFiles()
 
+    let l:cmd = ''
+    " search for editorconfig core
+    for possible_cmd in [
+                \ 'editorconfig',
+                \ '/usr/local/bin/editorconfig',
+                \ '/usr/bin/editorconfig',
+                \ '/opt/bin/editorconfig',
+                \ '/opt/editorconfig/bin/editorconfig']
+        if executable(possible_cmd)
+            let l:cmd = possible_cmd
+        endif
+    endfor
+
     " if editorconfig is present, we use this as our parser
-    if executable('editorconfig')
+    if !empty(l:cmd)
         let l:config = {}
 
-        let l:cmd = 'editorconfig ' . shellescape(expand('%:p'))
+        let l:cmd = l:cmd . ' ' . shellescape(expand('%:p'))
         let l:parsing_result = split(system(l:cmd), '\n')
 
         " if editorconfig core's exit code is not zero, give out an error
