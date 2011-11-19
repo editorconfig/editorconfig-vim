@@ -26,6 +26,6 @@ installed.
 Once IniParser is installed, copy the `editorconfig.vim` file to your
 `~/.vim/plugin` directory to install the editorconfig plugin.
 
-[EditorConfig]: http://treyhunner.github.com/editorconfig/
-[EditorConfig core]: https://github.com/treyhunner/editorconfig
+[EditorConfig]: http://editorconfig.github.com/
+[EditorConfig core]: https://github.com/editorconfig/editorconfig
 [IniParser]: http://www.vim.org/scripts/script.php?script_id=3434
