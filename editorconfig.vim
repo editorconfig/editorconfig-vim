@@ -61,28 +61,16 @@ endfunction
 " Set the indentation style according to the config values
 function! s:ApplyConfig(config)
     if has_key(a:config, "indent_style")
-        if has_key(a:config, "indent_size") && !has_key(a:config, "tab_width")
-            let a:config["tab_width"] = a:config["indent_size"]
-        endif
         if a:config["indent_style"] == "tab"
             setl noexpandtab
-            if has_key(a:config, "tab_width")
-                let &l:tabstop = str2nr(a:config["tab_width"])
-            endif
-            if has_key(a:config, "indent_size")
-                let &l:shiftwidth = str2nr(a:config["indent_size"])
-            else
-                let &l:shiftwidth = &l:tabstop
-            endif
         elseif a:config["indent_style"] == "space"
             setl expandtab
-            if has_key(a:config, "indent_size")
-                let &l:shiftwidth = str2nr(a:config["indent_size"])
-            endif
-            if has_key(a:config, "tab_width")
-                let &l:softtabstop = str2nr(a:config["tab_width"])
-                let &l:tabstop = str2nr(a:config["tab_width"])
-            endif
+        endif
+        if has_key(a:config, "tab_width")
+            let &l:tabstop = str2nr(a:config["tab_width"])
+        endif
+        if has_key(a:config, "indent_size")
+            let &l:shiftwidth = str2nr(a:config["indent_size"])
         endif
     endif
 endfunction
