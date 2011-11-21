@@ -83,6 +83,16 @@ function! s:ApplyConfig(config)
             let &l:shiftwidth = str2nr(a:config["indent_size"])
         endif
     endif
+
+    if has_key(a:config, "end_of_line")
+        if a:config["end_of_line"] == "lf"
+            setl fileformat=unix
+        elseif a:config["end_of_line"] == "crlf"
+            setl fileformat=dos
+        elseif a:config["end_of_line"] == "cr"
+            setl fileformat=mac
+        endif
+    endif
 endfunction
 
 let &cpo = s:saved_cpo
