@@ -1,3 +1,13 @@
+if v:version < 700
+    finish
+endif
+
+" check whether this script is already loaded
+if exists("g:loaded_EditorConfig")
+    finish
+endif
+let g:loaded_EditorConfig = 1
+
 let s:saved_cpo = &cpo
 set cpo&vim
 
