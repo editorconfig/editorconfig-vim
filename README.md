@@ -10,5 +10,5 @@ and INSTALL files to install it.
 Once EditorConfig core is installed, copy the `editorconfig.vim` file to your
 `~/.vim/plugin` directory to install the editorconfig plugin.
 
-[EditorConfig]: http://editorconfig.github.com/
+[EditorConfig]: http://editorconfig.org
 [EditorConfig core]: https://github.com/editorconfig/editorconfig
