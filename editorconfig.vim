@@ -82,6 +82,7 @@ function! s:ApplyConfig(config)
     endif
     if has_key(a:config, "indent_size")
         let &l:shiftwidth = str2nr(a:config["indent_size"])
+        let &l:softtabstop = &l:shiftwidth
     endif
 
     if has_key(a:config, "end_of_line")
