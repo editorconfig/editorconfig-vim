@@ -76,12 +76,12 @@ function! s:ApplyConfig(config)
         elseif a:config["indent_style"] == "space"
             setl expandtab
         endif
-        if has_key(a:config, "tab_width")
-            let &l:tabstop = str2nr(a:config["tab_width"])
-        endif
-        if has_key(a:config, "indent_size")
-            let &l:shiftwidth = str2nr(a:config["indent_size"])
-        endif
+    endif
+    if has_key(a:config, "tab_width")
+        let &l:tabstop = str2nr(a:config["tab_width"])
+    endif
+    if has_key(a:config, "indent_size")
+        let &l:shiftwidth = str2nr(a:config["indent_size"])
     endif
 
     if has_key(a:config, "end_of_line")
