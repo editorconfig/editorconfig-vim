@@ -14,6 +14,7 @@ set cpo&vim
 augroup editorconfig
 autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
+autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
 
 function! s:UseConfigFiles()
 
