@@ -16,6 +16,8 @@ autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
 
+command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
+
 function! s:UseConfigFiles()
 
     let l:cmd = ''
