@@ -8,6 +8,10 @@ if exists("g:loaded_EditorConfig")
 endif
 let g:loaded_EditorConfig = 1
 
+if !exists('g:EditorConfig_exec_path')
+    let g:EditorConfig_exec_path = ''
+endif
+
 let s:saved_cpo = &cpo
 set cpo&vim
 
@@ -23,6 +27,7 @@ function! s:UseConfigFiles()
     let l:cmd = ''
     " search for editorconfig core
     for possible_cmd in [
+                \ g:EditorConfig_exec_path,
                 \ 'editorconfig',
                 \ '/usr/local/bin/editorconfig',
                 \ '/usr/bin/editorconfig',
