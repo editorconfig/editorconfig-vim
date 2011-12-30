@@ -25,14 +25,31 @@ command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 function! s:UseConfigFiles()
 
     let l:cmd = ''
+
+    if has('unix')
+        let l:searching_list = [
+                    \ g:EditorConfig_exec_path,
+                    \ 'editorconfig',
+                    \ '/usr/local/bin/editorconfig',
+                    \ '/usr/bin/editorconfig',
+                    \ '/opt/bin/editorconfig',
+                    \ '/opt/editorconfig/bin/editorconfig']
+    elseif has('win32')
+        let l:searching_list = [
+                    \ g:EditorConfig_exec_path,
+                    \ 'editorconfig',
+                    \ 'C:\editorconfig\bin\editorconfig',
+                    \ 'D:\editorconfig\bin\editorconfig',
+                    \ 'E:\editorconfig\bin\editorconfig',
+                    \ 'F:\editorconfig\bin\editorconfig',
+                    \ 'C:\Program Files\editorconfig\bin\editorconfig',
+                    \ 'D:\Program Files\editorconfig\bin\editorconfig',
+                    \ 'E:\Program Files\editorconfig\bin\editorconfig',
+                    \ 'F:\Program Files\editorconfig\bin\editorconfig']
+    endif
+
     " search for editorconfig core
-    for possible_cmd in [
-                \ g:EditorConfig_exec_path,
-                \ 'editorconfig',
-                \ '/usr/local/bin/editorconfig',
-                \ '/usr/bin/editorconfig',
-                \ '/opt/bin/editorconfig',
-                \ '/opt/editorconfig/bin/editorconfig']
+    for possible_cmd in l:searching_list
         if executable(possible_cmd)
             let l:cmd = possible_cmd
             break
