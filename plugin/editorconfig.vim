@@ -52,6 +52,9 @@ function! s:UseConfigFiles()
     for possible_cmd in l:searching_list
         if executable(possible_cmd)
             let l:cmd = possible_cmd
+            " let g:EditorConfig_exec_path as the command thus we could save
+            " time to find the EditorConfig core next time
+            let g:EditorConfig_exec_path = l:cmd
             break
         endif
     endfor
