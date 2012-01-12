@@ -1,0 +1,79 @@
+*editorconfig.txt*
+
+File: editorconfig.txt
+Version: 
+Maintainer: EditorConfig Team <http://editorconfig.org>
+Description: EditorConfig vim plugin
+
+CONTENTS~
+                                            *editorconfig-contents*
+----------------------------------------------------------------------------
+1.  Overview                                 |editorconfig-overview|
+2.  Installation                             |editorconfig-installation|
+3.  Commands                                 |editorconfig-commands|
+4.  Settings                                 |editorconfig-settings|
+
+
+OVERVIEW~
+                                            *editorconfig-overview*
+----------------------------------------------------------------------------
+This is the EditorConfig plugin for vim.
+
+
+INSTALLATION~
+                                            *editorconfig-installation*
+----------------------------------------------------------------------------
+Download the [EditorConfig core][] and follow the instructions in the README
+and INSTALL files to install it.
+
+Once EditorConfig core is installed, copy the `plugin/editorconfig.vim` file
+to your `~/.vim/plugin` directory and `doc/editorconfig.txt` to your
+`~/.vim/doc` directory to install the EditorConfig plugin.
+
+COMMANDS~
+                                            *editorconfig-commands*
+----------------------------------------------------------------------------
+
+                                            *:EditorConfigReload*
+Command:
+    :EditorConfigReload
+
+Reload the EditorConfig conf files. When `.editorconfig` files are modified,
+this command could prevent you to reload the current edited file to load the
+new configuration.
+
+SETTINGS~
+                                            *editorconfig-settings*
+----------------------------------------------------------------------------
+                                            *g:EditorConfig_exec_path*
+The file path to the EditorConfig core executable. You could set this value in
+your |vimrc| like this:
+>
+ let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
+<
+The default value is empty.
+
+This plugin will search through the following executables in order:
+
+On UNIX:
+    the value of g:EditorConfig_exec_path
+    editorconfig
+    /usr/local/bin/editorconfig
+    /usr/bin/editorconfig
+    /opt/bin/editorconfig
+    /opt/editorconfig/bin/editorconfig
+
+On Windows:
+    the value of g:EditorConfig_exec_path
+    editorconfig
+    C:\editorconfig\bin\editorconfig
+    D:\editorconfig\bin\editorconfig
+    E:\editorconfig\bin\editorconfig
+    F:\editorconfig\bin\editorconfig
+    C:\Program Files\editorconfig\bin\editorconfig
+    D:\Program Files\editorconfig\bin\editorconfig
+    E:\Program Files\editorconfig\bin\editorconfig
+    F:\Program Files\editorconfig\bin\editorconfig
+
+
+vim:ft=help:tw=78
