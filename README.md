@@ -12,7 +12,7 @@ Once EditorConfig core is installed, copy the `editorconfig.vim` file to your
 
 ## Supported properties
 
-The EditorConfig Emacs plugin supports the following EditorConfig [properties][]:
+The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 
 * indent_style
 * indent_size
