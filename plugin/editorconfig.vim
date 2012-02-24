@@ -134,8 +134,21 @@ function! s:ApplyConfig(config)
         let &l:tabstop = str2nr(a:config["tab_width"])
     endif
     if has_key(a:config, "indent_size")
-        let &l:shiftwidth = str2nr(a:config["indent_size"])
-        let &l:softtabstop = &l:shiftwidth
+
+        " if indent_size is 'tab', set shiftwidth to tabstop;
+        " if indent_size is a positive integer, set shiftwidth to the integer
+        " value
+        if a:config["indent_size"] == "tab"
+            let &l:shiftwidth = &l:tabstop
+            let &l:softtabstop = &l:shiftwidth
+        else
+            let l:indent_size = str2nr(a:config["indent_size"])
+            if l:indent_size > 0
+                let &l:shiftwidth = l:indent_size
+                let &l:softtabstop = &l:shiftwidth
+            endif
+        endif
+
     endif
 
     if has_key(a:config, "end_of_line")
