@@ -6,32 +6,74 @@ Licensed under PSF License (see PYTHON_LICENSE.txt file).
 """
 
 import re
-from ConfigParser import SafeConfigParser, DEFAULTSECT
-
+import os.path
+from fnmatch import fnmatch
+from ConfigParser import ParsingError
 from odict import OrderedDict
 
-__all__ = ["EditorConfigParser"]
+__all__ = ["ParsingError", "EditorConfigParser"]
 
 
-class EditorConfigParser(SafeConfigParser):
-    """Parser for EditorConfig-style configuration files"""
+class EditorConfigParser(object):
+    """
+    Parser for EditorConfig-style configuration files
 
+    Based on RawConfigParser from ConfigParser.py in Python 2.6.
+    """
+
+    # Regular expressions for parsing section headers and options.
     # Allow ] and escaped ; and # characters in section headers
     SECTCRE = re.compile(
-        r'\['
-        r'(?P<header>([^#;]|\\#|\\;)+)'
-        r'\]'
+        r'\['                                 # [
+        r'(?P<header>([^#;]|\\#|\\;)+)'       # very permissive!
+        r'\]'                                 # ]
+        )
+    OPTCRE = re.compile(
+        r'(?P<option>[^:=\s][^:=]*)'          # very permissive!
+        r'\s*(?P<vi>[:=])\s*'                 # any number of space/tab,
+                                              # followed by separator
+                                              # (either : or =), followed
+                                              # by any # space/tab
+        r'(?P<value>.*)$'                     # everything up to eol
         )
 
-    # Use empty section name for initial section
-    def __init__(self, *args, **kwargs):
-        SafeConfigParser.__init__(self, *args, **kwargs)
-        if '' not in self._sections:
-            self._sections[''] = self._dict()
+    def __init__(self, filename):
+        self.filename = filename
+        self.options = OrderedDict()
+        self.root_file = False
+
+    def matches_filename(self, config_filename, glob):
+        """Return True if section glob matches filename"""
+        config_dirname = os.path.dirname(config_filename)
+        if '/' in glob:
+            if glob.find('/') == 0:
+                glob = glob[1:]
+            glob = os.path.join(config_dirname, glob)
+        else:
+            glob = os.path.join('**/', glob)
+        return fnmatch(self.filename, glob)
+
+    def read(self, filename):
+        """Read and parse single EditorConfig file"""
+        try:
+            fp = open(filename)
+        except IOError:
+            return
+        self._read(fp, filename)
+        fp.close()
 
     def _read(self, fp, fpname):
-        """Parse a sectioned EditorConfig file."""
-        cursect = self._sections['']              # Current section
+        """Parse a sectioned setup file.
+
+        The sections in setup file contains a title line at the top,
+        indicated by a name in square brackets (`[]'), plus key/value
+        options lines, indicated by `name: value' format lines.
+        Continuations are represented by an embedded newline then
+        leading whitespace.  Blank lines, lines beginning with a '#',
+        and just about everything else are ignored.
+        """
+        in_section = False
+        matching_section = False
         optname = None
         lineno = 0
         e = None                                  # None, or an exception
@@ -43,28 +85,19 @@ class EditorConfigParser(SafeConfigParser):
             # comment or blank line?
             if line.strip() == '' or line[0] in '#;':
                 continue
-            if line.split(None, 1)[0].lower() == 'rem' and line[0] in "rR":
-                # no leading whitespace
-                continue
             # continuation line?
-            if line[0].isspace() and cursect is not None and optname:
+            if line[0].isspace() and in_section and optname:
                 value = line.strip()
-                if value:
-                    cursect[optname] = "%s\n%s" % (cursect[optname], value)
+                if value and matching_section:
+                    self._option[optname] += "\n%s" % value
             # a section header or option header?
             else:
                 # is it a section header?
                 mo = self.SECTCRE.match(line)
                 if mo:
                     sectname = mo.group('header')
-                    if sectname in self._sections:
-                        cursect = self._sections[sectname]
-                    elif sectname == DEFAULTSECT:
-                        cursect = self._defaults
-                    else:
-                        cursect = self._dict()
-                        cursect['__name__'] = sectname
-                        self._sections[sectname] = cursect
+                    in_section = True
+                    matching_section = self.matches_filename(fpname, sectname)
                     # So sections can't start with a continuation line
                     optname = None
                 # an option line?
@@ -83,7 +116,10 @@ class EditorConfigParser(SafeConfigParser):
                         if optval == '""':
                             optval = ''
                         optname = self.optionxform(optname.rstrip())
-                        cursect[optname] = optval
+                        if not in_section and optname == 'root':
+                            self.root_file = (optval.lower() == 'true')
+                        if matching_section:
+                            self.options[optname] = optval
                     else:
                         # a non-fatal parsing error occurred.  set up the
                         # exception but keep going. the exception will be
@@ -95,4 +131,7 @@ class EditorConfigParser(SafeConfigParser):
         # if any parsing errors occurred, raise an exception
         if e:
             raise e
+
+    def optionxform(self, optionstr):
+        return optionstr.lower()
 
