@@ -45,6 +45,8 @@ class EditorConfigParser(object):
     def matches_filename(self, config_filename, glob):
         """Return True if section glob matches filename"""
         config_dirname = os.path.dirname(config_filename)
+        glob = glob.replace("\\#", "#")
+        glob = glob.replace("\\;", ";")
         if '/' in glob:
             if glob.find('/') == 0:
                 glob = glob[1:]
