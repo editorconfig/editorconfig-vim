@@ -12,6 +12,9 @@ corresponding to PATTERN.  (It does not compile it.)
 Based on code from fnmatch.py file distributed with Python 2.6.
 
 Licensed under PSF License (see PYTHON_LICENSE.txt file).
+
+Changes to original fnmatch module:
+- translate function supports `*` and `**` similarly to fnmatch C library
 """
 
 import re
@@ -25,7 +28,8 @@ def fnmatch(name, pat):
 
     Patterns are Unix shell style:
 
-    *       matches everything
+    *       matches everything except /
+    **      matches everything
     ?       matches any single character
     [seq]   matches any character in seq
     [!seq]  matches any char not in seq
@@ -85,7 +89,11 @@ def translate(pat):
         c = pat[i]
         i = i+1
         if c == '*':
-            res = res + '.*'
+            j = i
+            if j < n and pat[j] == '*':
+                res = res + '.*'
+            else:
+                res = res + '[^/]*'
         elif c == '?':
             res = res + '.'
         elif c == '[':
