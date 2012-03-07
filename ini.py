@@ -3,6 +3,12 @@
 Based on code from ConfigParser.py file distributed with Python 2.6.
 
 Licensed under PSF License (see PYTHON_LICENSE.txt file).
+
+Changes to original ConfigParser:
+- Special characters can be used in section names
+- Octothorpe can be used for comments (not just at beginning of line)
+- Only track INI options in sections that match target filename
+- Stop parsing files with when `root = true` is found
 """
 
 import re
