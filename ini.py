@@ -30,12 +30,12 @@ class EditorConfigParser(object):
     # Regular expressions for parsing section headers and options.
     # Allow ] and escaped ; and # characters in section headers
     SECTCRE = re.compile(
-        r'\['                                 # [
+        r'\s*\['                              # [
         r'(?P<header>([^#;]|\\#|\\;)+)'       # very permissive!
         r'\]'                                 # ]
         )
     OPTCRE = re.compile(
-        r'(?P<option>[^:=\s][^:=]*)'          # very permissive!
+        r'\s*(?P<option>[^:=\s][^:=]*)'       # very permissive!
         r'\s*(?P<vi>[:=])\s*'                 # any number of space/tab,
                                               # followed by separator
                                               # (either : or =), followed
@@ -93,11 +93,6 @@ class EditorConfigParser(object):
             # comment or blank line?
             if line.strip() == '' or line[0] in '#;':
                 continue
-            # continuation line?
-            if line[0].isspace() and in_section and optname:
-                value = line.strip()
-                if value and matching_section:
-                    self._option[optname] += "\n%s" % value
             # a section header or option header?
             else:
                 # is it a section header?
