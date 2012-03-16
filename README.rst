@@ -10,20 +10,22 @@ importable library.
 Installation
 ============
 
-With setuptools:
+With setuptools::
 
     sudo python setup.py install
 
 Getting Help
 ============
-For help with the EditorConfig core code, please write to our `mailing list <http://groups.google.com/group/editorconfig>`_.
+For help with the EditorConfig core code, please write to our `mailing list
+<http://groups.google.com/group/editorconfig>`_.
 
-If you are writing a plugin a language that can import Python libraries, you may want to import and use the EditorConfig Python Core directly.
+If you are writing a plugin a language that can import Python libraries, you
+may want to import and use the EditorConfig Python Core directly.
 
 Using as a Library
 ==================
 
-Example use of EditorConfig Python Core as a library:
+Example use of EditorConfig Python Core as a library::
 
     filename = "/home/zoidberg/myfile.txt"
     conf_file = ".editorconfig"
@@ -35,4 +37,6 @@ Example use of EditorConfig Python Core as a library:
 License
 =======
 
-Unless otherwise stated, all files are distributed under the PSF license.  The odict library (editorconfig/odict.py) is distributed under the New BSD license.  See LICENSE.txt file for details on PSF license.
+Unless otherwise stated, all files are distributed under the PSF license.  The
+odict library (editorconfig/odict.py) is distributed under the New BSD license.
+See LICENSE.txt file for details on PSF license.
