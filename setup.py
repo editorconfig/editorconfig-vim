@@ -1,8 +1,9 @@
 from setuptools import setup
+import editorconfig
 
 setup(
     name='EditorConfig',
-    version='0.9.0-alpha',
+    version=editorconfig.__version__,
     author='EditorConfig Team',
     packages=['editorconfig'],
     url='http://editorconfig.org/',

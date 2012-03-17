@@ -2,11 +2,12 @@
 
 import getopt, sys
 
+from . import __version__
 from editorconfig import EditorConfigHandler
 
 
 def version():
-    print "Version 0.9.0"
+    print "Version %s" % __version__
 
 
 def usage(command):
@@ -31,10 +32,10 @@ def main():
     conf_filename = '.editorconfig'
 
     for option, arg in opts:
-        if option in ('-h' or '--help'):
+        if option in ('-h', '--help'):
             usage(command_name)
             sys.exit()
-        if option in ('-v' or '--version'):
+        if option in ('-v', '--version'):
             version()
             sys.exit()
         if option == '-f':
