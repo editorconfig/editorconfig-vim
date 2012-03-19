@@ -1,6 +1,6 @@
 import os
 
-from ini import EditorConfigParser
+from .ini import EditorConfigParser
 
 
 def get_filenames(path, filename):

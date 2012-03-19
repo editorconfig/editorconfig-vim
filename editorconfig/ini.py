@@ -13,9 +13,9 @@ Changes to original ConfigParser:
 
 import re
 import os.path
-from fnmatch import fnmatch
 from ConfigParser import ParsingError
-from odict import OrderedDict
+from .fnmatch import fnmatch
+from .odict import OrderedDict
 
 __all__ = ["ParsingError", "EditorConfigParser"]
 

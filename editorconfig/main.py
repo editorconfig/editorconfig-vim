@@ -3,7 +3,7 @@
 import getopt, sys
 
 from . import __version__
-from editorconfig import EditorConfigHandler
+from .editorconfig import EditorConfigHandler
 
 
 def version():
