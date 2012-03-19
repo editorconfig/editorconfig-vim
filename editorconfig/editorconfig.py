@@ -15,10 +15,11 @@ def get_filenames(path, filename):
 
 class EditorConfigHandler(object):
     """Allows locating and parsing of EditorConfig files for a given filename"""
-    def __init__(self, filepath, conf_filename='.editorconfig'):
+    def __init__(self, filepath, conf_filename='.editorconfig', version=None):
         """Create EditorConfigHandler for matching given filepath"""
         self.filepath = filepath
         self.conf_filename = conf_filename
+        self.version = version
         self.options = None
 
     def preprocess_values(self):
@@ -32,7 +33,7 @@ class EditorConfigHandler(object):
         # Set indent_size to "tab" if indent_size is unspecified and
         # indent_style is set to "tab".
         if (opts.get("indent_style") == "tab" and
-            not opts.has_key("indent_size")):
+            not opts.has_key("indent_size") and self.version >= (0, 9, 0)):
             opts["indent_size"] = "tab"
 
         # Set tab_width to indent_size if indent_size is specified and tab_width
