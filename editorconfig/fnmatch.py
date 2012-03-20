@@ -11,7 +11,7 @@ corresponding to PATTERN.  (It does not compile it.)
 
 Based on code from fnmatch.py file distributed with Python 2.6.
 
-Licensed under PSF License (see PYTHON_LICENSE.txt file).
+Licensed under PSF License (see LICENSE.txt file).
 
 Changes to original fnmatch module:
 - translate function supports `*` and `**` similarly to fnmatch C library
