@@ -12,7 +12,7 @@ setup(
     long_description=open('README.rst').read(),
     entry_points = {
         'console_scripts': [
-            'editorconfig = editorconfig.main:main',
+            'editorconfig = main:main',
         ]
     },
 )

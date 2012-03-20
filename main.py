@@ -2,9 +2,9 @@
 
 import getopt, sys
 
-from . import __version__, VERSION
-from .versiontools import split_version
-from .editorconfig import EditorConfigHandler
+from editorconfig import __version__, VERSION
+from editorconfig.versiontools import split_version
+from editorconfig.handler import EditorConfigHandler
 
 
 def version():
