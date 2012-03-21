@@ -44,6 +44,15 @@ Example use of EditorConfig Python Core as a library::
     for key, value in options.items():
         print "%s=%s" % (key, value)
 
+Running Test Cases
+==================
+
+`Cmake <http://www.cmake.org>`_ has to be installed first. Run the test cases
+using the following commands::
+
+    cmake .
+    ctest .
+
 License
 =======
 
