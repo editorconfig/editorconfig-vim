@@ -1,0 +1,6 @@
+*.pyc
+/Testing
+Makefile
+*.cmake
+CMakeFiles
+CMakeCache.txt
