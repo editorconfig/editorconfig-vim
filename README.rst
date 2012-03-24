@@ -27,7 +27,9 @@ With setuptools::
 Getting Help
 ============
 For help with the EditorConfig core code, please write to our `mailing list
-<http://groups.google.com/group/editorconfig>`_.
+<http://groups.google.com/group/editorconfig>`_.  Bugs and feature requests
+should be submitted to our `issue tracker
+<https://github.com/editorconfig/editorconfig/issues>`_.
 
 If you are writing a plugin a language that can import Python libraries, you
 may want to import and use the EditorConfig Python Core directly.
