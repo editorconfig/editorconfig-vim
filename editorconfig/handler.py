@@ -2,6 +2,7 @@ import os
 
 from . import VERSION
 from .ini import EditorConfigParser
+from .exceptions import PathError, VersionError
 
 
 def get_filenames(path, filename):
@@ -43,8 +44,17 @@ class EditorConfigHandler(object):
             opts["indent_size"] != "tab"):
             opts["tab_width"] = opts["indent_size"]
 
+    def check_assertions(self):
+        """Raise error if filepath or version have invalid values"""
+        if '/' not in self.filepath:
+            raise PathError("Input file must be a full path name.")
+        if self.version[:3] > VERSION[:3]:
+            raise VersionError(
+                    "Required version is greater than the current version.")
+
     def get_configurations(self):
         """Find EditorConfig files and return all options matching filepath"""
+        self.check_assertions()
         path, filename = os.path.split(self.filepath)
         conf_files = get_filenames(path, self.conf_filename)
         for filename in conf_files:
