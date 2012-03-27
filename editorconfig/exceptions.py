@@ -1,3 +1,6 @@
+from ConfigParser import ParsingError
+
+
 class PathError(ValueError):
     pass
 

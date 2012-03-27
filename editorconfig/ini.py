@@ -13,7 +13,7 @@ Changes to original ConfigParser:
 
 import re
 import os.path
-from ConfigParser import ParsingError
+from .exceptions import ParsingError
 from .fnmatch import fnmatch
 from .odict import OrderedDict
 
