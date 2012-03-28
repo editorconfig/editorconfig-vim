@@ -1,7 +1,7 @@
 *editorconfig.txt*
 
 File: editorconfig.txt
-Version: 0.1
+Version: 0.2
 Maintainer: EditorConfig Team <http://editorconfig.org>
 Description: EditorConfig vim plugin
 
