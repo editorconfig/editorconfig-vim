@@ -1,8 +1,18 @@
+"""EditorConfig file handler
+
+Provides ``EditorConfigHandler`` class for locating and parsing
+EditorConfig files relevant to a given filepath.
+
+"""
+
 import os
 
 from . import VERSION
 from .ini import EditorConfigParser
 from .exceptions import PathError, VersionError
+
+
+__all__ = ['EditorConfigHandler']
 
 
 def get_filenames(path, filename):
@@ -16,7 +26,15 @@ def get_filenames(path, filename):
 
 
 class EditorConfigHandler(object):
-    """Allows locating and parsing of EditorConfig files for a given filename"""
+
+    """
+    Allows locating and parsing of EditorConfig files for given filename
+
+    In addition to the constructor a single public method is provided,
+    ``get_configurations`` which returns the EditorConfig options for
+    the ``filepath`` specified to the constructor.
+
+    """
 
     def __init__(self, filepath, conf_filename='.editorconfig', version=None):
         """Create EditorConfigHandler for matching given filepath"""
@@ -25,7 +43,58 @@ class EditorConfigHandler(object):
         self.version = version
         self.options = None
 
+    def get_configurations(self):
+
+        """
+        Find EditorConfig files and return all options matching filepath
+
+        Special exceptions that may be raised by this function include:
+
+        - ``VersionError``: self.version is invalid EditorConfig version
+        - ``PathError``: self.filepath is not a valid absolute filepath
+        - ``ParsingError``: improperly formatted EditorConfig file found
+
+        """
+
+        self.check_assertions()
+        path, filename = os.path.split(self.filepath)
+        conf_files = get_filenames(path, self.conf_filename)
+
+        # Attempt to find and parse every EditorConfig file in filetree
+        for filename in conf_files:
+            parser = EditorConfigParser(self.filepath)
+            parser.read(filename)
+
+            # Merge new EditorConfig file's options into current options
+            old_options = self.options
+            self.options = parser.options
+            if old_options:
+                self.options.update(old_options)
+
+            # Stop parsing if parsed file has a ``root = true`` option
+            if parser.root_file:
+                break
+
+        self.preprocess_values()
+        return self.options
+
+    def check_assertions(self):
+
+        """Raise error if filepath or version have invalid values"""
+
+        # Raise ``PathError`` if filepath doesn't contain a path separator
+        if '/' not in self.filepath:
+            raise PathError("Input file must be a full path name.")
+
+        # Raise ``VersionError`` if version specified is greater than current
+        if self.version[:3] > VERSION[:3]:
+            raise VersionError(
+                    "Required version is greater than the current version.")
+
     def preprocess_values(self):
+
+        """Preprocess option values for consumption by plugins"""
+
         opts = self.options
 
         # Lowercase option value for certain options
@@ -39,33 +108,8 @@ class EditorConfigHandler(object):
             not "indent_size" in opts and self.version >= VERSION[:3]):
             opts["indent_size"] = "tab"
 
-        # Set tab_width to indent_size if indent_size is specified and tab_width
-        # is unspecified
-        if (opts.has_key("indent_size") and not opts.has_key("tab_width") and
+        # Set tab_width to indent_size if indent_size is specified and
+        # tab_width is unspecified
+        if ("indent_size" in opts and "tab_width" not in opts and
             opts["indent_size"] != "tab"):
             opts["tab_width"] = opts["indent_size"]
-
-    def check_assertions(self):
-        """Raise error if filepath or version have invalid values"""
-        if '/' not in self.filepath:
-            raise PathError("Input file must be a full path name.")
-        if self.version[:3] > VERSION[:3]:
-            raise VersionError(
-                    "Required version is greater than the current version.")
-
-    def get_configurations(self):
-        """Find EditorConfig files and return all options matching filepath"""
-        self.check_assertions()
-        path, filename = os.path.split(self.filepath)
-        conf_files = get_filenames(path, self.conf_filename)
-        for filename in conf_files:
-            parser = EditorConfigParser(self.filepath)
-            parser.read(filename)
-            old_options = self.options
-            self.options = parser.options
-            if old_options:
-                self.options.update(old_options)
-            if parser.root_file:
-                break
-        self.preprocess_values()
-        return self.options
