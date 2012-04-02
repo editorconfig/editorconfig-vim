@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import getopt, sys
+import getopt
+import sys
 
 from editorconfig import __version__, VERSION
 from editorconfig.versiontools import split_version
@@ -22,7 +23,7 @@ def usage(command):
 
 def main():
     command_name = sys.argv[0]
-    try: 
+    try:
         opts, args = getopt.getopt(sys.argv[1:], "vhb:f:", ["version", "help"])
     except getopt.GetoptError, err:
         print str(err)

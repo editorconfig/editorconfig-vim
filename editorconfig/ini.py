@@ -9,6 +9,7 @@ Changes to original ConfigParser:
 - Octothorpe can be used for comments (not just at beginning of line)
 - Only track INI options in sections that match target filename
 - Stop parsing files with when `root = true` is found
+
 """
 
 import re
@@ -17,12 +18,13 @@ from .exceptions import ParsingError
 from .fnmatch import fnmatch
 from .odict import OrderedDict
 
+
 __all__ = ["ParsingError", "EditorConfigParser"]
 
 
 class EditorConfigParser(object):
-    """
-    Parser for EditorConfig-style configuration files
+
+    """Parser for EditorConfig-style configuration files
 
     Based on RawConfigParser from ConfigParser.py in Python 2.6.
     """
@@ -137,4 +139,3 @@ class EditorConfigParser(object):
 
     def optionxform(self, optionstr):
         return optionstr.lower()
-
