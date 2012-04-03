@@ -157,11 +157,8 @@ sys.path.insert(0, vim.eval('s:editorconfig_core_py_dir'))
 
 try:
     from editorconfig.handler import EditorConfigHandler
-    import editorconfig.exceptions as editorconfig_except
-
-    class EditorConfig:
-        """ Empty class. For name space use. """
-        pass
+    from editorconfig.exceptions import (ParsingError, PathError,
+            VersionError)
 except:
     vim.command('let s:editorconfig_core_mode = "c"')
 
@@ -200,16 +197,13 @@ function! s:UseConfigFiles_Python_Builtin()
 
     python << EEOOFF
 
-EditorConfig.filename = vim.eval("expand('%:p')")
-EditorConfig.conf_file = ".editorconfig"
-EditorConfig.handler = EditorConfigHandler(
-        EditorConfig.filename,
-        EditorConfig.conf_file)
+filename = vim.eval("expand('%:p')")
+conf_file = ".editorconfig"
+handler = EditorConfigHandler(filename, conf_file)
 
 try:
-    EditorConfig.options = EditorConfig.handler.get_configurations()
-except (editorconfig_except.PathError, editorconfig_except.ParsingError,
-        editorconfig_except.VersionError) as e:
+    handler.get_configurations()
+except (PathError, ParsingError, VersionError) as e:
     print >> sys.stderr, str(e)
     vim.command('let l:ret = 1')
 
@@ -219,7 +213,7 @@ EEOOFF
     endif
 
     python << EEOOFF
-for key, value in EditorConfig.options.items():
+for key, value in handler.options.items():
     vim.command('let l:config[' + repr(key) + '] = ' + repr(value))
 
 EEOOFF
