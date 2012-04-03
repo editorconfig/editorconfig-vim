@@ -6,7 +6,7 @@ import sys
 from editorconfig import __version__, VERSION
 from editorconfig.versiontools import split_version
 from editorconfig.handler import EditorConfigHandler
-from editorconfig.exceptions import PathError, VersionError
+from editorconfig.exceptions import ParsingError, PathError, VersionError
 
 
 def version():
@@ -58,7 +58,7 @@ def main():
     handler = EditorConfigHandler(filename, conf_filename, version_tuple)
     try:
         options = handler.get_configurations()
-    except (PathError, VersionError) as e:
+    except (ParsingError, PathError, VersionError) as e:
         print >> sys.stderr, str(e)
         sys.exit(2)
     for key, value in options.items():
