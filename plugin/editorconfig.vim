@@ -51,6 +51,54 @@ autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
 
 command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 
+" Find python interp. If found, return python command; if not found, return ''
+function! s:FindPythonInterp()
+    if has('unix')
+        let l:searching_list = [
+                    \ 'python',
+                    \ 'python27',
+                    \ 'python26',
+                    \ 'python25',
+                    \ 'python24',
+                    \ '/usr/local/bin/python',
+                    \ '/usr/local/bin/python27',
+                    \ '/usr/local/bin/python26',
+                    \ '/usr/local/bin/python25',
+                    \ '/usr/local/bin/python24',
+                    \ '/usr/bin/python',
+                    \ '/usr/bin/python27',
+                    \ '/usr/bin/python26',
+                    \ '/usr/bin/python25',
+                    \ '/usr/bin/python24']
+    elseif has('win32')
+        let l:searching_list = [
+                    \ 'python',
+                    \ 'python27',
+                    \ 'python26',
+                    \ 'python25',
+                    \ 'python24',
+                    \ 'C:\Python27\python.exe',
+                    \ 'C:\Python26\python.exe',
+                    \ 'C:\Python25\python.exe',
+                    \ 'C:\Python24\python.exe']
+    endif
+
+    for possible_python_interp in l:searching_list
+        if executable(possible_python_interp)
+            return possible_python_interp
+        endif
+    endfor
+
+    return ''
+endfunction
+
+" Find EditorConfig Core python files
+function! s:FindPythonFiles()
+    return substitute(
+                \ findfile(g:EditorConfig_python_files_dir . '/main.py',
+                \ ','.&runtimepath), '/main.py$', '', '')
+endfunction
+
 let s:editorconfig_core_mode = ''
 
 " If python is built-in with vim and python scripts are found, python core
@@ -63,8 +111,29 @@ while 1
         break
     endif
 
-    if !has('python')
+    " Find python files. If not found, we use C mode
+    let s:editorconfig_core_py_dir = s:FindPythonFiles()
+    if empty(s:editorconfig_core_py_dir) " python files are not found
         let s:editorconfig_core_mode = 'c'
+        break
+    endif
+
+    " Check whether built-in python could be found. If not, we need to look
+    " for external python interp. If the external interp is not found, use C
+    " mode.
+    if !has('python')
+
+        if !exists('g:editorconfig_python_interp') ||
+                    \ empty('g:editorconfig_python_interp')
+            let g:editorconfig_python_interp = s:FindPythonInterp()
+        endif
+
+        if empty(g:editorconfig_python_interp) " Use C
+            let s:editorconfig_core_mode = 'c'
+        else
+            let s:editorconfig_core_mode = 'python_external'
+        endif
+
         break
     endif
 
@@ -79,16 +148,6 @@ except:
 EEOOFF
 
     if !empty(s:editorconfig_core_mode)
-        break
-    endif
-
-    let s:editorconfig_core_py_dir = substitute(
-                \ findfile(g:EditorConfig_python_files_dir . '/main.py',
-                \ ','.&runtimepath), '/main.py$', '', '')
-
-    " python files are not found
-    if empty(s:editorconfig_core_py_dir)
-        let s:editorconfig_core_mode = 'c'
         break
     endif
 
@@ -114,15 +173,17 @@ EEOOFF
         break
     endif
 
-    let s:editorconfig_core_mode = 'python'
+    let s:editorconfig_core_mode = 'python_builtin'
     break
 endwhile
 
 function! s:UseConfigFiles()
     if s:editorconfig_core_mode == 'c'
         call s:UseConfigFiles_C()
-    elseif s:editorconfig_core_mode == 'python'
-        call s:UseConfigFiles_Python()
+    elseif s:editorconfig_core_mode == 'python_builtin'
+        call s:UseConfigFiles_Python_Builtin()
+    elseif s:editorconfig_core_mode == 'python_external'
+        call s:UseConfigFiles_Python_External()
     else
         echohl Error |
                     \ echo "Unknown EditorConfig Core: " .
@@ -131,8 +192,8 @@ function! s:UseConfigFiles()
     endif
 endfunction
 
-" Use python EditorConfig core
-function! s:UseConfigFiles_Python()
+" Use built-in python to run the python EditorConfig core
+function! s:UseConfigFiles_Python_Builtin()
 
     let l:config = {}
     let l:ret = 0
@@ -168,7 +229,38 @@ EEOOFF
     return 0
 endfunction
 
-" Use C EditorConfig core
+" Use external python interp to run the the python EditorConfig Core
+function! s:UseConfigFiles_Python_External()
+
+    " Find Python Files
+    if !exists('s:editorconfig_core_py_dir') ||
+                \ empty('s:editorconfig_core_py_dir')
+        let s:editorconfig_core_py_dir = s:FindPythonFiles()
+    endif
+
+    if empty(s:editorconfig_core_py_dir)
+        return 1
+    endif
+
+    " Find python interp 
+    if !exists('g:editorconfig_python_interp') ||
+                \ empty('g:editorconfig_python_interp')
+        let g:editorconfig_python_interp = s:FindPythonInterp()
+    endif
+
+    if empty(g:editorconfig_python_interp)
+        return 2
+    endif
+
+    let l:cmd = g:editorconfig_python_interp . ' ' .
+                \ s:editorconfig_core_py_dir . '/main.py'
+
+    call s:SpawnExternalParser(l:cmd)
+
+    return 0
+endfunction
+
+" Use external EditorConfig core (The C core, or external python interp)
 function! s:UseConfigFiles_C()
 
     let l:cmd = ''
@@ -205,6 +297,13 @@ function! s:UseConfigFiles_C()
             break
         endif
     endfor
+
+    call s:SpawnExternalParser(l:cmd)
+endfunction
+
+function! s:SpawnExternalParser(cmd) " Spawn external EditorConfig
+
+    let l:cmd = a:cmd
 
     " if editorconfig is present, we use this as our parser
     if !empty(l:cmd)
