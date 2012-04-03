@@ -37,6 +37,10 @@ if !exists('g:EditorConfig_exec_path')
     let g:EditorConfig_exec_path = ''
 endif
 
+if !exists('g:EditorConfig_python_files')
+    let g:EditorConfig_python_files_dir = 'plugin/editorconfig-core-py'
+endif
+
 let s:saved_cpo = &cpo
 set cpo&vim
 
@@ -47,7 +51,110 @@ autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
 
 command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 
+let s:editorconfig_core_mode = ''
+
+" If python is built-in with vim and python scripts are found, python core
+" would be used
+while 1
+
+    " If user has specified a mode, just break
+    if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
+        let s:editorconfig_core_mode = g:editorconfig_core_mode
+        break
+    endif
+
+    if !has('python')
+        let s:editorconfig_core_mode = 'c'
+        break
+    endif
+
+    python << EEOOFF
+
+try:
+    import vim
+    import sys
+except:
+    vim.command('let s:editorconfig_core_mode = "c"')
+
+EEOOFF
+
+    if !empty(s:editorconfig_core_mode)
+        break
+    endif
+
+    let s:editorconfig_core_py_dir = substitute(
+                \ findfile(g:EditorConfig_python_files_dir . '/main.py',
+                \ ','.&runtimepath), '/main.py$', '', '')
+
+    " python files are not found
+    if empty(s:editorconfig_core_py_dir)
+        let s:editorconfig_core_mode = 'c'
+        break
+    endif
+
+    python << EEOOFF
+
+sys.path.insert(0, vim.eval('s:editorconfig_core_py_dir'))
+
+try:
+    import editorconfig
+
+    class EditorConfig:
+        """ Empty class. For name space use. """
+        pass
+except:
+    vim.command('let s:editorconfig_core_mode = "c"')
+
+del sys.path[0] 
+
+EEOOFF
+
+    if !empty(s:editorconfig_core_mode)
+        break
+    endif
+
+    let s:editorconfig_core_mode = 'python'
+    break
+endwhile
+
 function! s:UseConfigFiles()
+    if s:editorconfig_core_mode == 'c'
+        call s:UseConfigFiles_C()
+    elseif s:editorconfig_core_mode == 'python'
+        call s:UseConfigFiles_Python()
+    else
+        echohl Error |
+                    \ echo "Unknown EditorConfig Core: " .
+                    \ s:editorconfig_core_mode |
+                    \ echohl None
+    endif
+endfunction
+
+" Use python EditorConfig core
+function! s:UseConfigFiles_Python()
+
+    let l:config = {}
+
+    python << EEOOFF
+
+EditorConfig.filename = vim.eval("shellescape(expand('%:p'))")
+EditorConfig.conf_file = ".editorconfig"
+EditorConfig.handler = EditorConfigHandler(
+        EditorConfig.filename,
+        EditorConfig.conf_filename)
+
+EditorConfig.options = EditorConfig.handler.get_configurations()
+
+for key, value in EditorConfig.options.items():
+    vim.command('let l:config[' + key + '] = ' + value)
+
+EEOOFF
+
+    call s:ApplyConfig(l:config)
+endfunction
+
+" Use C EditorConfig core
+function! s:UseConfigFiles_C()
 
     let l:cmd = ''
 
