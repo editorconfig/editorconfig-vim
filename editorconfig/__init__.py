@@ -9,6 +9,6 @@ from versiontools import join_version
 
 VERSION = (0, 9, 0, "alpha")
 
-__all__ = ['handler', 'exceptions']
+__all__ = ['handler', 'exceptions', 'main']
 
 __version__ = join_version(VERSION)
