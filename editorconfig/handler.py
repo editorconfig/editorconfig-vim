@@ -87,7 +87,7 @@ class EditorConfigHandler(object):
             raise PathError("Input file must be a full path name.")
 
         # Raise ``VersionError`` if version specified is greater than current
-        if self.version[:3] > VERSION[:3]:
+        if self.version is not None and self.version[:3] > VERSION[:3]:
             raise VersionError(
                     "Required version is greater than the current version.")
 
