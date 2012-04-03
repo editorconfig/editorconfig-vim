@@ -156,7 +156,7 @@ EEOOFF
 sys.path.insert(0, vim.eval('s:editorconfig_core_py_dir'))
 
 try:
-    import editorconfig
+    from editorconfig.handler import EditorConfigHandler
     import editorconfig.exceptions as editorconfig_except
 
     class EditorConfig:
@@ -200,11 +200,11 @@ function! s:UseConfigFiles_Python_Builtin()
 
     python << EEOOFF
 
-EditorConfig.filename = vim.eval("shellescape(expand('%:p'))")
+EditorConfig.filename = vim.eval("expand('%:p')")
 EditorConfig.conf_file = ".editorconfig"
 EditorConfig.handler = EditorConfigHandler(
         EditorConfig.filename,
-        EditorConfig.conf_filename)
+        EditorConfig.conf_file)
 
 try:
     EditorConfig.options = EditorConfig.handler.get_configurations()
@@ -220,7 +220,7 @@ EEOOFF
 
     python << EEOOFF
 for key, value in EditorConfig.options.items():
-    vim.command('let l:config[' + key + '] = ' + value)
+    vim.command('let l:config[' + repr(key) + '] = ' + repr(value))
 
 EEOOFF
 
