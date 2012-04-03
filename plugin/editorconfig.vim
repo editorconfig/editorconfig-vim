@@ -98,6 +98,7 @@ sys.path.insert(0, vim.eval('s:editorconfig_core_py_dir'))
 
 try:
     import editorconfig
+    import editorconfig.exceptions as editorconfig_except
 
     class EditorConfig:
         """ Empty class. For name space use. """
@@ -134,6 +135,7 @@ endfunction
 function! s:UseConfigFiles_Python()
 
     let l:config = {}
+    let l:ret = 0
 
     python << EEOOFF
 
@@ -143,14 +145,27 @@ EditorConfig.handler = EditorConfigHandler(
         EditorConfig.filename,
         EditorConfig.conf_filename)
 
-EditorConfig.options = EditorConfig.handler.get_configurations()
+try:
+    EditorConfig.options = EditorConfig.handler.get_configurations()
+except (editorconfig_except.PathError, editorconfig_except.ParsingError,
+        editorconfig_except.VersionError) as e:
+    print >> sys.stderr, str(e)
+    vim.command('let l:ret = 1')
 
+EEOOFF
+    if l:ret != 0
+        return l:ret
+    endif
+
+    python << EEOOFF
 for key, value in EditorConfig.options.items():
     vim.command('let l:config[' + key + '] = ' + value)
 
 EEOOFF
 
     call s:ApplyConfig(l:config)
+
+    return 0
 endfunction
 
 " Use C EditorConfig core
