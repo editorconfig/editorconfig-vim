@@ -304,7 +304,7 @@ function! s:UseConfigFiles_Python_External()
     return 0
 endfunction
 
-" Use external EditorConfig core (The C core, or external python interp)
+" Use external EditorConfig core (The C core, or editorconfig.py)
 function! s:UseConfigFiles_C()
 
     let l:cmd = ''
@@ -316,7 +316,12 @@ function! s:UseConfigFiles_C()
                     \ '/usr/local/bin/editorconfig',
                     \ '/usr/bin/editorconfig',
                     \ '/opt/bin/editorconfig',
-                    \ '/opt/editorconfig/bin/editorconfig']
+                    \ '/opt/editorconfig/bin/editorconfig',
+                    \ 'editorconfig.py',
+                    \ '/usr/local/bin/editorconfig.py',
+                    \ '/usr/bin/editorconfig.py',
+                    \ '/opt/bin/editorconfig.py',
+                    \ '/opt/editorconfig/bin/editorconfig.py']
     elseif has('win32')
         let l:searching_list = [
                     \ g:EditorConfig_exec_path,
@@ -328,7 +333,8 @@ function! s:UseConfigFiles_C()
                     \ 'C:\Program Files\editorconfig\bin\editorconfig',
                     \ 'D:\Program Files\editorconfig\bin\editorconfig',
                     \ 'E:\Program Files\editorconfig\bin\editorconfig',
-                    \ 'F:\Program Files\editorconfig\bin\editorconfig']
+                    \ 'F:\Program Files\editorconfig\bin\editorconfig',
+                    \ 'editorconfig.py']
     endif
 
     " search for editorconfig core
