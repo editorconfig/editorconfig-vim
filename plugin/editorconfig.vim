@@ -242,9 +242,7 @@ except:
 
 del sys.path[0] 
 
-class EditorConfig:
-    """ Empty class. For name space use. """
-    pass
+ec_data = {}  # used in order to keep clean Python namespace
 
 EEOOFF
 
@@ -359,14 +357,14 @@ function! s:UseConfigFiles_Python_Builtin() " {{{2
 
     python << EEOOFF
 
-EditorConfig.filename = vim.eval("expand('%:p')")
-EditorConfig.conf_file = ".editorconfig"
-EditorConfig.handler = EditorConfigHandler(
-        EditorConfig.filename,
-        EditorConfig.conf_file)
+ec_data['filename'] = vim.eval("expand('%:p')")
+ec_data['conf_file'] = ".editorconfig"
+ec_data['handler'] = EditorConfigHandler(
+        ec_data['filename'],
+        ec_data['conf_file'])
 
 try:
-    EditorConfig.options = EditorConfig.handler.get_configurations()
+    ec_data['options'] = ec_data['handler'].get_configurations()
 except (editorconfig_except.PathError, editorconfig_except.ParsingError,
         editorconfig_except.VersionError) as e:
     print >> sys.stderr, str(e)
@@ -378,7 +376,7 @@ EEOOFF
     endif
 
     python << EEOOFF
-for key, value in EditorConfig.options.items():
+for key, value in ec_data['options'].items():
     vim.command('let l:config[' + repr(key) + '] = ' + repr(value))
 
 EEOOFF
