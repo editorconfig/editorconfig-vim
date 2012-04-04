@@ -44,11 +44,6 @@ endif
 let s:saved_cpo = &cpo
 set cpo&vim
 
-augroup editorconfig
-autocmd! editorconfig
-autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
-autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
-
 command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 
 " Find python interp. If found, return python command; if not found, return ''
@@ -94,47 +89,41 @@ endfunction
 
 " Find EditorConfig Core python files
 function! s:FindPythonFiles()
-    return substitute(
+
+    " On Windows, we still use slash rather than backslash
+    let l:old_shellslash = &shellslash
+    set shellslash
+
+    let l:python_core_files_dir = substitute(
                 \ findfile(g:EditorConfig_python_files_dir . '/main.py',
                 \ ','.&runtimepath), '/main.py$', '', '')
+
+    if empty(l:python_core_files_dir)
+        return ''
+    endif
+
+    " expand python core file path to full path, and remove the appending '/'
+    let l:python_core_files_dir = substitute(
+                \ fnamemodify(l:python_core_files_dir, ':p'), '/$', '', '')
+
+    set noshellslash
+
+    return l:python_core_files_dir
 endfunction
 
-let s:editorconfig_core_mode = ''
+" Initialize builtin python. The parameter is the Python Core directory
+function! s:InitializePythonBuiltin(editorconfig_core_py_dir)
 
-" If python is built-in with vim and python scripts are found, python core
-" would be used
-while 1
-
-    " If user has specified a mode, just break
-    if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
-        let s:editorconfig_core_mode = g:editorconfig_core_mode
-        break
+    if exists('s:builtin_python_initialized') && s:builtin_python_initialized
+        return 0
     endif
 
-    " Find python files. If not found, we use C mode
-    let s:editorconfig_core_py_dir = s:FindPythonFiles()
-    if empty(s:editorconfig_core_py_dir) " python files are not found
-        let s:editorconfig_core_mode = 'c'
-        break
-    endif
+    let s:builtin_python_initialized = 1
 
-    " Check whether built-in python could be found. If not, we need to look
-    " for external python interp. If the external interp is not found, use C
-    " mode.
+    let l:ret = 0
+
     if !has('python')
-
-        if !exists('g:editorconfig_python_interp') ||
-                    \ empty('g:editorconfig_python_interp')
-            let g:editorconfig_python_interp = s:FindPythonInterp()
-        endif
-
-        if empty(g:editorconfig_python_interp) " Use C
-            let s:editorconfig_core_mode = 'c'
-        else
-            let s:editorconfig_core_mode = 'python_external'
-        endif
-
-        break
+        return 1
     endif
 
     python << EEOOFF
@@ -143,37 +132,107 @@ try:
     import vim
     import sys
 except:
-    vim.command('let s:editorconfig_core_mode = "c"')
+    vim.command('let l:ret = 2')
 
 EEOOFF
 
-    if !empty(s:editorconfig_core_mode)
-        break
+    if l:ret != 0
+        return l:ret
     endif
 
     python << EEOOFF
 
-sys.path.insert(0, vim.eval('s:editorconfig_core_py_dir'))
-
 try:
+    sys.path.insert(0, vim.eval('a:editorconfig_core_py_dir'))
+
     from editorconfig.handler import EditorConfigHandler
     import editorconfig.exceptions as editorconfig_except
 
-    class EditorConfig:
-        """ Empty class. For name space use. """
-        pass
 except:
-    vim.command('let s:editorconfig_core_mode = "c"')
+    vim.command('let l:ret = 3')
 
 del sys.path[0] 
 
+class EditorConfig:
+    """ Empty class. For name space use. """
+    pass
+
 EEOOFF
 
-    if !empty(s:editorconfig_core_mode)
+    if l:ret != 0
+        return l:ret
+    endif
+
+    return 0
+endfunction
+
+if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
+    let s:editorconfig_core_mode = g:editorconfig_core_mode
+else
+    let s:editorconfig_core_mode = ''
+endif
+
+" Do some initalization for the case that the user has specified core mode
+if !empty(s:editorconfig_core_mode) && s:editorconfig_core_mode != 'c'
+    let s:editorconfig_core_py_dir = s:FindPythonFiles()
+
+    if empty(s:editorconfig_core_py_dir)
+        echo 'EditorConfig: EditorConfig Python Core files could not be found.'
+        finish
+    endif
+
+    if s:editorconfig_core_mode == 'python_builtin' &&
+                \ s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
+        echo 'EditorConfig: Failed to initialize vim built-in python.'
+        finish
+    elseif s:editorconfig_core_mode == 'python_external'
+        " Find python interp 
+        if !exists('g:editorconfig_python_interp') ||
+                    \ empty('g:editorconfig_python_interp')
+            let g:editorconfig_python_interp = s:FindPythonInterp()
+        endif
+
+        if empty(g:editorconfig_python_interp) ||
+                    \ !executable(g:editorconfig_python_interp)
+            echo 'EditorConfig: Failed to find external Python interpreter.'
+            finish
+        endif
+    endif
+endif
+
+" Determine the editorconfig_core_mode we should use
+while 1
+    " If user has specified a mode, just break
+    if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
         break
     endif
 
-    let s:editorconfig_core_mode = 'python_builtin'
+    " Find Python core files. If not found, we use C mode
+    let s:editorconfig_core_py_dir = s:FindPythonFiles()
+    if empty(s:editorconfig_core_py_dir) " python files are not found
+        let s:editorconfig_core_mode = 'c'
+        break
+    endif
+
+    " Check whether built-in python could be initialized. If not, we need to
+    " look for external python interp. If the external interp is not found,
+    " use C mode.
+    if !s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
+        let s:editorconfig_core_mode = 'python_builtin'
+        break
+    endif
+
+    if !exists('g:editorconfig_python_interp') ||
+                \ empty('g:editorconfig_python_interp')
+        let g:editorconfig_python_interp = s:FindPythonInterp()
+    endif
+
+    if empty(g:editorconfig_python_interp) " Use C
+        let s:editorconfig_core_mode = 'c'
+    else
+        let s:editorconfig_core_mode = 'python_external'
+    endif
+
     break
 endwhile
 
@@ -191,6 +250,11 @@ function! s:UseConfigFiles()
                     \ echohl None
     endif
 endfunction
+
+augroup editorconfig
+autocmd! editorconfig
+autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
+autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
 
 " Use built-in python to run the python EditorConfig core
 function! s:UseConfigFiles_Python_Builtin()
@@ -231,26 +295,6 @@ endfunction
 
 " Use external python interp to run the the python EditorConfig Core
 function! s:UseConfigFiles_Python_External()
-
-    " Find Python Files
-    if !exists('s:editorconfig_core_py_dir') ||
-                \ empty('s:editorconfig_core_py_dir')
-        let s:editorconfig_core_py_dir = s:FindPythonFiles()
-    endif
-
-    if empty(s:editorconfig_core_py_dir)
-        return 1
-    endif
-
-    " Find python interp 
-    if !exists('g:editorconfig_python_interp') ||
-                \ empty('g:editorconfig_python_interp')
-        let g:editorconfig_python_interp = s:FindPythonInterp()
-    endif
-
-    if empty(g:editorconfig_python_interp)
-        return 2
-    endif
 
     let l:cmd = g:editorconfig_python_interp . ' ' .
                 \ s:editorconfig_core_py_dir . '/main.py'
