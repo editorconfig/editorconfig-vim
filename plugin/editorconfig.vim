@@ -33,6 +33,10 @@ if exists("g:loaded_EditorConfig")
 endif
 let g:loaded_EditorConfig = 1
 
+let s:saved_cpo = &cpo
+set cpo&vim
+
+" variables {{{1
 if !exists('g:EditorConfig_exec_path')
     let g:EditorConfig_exec_path = ''
 endif
@@ -41,13 +45,15 @@ if !exists('g:EditorConfig_python_files')
     let g:EditorConfig_python_files_dir = 'plugin/editorconfig-core-py'
 endif
 
-let s:saved_cpo = &cpo
-set cpo&vim
+if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
+    let s:editorconfig_core_mode = g:editorconfig_core_mode
+else
+    let s:editorconfig_core_mode = ''
+endif
 
-command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
-
+function! s:FindPythonInterp() " {{{1
 " Find python interp. If found, return python command; if not found, return ''
-function! s:FindPythonInterp()
+
     if has('unix')
         let l:searching_list = [
                     \ 'python',
@@ -87,8 +93,8 @@ function! s:FindPythonInterp()
     return ''
 endfunction
 
+function! s:FindPythonFiles() " {{{1
 " Find EditorConfig Core python files
-function! s:FindPythonFiles()
 
     " On Windows, we still use slash rather than backslash
     let l:old_shellslash = &shellslash
@@ -111,8 +117,9 @@ function! s:FindPythonFiles()
     return l:python_core_files_dir
 endfunction
 
+" Mode initialization functions {{{1
+function! s:InitializeC() " {{{2
 " Initialize C mode
-function! s:InitializeC()
 
     let s:EditorConfig_exec_path = ''
 
@@ -169,10 +176,10 @@ function! s:InitializeC()
     return 0
 endfunction
 
+function! s:InitializePythonExternal() " {{{2
 " Initialize external python. Before calling this function, please make sure
 " s:FindPythonFiles is called and the return value is set to
 " s:editorconfig_core_py_dir
-function! s:InitializePythonExternal()
 
     if !exists('s:editorconfig_core_py_dir') ||
                 \ empty(s:editorconfig_core_py_dir)
@@ -193,8 +200,8 @@ function! s:InitializePythonExternal()
     return 0
 endfunction
 
+function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
 " Initialize builtin python. The parameter is the Python Core directory
-function! s:InitializePythonBuiltin(editorconfig_core_py_dir)
 
     if exists('s:builtin_python_initialized') && s:builtin_python_initialized
         return 0
@@ -248,13 +255,7 @@ EEOOFF
     return 0
 endfunction
 
-if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
-    let s:editorconfig_core_mode = g:editorconfig_core_mode
-else
-    let s:editorconfig_core_mode = ''
-endif
-
-" Do some initalization for the case that the user has specified core mode
+" Do some initalization for the case that the user has specified core mode {{{1
 if !empty(s:editorconfig_core_mode)
     
     if s:editorconfig_core_mode == 'c'
@@ -283,7 +284,7 @@ if !empty(s:editorconfig_core_mode)
     endif
 endif
 
-" Determine the editorconfig_core_mode we should use
+" Determine the editorconfig_core_mode we should use {{{1
 while 1
     " If user has specified a mode, just break
     if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
@@ -342,13 +343,16 @@ function! s:UseConfigFiles()
     endif
 endfunction
 
+" command, autoload {{{1
+command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 augroup editorconfig
 autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
 
+" UseConfigFiles function for different mode {{{1
+function! s:UseConfigFiles_Python_Builtin() " {{{2
 " Use built-in python to run the python EditorConfig core
-function! s:UseConfigFiles_Python_Builtin()
 
     let l:config = {}
     let l:ret = 0
@@ -384,8 +388,8 @@ EEOOFF
     return 0
 endfunction
 
+function! s:UseConfigFiles_Python_External() " {{{2
 " Use external python interp to run the the python EditorConfig Core
-function! s:UseConfigFiles_Python_External()
 
     let l:cmd = s:editorconfig_python_interp . ' ' .
                 \ s:editorconfig_core_py_dir . '/main.py'
@@ -395,12 +399,14 @@ function! s:UseConfigFiles_Python_External()
     return 0
 endfunction
 
+function! s:UseConfigFiles_C() " {{{2
 " Use external EditorConfig core (The C core, or editorconfig.py)
-function! s:UseConfigFiles_C()
     call s:SpawnExternalParser(s:EditorConfig_exec_path)
 endfunction
 
-function! s:SpawnExternalParser(cmd) " Spawn external EditorConfig
+function! s:SpawnExternalParser(cmd) " {{{2
+" Spawn external EditorConfig. Used by s:UseConfigFiles_Python_External() and
+" s:UseConfigFiles_C()
 
     let l:cmd = a:cmd
 
@@ -441,8 +447,9 @@ function! s:SpawnExternalParser(cmd) " Spawn external EditorConfig
     endif
 endfunction
 
+function! s:ApplyConfig(config) " {{{1
 " Set the indentation style according to the config values
-function! s:ApplyConfig(config)
+
     if has_key(a:config, "indent_style")
         if a:config["indent_style"] == "tab"
             setl noexpandtab
@@ -482,6 +489,9 @@ function! s:ApplyConfig(config)
     endif
 endfunction
 
+" }}}
+
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
 
+" vim: fdm=marker fdc=3
