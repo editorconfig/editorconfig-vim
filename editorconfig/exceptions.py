@@ -1,3 +1,9 @@
+"""EditorConfig exception classes
+
+Licensed under PSF License (see LICENSE.txt file).
+
+"""
+
 from ConfigParser import ParsingError as _ParsingError
 
 

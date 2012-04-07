@@ -3,6 +3,8 @@
 Provides ``EditorConfigHandler`` class for locating and parsing
 EditorConfig files relevant to a given filepath.
 
+Licensed under PSF License (see LICENSE.txt file).
+
 """
 
 import os
