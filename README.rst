@@ -37,14 +37,19 @@ may want to import and use the EditorConfig Python Core directly.
 Using as a Library
 ==================
 
-Example use of EditorConfig Python Core as a library::
+Basic example use of EditorConfig Python Core as a library::
 
-    filename = "/home/zoidberg/myfile.txt"
-    conf_file = ".editorconfig"
-    handler = EditorConfigHandler(filename, conf_filename)
-    options = handler.get_configurations()
-    for key, value in options.items():
-        print "%s=%s" % (key, value)
+    from editorconfig import get_properties, EditorConfigError
+
+    filename = "/home/zoidberg/humans/anatomy.md"
+
+    try:
+        options = get_properties(filename)
+    except EditorConfigError:
+        print "Error occurred while getting EditorConfig properties"
+    else:
+        for key, value in options.items():
+            print "%s=%s" % (key, value)
 
 Running Test Cases
 ==================
