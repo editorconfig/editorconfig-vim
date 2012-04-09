@@ -365,8 +365,7 @@ ec_data['handler'] = EditorConfigHandler(
 
 try:
     ec_data['options'] = ec_data['handler'].get_configurations()
-except (editorconfig_except.PathError, editorconfig_except.ParsingError,
-        editorconfig_except.VersionError) as e:
+except editorconfig_except.EditorConfigError as e:
     print >> sys.stderr, str(e)
     vim.command('let l:ret = 1')
 
