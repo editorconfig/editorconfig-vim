@@ -17,12 +17,18 @@ def version():
     print "Version %s" % __version__
 
 
-def usage(command):
-    print "%s [OPTIONS] FILENAME" % command
-    print '-f                 Specify conf filename other than ".editorconfig".'
-    print "-b                 Specify version (used by devs to test compatibility)."
-    print "-h OR --help       Print this help message."
-    print "--version          Display version information."
+def usage(command, error=False):
+    if error:
+        out = sys.stderr
+    else:
+        out = sys.stdout
+    print >> out, "%s [OPTIONS] FILENAME" % command
+    print >> out, ('-f                 '
+            'Specify conf filename other than ".editorconfig".')
+    print >> out, ("-b                 "
+            "Specify version (used by devs to test compatibility).")
+    print >> out, "-h OR --help       Print this help message."
+    print >> out, "--version          Display version information."
 
 
 def main():
@@ -31,10 +37,10 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:], "vhb:f:", ["version", "help"])
     except getopt.GetoptError, err:
         print str(err)
-        usage(command_name)
+        usage(command_name, error=True)
         sys.exit(2)
     if len(args) > 1:
-        usage(command_name)
+        usage(command_name, error=True)
         sys.exit(2)
 
     version_tuple = VERSION
@@ -55,7 +61,7 @@ def main():
                 sys.exit("Invalid version number: %s" % arg)
 
     if len(args) < 1:
-        usage(command_name)
+        usage(command_name, error=True)
         sys.exit(2)
     filename = args[0]
 
