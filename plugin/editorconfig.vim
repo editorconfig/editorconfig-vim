@@ -45,6 +45,10 @@ if !exists('g:EditorConfig_python_files')
     let g:EditorConfig_python_files_dir = 'plugin/editorconfig-core-py'
 endif
 
+if !exists('g:EditorConfig_verbose')
+    let g:EditorConfig_verbose = 0
+endif
+
 if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
     let s:editorconfig_core_mode = g:editorconfig_core_mode
 else
@@ -366,7 +370,8 @@ ec_data['handler'] = EditorConfigHandler(
 try:
     ec_data['options'] = ec_data['handler'].get_configurations()
 except editorconfig_except.EditorConfigError as e:
-    print >> sys.stderr, str(e)
+    if int(vim.eval('g:EditorConfig_verbose')) != 0:
+        print >> sys.stderr, str(e)
     vim.command('let l:ret = 1')
 
 EEOOFF
