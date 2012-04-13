@@ -5,10 +5,11 @@ Based on code from ConfigParser.py file distributed with Python 2.6.
 Licensed under PSF License (see LICENSE.txt file).
 
 Changes to original ConfigParser:
+
 - Special characters can be used in section names
 - Octothorpe can be used for comments (not just at beginning of line)
 - Only track INI options in sections that match target filename
-- Stop parsing files with when `root = true` is found
+- Stop parsing files with when ``root = true`` is found
 
 """
 
@@ -30,19 +31,20 @@ class EditorConfigParser(object):
     """
 
     # Regular expressions for parsing section headers and options.
-    # Allow ] and escaped ; and # characters in section headers
+    # Allow ``]`` and escaped ``;`` and ``#`` characters in section headers
     SECTCRE = re.compile(
         r'\s*\['                              # [
         r'(?P<header>([^#;]|\\#|\\;)+)'       # very permissive!
         r'\]'                                 # ]
         )
+    # Regular expression for parsing option name/values.
+    # Allow any amount of whitespaces, followed by separator
+    # (either ``:`` or ``=``), followed by any amount of whitespace and then
+    # any characters to eol
     OPTCRE = re.compile(
-        r'\s*(?P<option>[^:=\s][^:=]*)'       # very permissive!
-        r'\s*(?P<vi>[:=])\s*'                 # any number of space/tab,
-                                              # followed by separator
-                                              # (either : or =), followed
-                                              # by any # space/tab
-        r'(?P<value>.*)$'                     # everything up to eol
+        r'\s*(?P<option>[^:=\s][^:=]*)'
+        r'\s*(?P<vi>[:=])\s*'
+        r'(?P<value>.*)$'
         )
 
     def __init__(self, filename):

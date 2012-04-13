@@ -14,7 +14,7 @@ Based on code from fnmatch.py file distributed with Python 2.6.
 Licensed under PSF License (see LICENSE.txt file).
 
 Changes to original fnmatch module:
-- translate function supports `*` and `**` similarly to fnmatch C library
+- translate function supports ``*`` and ``**`` similarly to fnmatch C library
 """
 
 import re
@@ -28,11 +28,11 @@ def fnmatch(name, pat):
 
     Patterns are Unix shell style:
 
-    *       matches everything except /
-    **      matches everything
-    ?       matches any single character
-    [seq]   matches any character in seq
-    [!seq]  matches any char not in seq
+    - ``*``       matches everything except /
+    - ``**``      matches everything
+    - ``?``       matches any single character
+    - ``[seq]``   matches any character in seq
+    - ``[!seq]``  matches any char not in seq
 
     An initial period in FILENAME is not special.
     Both FILENAME and PATTERN are first case-normalized

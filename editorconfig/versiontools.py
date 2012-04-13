@@ -1,6 +1,6 @@
 """EditorConfig version tools
 
-Provides ``join_version`` and `split_version`` classes for converting
+Provides ``join_version`` and ``split_version`` classes for converting
 __version__ strings to VERSION tuples and vice versa.
 
 """
