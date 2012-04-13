@@ -49,8 +49,8 @@ if !exists('g:EditorConfig_verbose')
     let g:EditorConfig_verbose = 0
 endif
 
-if exists('g:editorconfig_core_mode') && !empty(g:editorconfig_core_mode)
-    let s:editorconfig_core_mode = g:editorconfig_core_mode
+if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
+    let s:editorconfig_core_mode = g:EditorConfig_core_mode
 else
     let s:editorconfig_core_mode = ''
 endif
