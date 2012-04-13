@@ -72,7 +72,7 @@ SETTINGS~
                                             *editorconfig-settings*
 ----------------------------------------------------------------------------
                                             *g:EditorConfig_core_mode*
-Spedify the mode of EditorConfig core. Generally it is OK to leave this option
+Specify the mode of EditorConfig core. Generally it is OK to leave this option
 empty. There are 3 modes currently: "c", "python_builtin", "python_external".
 
     python_builtin:     Use the vim built-in python to run the python version
