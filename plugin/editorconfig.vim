@@ -122,8 +122,8 @@ function! s:FindPythonFiles() " {{{1
 endfunction
 
 " Mode initialization functions {{{1
-function! s:InitializeC() " {{{2
-" Initialize C mode
+function! s:InitializeExternalCommand() " {{{2
+" Initialize external_command mode
 
     let s:EditorConfig_exec_path = ''
 
@@ -260,9 +260,9 @@ endfunction
 " Do some initalization for the case that the user has specified core mode {{{1
 if !empty(s:editorconfig_core_mode)
     
-    if s:editorconfig_core_mode == 'c'
-        if s:InitializeC()
-            echo 'EditorConfig: Failed to initialize C mode'
+    if s:editorconfig_core_mode == 'external_command'
+        if s:InitializeExternalCommand()
+            echo 'EditorConfig: Failed to initialize external_command mode'
             finish
         endif
     else
@@ -293,11 +293,11 @@ while 1
         break
     endif
 
-    " Find Python core files. If not found, we try C mode
+    " Find Python core files. If not found, we try external_command mode
     let s:editorconfig_core_py_dir = s:FindPythonFiles()
     if empty(s:editorconfig_core_py_dir) " python files are not found
-        if !s:InitializeC()
-            let s:editorconfig_core_mode = 'c'
+        if !s:InitializeExternalCommand()
+            let s:editorconfig_core_mode = 'external_command'
         endif
         break
     endif
@@ -308,9 +308,9 @@ while 1
         break
     endif
 
-    " Then C mode
-    if !s:InitializeC()
-        let s:editorconfig_core_mode = 'c'
+    " Then external_command mode
+    if !s:InitializeExternalCommand()
+        let s:editorconfig_core_mode = 'external_command'
         break
     endif
 
@@ -331,8 +331,8 @@ if empty(s:editorconfig_core_mode)
 endif
 
 function! s:UseConfigFiles()
-    if s:editorconfig_core_mode == 'c'
-        call s:UseConfigFiles_C()
+    if s:editorconfig_core_mode == 'external_command'
+        call s:UseConfigFiles_ExternalCommand()
     elseif s:editorconfig_core_mode == 'python_builtin'
         call s:UseConfigFiles_Python_Builtin()
     elseif s:editorconfig_core_mode == 'python_external'
@@ -401,14 +401,14 @@ function! s:UseConfigFiles_Python_External() " {{{2
     return 0
 endfunction
 
-function! s:UseConfigFiles_C() " {{{2
+function! s:UseConfigFiles_ExternalCommand() " {{{2
 " Use external EditorConfig core (The C core, or editorconfig.py)
     call s:SpawnExternalParser(s:EditorConfig_exec_path)
 endfunction
 
 function! s:SpawnExternalParser(cmd) " {{{2
 " Spawn external EditorConfig. Used by s:UseConfigFiles_Python_External() and
-" s:UseConfigFiles_C()
+" s:UseConfigFiles_ExternalCommand()
 
     let l:cmd = a:cmd
 

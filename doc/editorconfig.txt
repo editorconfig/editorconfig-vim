@@ -73,17 +73,18 @@ SETTINGS~
 ----------------------------------------------------------------------------
                                             *g:EditorConfig_core_mode*
 Specify the mode of EditorConfig core. Generally it is OK to leave this option
-empty. There are 3 modes currently: "c", "python_builtin", "python_external".
+empty. There are 3 modes currently: "external_command", "python_builtin",
+"python_external".
 
     python_builtin:     Use the vim built-in python to run the python version
                         EditorConfig Core.
     python_external:    Use an external python interpreter to run the python
                         version EditorConfig Core.
-    c:                  Run the external C EditorConfig Core.
+    external_command:   Run external EditorConfig Core.
 
 If "g:EditorConfig_core_mode" is not specified, this plugin will automatically
 choose a mode that could work for you. The checking sequence is:
-python_builtin, c, python_external.
+python_builtin, external_command, python_external.
 
                                             *g:EditorConfig_exec_path*
 The file path to the EditorConfig core executable. You could set this value in
