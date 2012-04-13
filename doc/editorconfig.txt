@@ -71,6 +71,20 @@ new configuration.
 SETTINGS~
                                             *editorconfig-settings*
 ----------------------------------------------------------------------------
+                                            *g:EditorConfig_core_mode*
+Spedify the mode of EditorConfig core. Generally it is OK to leave this option
+empty. There are 3 modes currently: "c", "python_builtin", "python_external".
+
+    python_builtin:     Use the vim built-in python to run the python version
+                        EditorConfig Core.
+    python_external:    Use an external python interpreter to run the python
+                        version EditorConfig Core.
+    c:                  Run the external C EditorConfig Core.
+
+If "g:EditorConfig_core_mode" is not specified, this plugin will automatically
+choose a mode that could work for you. The checking sequence is:
+python_builtin, c, python_external.
+
                                             *g:EditorConfig_exec_path*
 The file path to the EditorConfig core executable. You could set this value in
 your |vimrc| like this:
@@ -88,6 +102,11 @@ On UNIX:
     /usr/bin/editorconfig
     /opt/bin/editorconfig
     /opt/editorconfig/bin/editorconfig
+    editorconfig.py
+    /usr/local/bin/editorconfig.py
+    /usr/bin/editorconfig.py
+    /opt/bin/editorconfig.py
+    /opt/editorconfig/bin/editorconfig.py
 
 On Windows:
     the value of g:EditorConfig_exec_path
@@ -100,6 +119,20 @@ On Windows:
     D:\Program Files\editorconfig\bin\editorconfig
     E:\Program Files\editorconfig\bin\editorconfig
     F:\Program Files\editorconfig\bin\editorconfig
+    editorconfig.py
 
+                                            *g:EditorConfig_python_files*
+If the EditorConfig core mode is python_builtin or python_external(see
+|g:EditorConfig_core_mode|), this variable is the directory where the plugin
+looks for the python scripts. This could either be an abosolute path, or a
+path relative to any of the directories in 'runtimepath'. The default value is
+"plugin/editorconfig-core-py", which means all "plugin/editorconfig-core-py"
+directory in 'runtimepath' will be searched.
+
+                                            *g:EditorConfig_verbose*
+Set this to 1 if you want debug info printed:
+>
+ let g:EditorConfig_verbose = 1
+<
 
 vim:ft=help:tw=78
