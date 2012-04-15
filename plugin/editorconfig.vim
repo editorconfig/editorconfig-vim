@@ -259,7 +259,7 @@ endfunction
 
 " Do some initalization for the case that the user has specified core mode {{{1
 if !empty(s:editorconfig_core_mode)
-    
+ 
     if s:editorconfig_core_mode == 'external_command'
         if s:InitializeExternalCommand()
             echo 'EditorConfig: Failed to initialize external_command mode'
@@ -391,7 +391,7 @@ EEOOFF
 endfunction
 
 function! s:UseConfigFiles_Python_External() " {{{2
-" Use external python interp to run the the python EditorConfig Core
+" Use external python interp to run the python EditorConfig Core
 
     let l:cmd = s:editorconfig_python_interp . ' ' .
                 \ s:editorconfig_core_py_dir . '/main.py'
