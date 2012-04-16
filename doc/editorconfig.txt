@@ -122,7 +122,7 @@ On Windows:
     F:\Program Files\editorconfig\bin\editorconfig
     editorconfig.py
 
-                                            *g:EditorConfig_python_files*
+                                            *g:EditorConfig_python_files_dir*
 If the EditorConfig core mode is python_builtin or python_external(see
 |g:EditorConfig_core_mode|), this variable is the directory where the plugin
 looks for the python scripts. This could either be an abosolute path, or a

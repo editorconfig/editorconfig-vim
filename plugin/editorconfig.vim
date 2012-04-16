@@ -41,7 +41,7 @@ if !exists('g:EditorConfig_exec_path')
     let g:EditorConfig_exec_path = ''
 endif
 
-if !exists('g:EditorConfig_python_files')
+if !exists('g:EditorConfig_python_files_dir')
     let g:EditorConfig_python_files_dir = 'plugin/editorconfig-core-py'
 endif
 
