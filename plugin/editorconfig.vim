@@ -489,6 +489,8 @@ function! s:ApplyConfig(config) " {{{1
             setl fileformat=mac
         endif
     endif
+
+    call editorconfig#ApplyHooks(a:config)
 endfunction
 
 " }}}
