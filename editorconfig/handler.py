@@ -40,7 +40,7 @@ class EditorConfigHandler(object):
 
     def __init__(self, filepath, conf_filename='.editorconfig', version=None):
         """Create EditorConfigHandler for matching given filepath"""
-        self.filepath = filepath.replace(os.sep, '/') # Allow \ path separator
+        self.filepath = filepath
         self.conf_filename = conf_filename
         self.version = version
         self.options = None

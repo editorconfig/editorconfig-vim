@@ -17,6 +17,7 @@ Changes to original fnmatch module:
 - translate function supports ``*`` and ``**`` similarly to fnmatch C library
 """
 
+import os
 import re
 
 __all__ = ["filter", "fnmatch","fnmatchcase","translate"]
@@ -28,7 +29,7 @@ def fnmatch(name, pat):
 
     Patterns are Unix shell style:
 
-    - ``*``       matches everything except /
+    - ``*``       matches everything except path separator
     - ``**``      matches everything
     - ``?``       matches any single character
     - ``[seq]``   matches any character in seq
@@ -40,14 +41,13 @@ def fnmatch(name, pat):
     If you don't want this, use fnmatchcase(FILENAME, PATTERN).
     """
 
-    import os
     name = os.path.normcase(name)
     pat = os.path.normcase(pat)
     return fnmatchcase(name, pat)
 
 def filter(names, pat):
     """Return the subset of the list NAMES that match PAT"""
-    import os,posixpath
+    import posixpath
     result=[]
     pat=os.path.normcase(pat)
     if not pat in _cache:
@@ -93,7 +93,7 @@ def translate(pat):
             if j < n and pat[j] == '*':
                 res = res + '.*'
             else:
-                res = res + '[^/]*'
+                res = res + '[^%s]*' % re.escape(os.sep)
         elif c == '?':
             res = res + '.'
         elif c == '[':
