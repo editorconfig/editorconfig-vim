@@ -14,7 +14,7 @@ Changes to original ConfigParser:
 """
 
 import re
-import os.path
+import os
 import posixpath
 from .exceptions import ParsingError
 from .fnmatch import fnmatch
@@ -55,7 +55,7 @@ class EditorConfigParser(object):
 
     def matches_filename(self, config_filename, glob):
         """Return True if section glob matches filename"""
-        config_dirname = os.path.dirname(config_filename)
+        config_dirname = os.path.dirname(config_filename).replace(os.sep, '/')
         glob = glob.replace("\\#", "#")
         glob = glob.replace("\\;", ";")
         if '/' in glob:
