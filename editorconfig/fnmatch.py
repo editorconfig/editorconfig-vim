@@ -20,7 +20,7 @@ Changes to original fnmatch module:
 import os
 import re
 
-__all__ = ["filter", "fnmatch","fnmatchcase","translate"]
+__all__ = ["fnmatch", "fnmatchcase", "translate"]
 
 _cache = {}
 
@@ -44,26 +44,6 @@ def fnmatch(name, pat):
     name = os.path.normcase(name).replace(os.sep, "/")
     pat = pat
     return fnmatchcase(name, pat)
-
-def filter(names, pat):
-    """Return the subset of the list NAMES that match PAT"""
-    import posixpath
-    result=[]
-    pat=os.path.normcase(pat)
-    if not pat in _cache:
-        res = translate(pat)
-        _cache[pat] = re.compile(res)
-    match=_cache[pat].match
-    if os.path is posixpath:
-        # normcase on posix is NOP. Optimize it away from the loop.
-        for name in names:
-            if match(name):
-                result.append(name)
-    else:
-        for name in names:
-            if match(os.path.normcase(name)):
-                result.append(name)
-    return result
 
 def fnmatchcase(name, pat):
     """Test whether FILENAME matches PATTERN, including case.
