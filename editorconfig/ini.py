@@ -15,6 +15,7 @@ Changes to original ConfigParser:
 
 import re
 import os.path
+import posixpath
 from .exceptions import ParsingError
 from .fnmatch import fnmatch
 from .odict import OrderedDict
@@ -60,9 +61,9 @@ class EditorConfigParser(object):
         if '/' in glob:
             if glob.find('/') == 0:
                 glob = glob[1:]
-            glob = os.path.join(config_dirname, glob)
+            glob = posixpath.join(config_dirname, glob)
         else:
-            glob = os.path.join('**/', glob)
+            glob = posixpath.join('**/', glob)
         return fnmatch(self.filename, glob)
 
     def read(self, filename):

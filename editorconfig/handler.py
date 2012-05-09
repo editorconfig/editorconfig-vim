@@ -84,8 +84,8 @@ class EditorConfigHandler(object):
 
         """Raise error if filepath or version have invalid values"""
 
-        # Raise ``PathError`` if filepath doesn't contain a path separator
-        if '/' not in self.filepath:
+        # Raise ``PathError`` if filepath isn't an absolute path
+        if not os.path.isabs(self.filepath):
             raise PathError("Input file must be a full path name.")
 
         # Raise ``VersionError`` if version specified is greater than current

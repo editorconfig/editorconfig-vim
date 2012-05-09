@@ -41,8 +41,8 @@ def fnmatch(name, pat):
     If you don't want this, use fnmatchcase(FILENAME, PATTERN).
     """
 
-    name = os.path.normcase(name)
-    pat = os.path.normcase(pat)
+    name = os.path.normcase(name).replace(os.sep, "/")
+    pat = pat
     return fnmatchcase(name, pat)
 
 def filter(names, pat):
@@ -93,7 +93,7 @@ def translate(pat):
             if j < n and pat[j] == '*':
                 res = res + '.*'
             else:
-                res = res + '[^%s]*' % re.escape(os.sep)
+                res = res + '[^/]*'
         elif c == '?':
             res = res + '.'
         elif c == '[':
