@@ -38,6 +38,7 @@ CONTENTS~
 2.  Installation                             |editorconfig-installation|
 3.  Commands                                 |editorconfig-commands|
 4.  Settings                                 |editorconfig-settings|
+5.  Advanced                                 |editorconfig-advanced|
 
 
 OVERVIEW~
@@ -135,5 +136,36 @@ Set this to 1 if you want debug info printed:
 >
  let g:EditorConfig_verbose = 1
 <
+
+ADVANCED~
+                                            *editorconfig-advanced*
+----------------------------------------------------------------------------
+                                            *editorconfig-hook*
+                                            *EditorConfig#AddNewHook()*
+While this plugin offers several builtin supported properties (as mentioned
+here: https://github.com/editorconfig/editorconfig-vim#supported-properties),
+we are also able to add our own hooks to support additional EditorConfig
+properties, including those not in the EditorConfig standard. For example, we
+are working on an Objective-C project, and all our "*.m" files should be
+Objective-C source files. However, vim sometimes detect "*.m" files as MATLAB
+source files, which causes incorrect syntax highlighting, code indentation,
+etc. To solve the case, we could write the following code into the |vimrc|
+file:
+>
+ function! FiletypeHook(config)
+     if has_key(a:config, 'vim_filetype')
+         exec 'set filetype=' . a:config['vim_filetype']
+     endif
+ endfunction
+
+ call editorconfig#AddNewHook(function('FiletypeHook'))
+<
+And add the following code to your .editorconfig file:
+>
+ [*.m]
+ vim_filetype = objc
+<
+Then try to open an Objective-C file, you will find the |filetype| is set to
+"objc".
 
 vim:ft=help:tw=78
