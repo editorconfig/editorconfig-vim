@@ -7,7 +7,7 @@ Modules exported by ``editorconfig`` package:
 
 from versiontools import join_version
 
-VERSION = (0, 9, 0, "alpha")
+VERSION = (0, 9, 0, "final")
 
 __all__ = ['get_properties', 'EditorConfigError', 'handler', 'exceptions']
 
