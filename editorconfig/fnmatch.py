@@ -42,7 +42,6 @@ def fnmatch(name, pat):
     """
 
     name = os.path.normcase(name).replace(os.sep, "/")
-    pat = pat
     return fnmatchcase(name, pat)
 
 def fnmatchcase(name, pat):

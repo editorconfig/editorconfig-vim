@@ -14,8 +14,9 @@ Changes to original ConfigParser:
 """
 
 import re
-import os
 import posixpath
+from os import sep
+from os.path import normcase, dirname
 from .exceptions import ParsingError
 from .fnmatch import fnmatch
 from .odict import OrderedDict
@@ -55,7 +56,7 @@ class EditorConfigParser(object):
 
     def matches_filename(self, config_filename, glob):
         """Return True if section glob matches filename"""
-        config_dirname = os.path.dirname(config_filename).replace(os.sep, '/')
+        config_dirname = normcase(dirname(config_filename)).replace(sep, '/')
         glob = glob.replace("\\#", "#")
         glob = glob.replace("\\;", ";")
         if '/' in glob:
