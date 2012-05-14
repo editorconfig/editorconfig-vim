@@ -16,7 +16,7 @@ There are two ways for installation:
   and the plugin won't work if you want to use the EditorConfig Core written in
   Python:
 
-    git submodule update --init
+        git submodule update --init
 
 - If your Vim is not compiled with `+python` feature, please first download the
   [EditorConfig core][] and follow the instructions in the README and INSTALL
