@@ -154,7 +154,7 @@ file:
 >
  function! FiletypeHook(config)
      if has_key(a:config, 'vim_filetype')
-         exec 'set filetype=' . a:config['vim_filetype']
+         let &filetype = a:config['vim_filetype']
      endif
  endfunction
 
