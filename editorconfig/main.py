@@ -28,7 +28,7 @@ def usage(command, error=False):
     print >> out, ("-b                 "
             "Specify version (used by devs to test compatibility).")
     print >> out, "-h OR --help       Print this help message."
-    print >> out, "--version          Display version information."
+    print >> out, "-v OR --version    Display version information."
 
 
 def main():
