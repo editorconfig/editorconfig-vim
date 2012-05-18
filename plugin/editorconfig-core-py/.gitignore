@@ -1,0 +1,9 @@
+*.py[co]
+*.egg-info
+dist
+build
+/Testing
+Makefile
+*.cmake
+CMakeFiles
+CMakeCache.txt
