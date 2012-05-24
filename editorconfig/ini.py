@@ -17,9 +17,9 @@ import re
 import posixpath
 from os import sep
 from os.path import normcase, dirname
-from .exceptions import ParsingError
-from .fnmatch import fnmatch
-from .odict import OrderedDict
+from editorconfig.exceptions import ParsingError
+from editorconfig.fnmatch import fnmatch
+from editorconfig.odict import OrderedDict
 
 
 __all__ = ["ParsingError", "EditorConfigParser"]
