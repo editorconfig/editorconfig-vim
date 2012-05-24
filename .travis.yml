@@ -1,4 +1,4 @@
-langauge: python
+language: python
 
 # We support from Python 2.4 to 2.7
 python:
