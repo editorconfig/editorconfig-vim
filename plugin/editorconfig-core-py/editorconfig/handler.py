@@ -9,9 +9,9 @@ Licensed under PSF License (see LICENSE.txt file).
 
 import os
 
-from . import VERSION
-from .ini import EditorConfigParser
-from .exceptions import PathError, VersionError
+from editorconfig import VERSION
+from editorconfig.ini import EditorConfigParser
+from editorconfig.exceptions import PathError, VersionError
 
 
 __all__ = ['EditorConfigHandler']

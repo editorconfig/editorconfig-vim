@@ -7,10 +7,10 @@ Licensed under PSF License (see LICENSE.txt file).
 import getopt
 import sys
 
-from . import __version__, VERSION
-from .versiontools import split_version
-from .handler import EditorConfigHandler
-from .exceptions import ParsingError, PathError, VersionError
+from editorconfig import __version__, VERSION
+from editorconfig.versiontools import split_version
+from editorconfig.handler import EditorConfigHandler
+from editorconfig.exceptions import ParsingError, PathError, VersionError
 
 
 def version():
@@ -68,7 +68,7 @@ def main():
     handler = EditorConfigHandler(filename, conf_filename, version_tuple)
     try:
         options = handler.get_configurations()
-    except (ParsingError, PathError, VersionError) as e:
+    except (ParsingError, PathError, VersionError), e:
         print >> sys.stderr, str(e)
         sys.exit(2)
     for key, value in options.items():

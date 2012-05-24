@@ -3,7 +3,8 @@
 dist
 build
 /Testing
-Makefile
+/Makefile
+/tests/Makefile
 *.cmake
 CMakeFiles
 CMakeCache.txt
