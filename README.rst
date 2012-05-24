@@ -2,6 +2,9 @@
 EditorConfig Python Core
 ========================
 
+.. image:: https://secure.travis-ci.org/editorconfig/editorconfig-core-py.png?branch=master
+   :target: http://travis-ci.org/editorconfig/editorconfig-core-py
+
 EditorConfig Python Core provides the same functionality as the
 `EditorConfig C Core <https://github.com/editorconfig/editorconfig-core>`_. 
 EditorConfig Python core can be used as a command line program or as an
