@@ -22,7 +22,7 @@ for a given file.  Example::
     try:
         options = get_properties(filename)
     except EditorConfigError:
-        logger.warning("Error getting EditorConfig properties", exc_info=True)
+        logging.warning("Error getting EditorConfig properties", exc_info=True)
     else:
         for key, value in options.items():
             print "%s=%s" % (key, value)
