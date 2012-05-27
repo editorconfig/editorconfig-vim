@@ -11,15 +11,12 @@ python:
 # we need cmake, and jython if the python version is "jython"
 install:
   - sudo apt-get install cmake
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then sudo apt-get install jython; fi
-
-before_script:
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PYTHON_EXECUTABLE=$(which jython); fi
-  - echo $PYTHON_EXECUTABLE
+  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.5.2/jython_installer-2.5.2.jar?r=http%3A%2F%2Fwww.jython.org%2Fdownloads.html&ts=1338089844&use_mirror=iweb'
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; $HOME/jython/jython --version; fi
 
 # test script
 script:
-  - cmake -DPYTHON_EXECUTABLE=$PYTHON_EXECUTABLE .
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then cmake -DPYTHON_EXECUTABLE="$HOME/jython/jython" . ; else cmake . ; fi
   - ctest -V .
 
 # Notify the mailing list
