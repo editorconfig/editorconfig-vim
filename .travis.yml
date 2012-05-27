@@ -17,7 +17,7 @@ install:
 # test script
 script:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then cmake -DPYTHON_EXECUTABLE="$HOME/jython/jython" . ; else cmake . ; fi
-  - ctest -V .
+  - ctest -V --output-on-failure .
 
 # Notify the mailing list
 notifications:
