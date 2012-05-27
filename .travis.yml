@@ -6,14 +6,20 @@ python:
   - "2.5"
   - "2.6"
   - "2.7"
+  - "jython"
 
-# we need cmake
+# we need cmake, and jython if the python version is "jython"
 install:
   - sudo apt-get install cmake
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then sudo apt-get install jython; fi
+
+before_script:
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PYTHON_EXECUTABLE=$(which jython); fi
+  - echo $PYTHON_EXECUTABLE
 
 # test script
 script:
-  - cmake .
+  - cmake -DPYTHON_EXECUTABLE=$PYTHON_EXECUTABLE .
   - ctest -V .
 
 # Notify the mailing list
