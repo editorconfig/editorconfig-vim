@@ -19,5 +19,5 @@ Contents:
    :maxdepth: 1
 
    usage
-   exceptions
    command_line_usage
+   plugins
