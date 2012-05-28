@@ -19,12 +19,14 @@ __all__ = ['EditorConfigHandler']
 
 def get_filenames(path, filename):
     """Yield full filepath for filename in each directory in and above path"""
+    path_list = []
     while True:
-        yield os.path.join(path, filename)
+        path_list.append(os.path.join(path, filename))
         newpath = os.path.dirname(path)
         if path == newpath:
             break
         path = newpath
+    return path_list
 
 
 class EditorConfigHandler(object):
