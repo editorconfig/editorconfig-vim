@@ -238,7 +238,7 @@ EEOOFF
 try:
     sys.path.insert(0, vim.eval('a:editorconfig_core_py_dir'))
 
-    from editorconfig.handler import EditorConfigHandler
+    import editorconfig
     import editorconfig.exceptions as editorconfig_except
 
 except:
@@ -363,12 +363,9 @@ function! s:UseConfigFiles_Python_Builtin() " {{{2
 
 ec_data['filename'] = vim.eval("expand('%:p')")
 ec_data['conf_file'] = ".editorconfig"
-ec_data['handler'] = EditorConfigHandler(
-        ec_data['filename'],
-        ec_data['conf_file'])
 
 try:
-    ec_data['options'] = ec_data['handler'].get_configurations()
+    ec_data['options'] = editorconfig.get_properties(ec_data['filename'])
 except editorconfig_except.EditorConfigError as e:
     if int(vim.eval('g:EditorConfig_verbose')) != 0:
         print >> sys.stderr, str(e)
