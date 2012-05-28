@@ -1,4 +1,5 @@
 *.py[co]
+*\$py.class
 *.egg-info
 dist
 build
