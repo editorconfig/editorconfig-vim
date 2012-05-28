@@ -6,7 +6,7 @@ Licensed under PSF License (see LICENSE.txt file).
 
 
 class EditorConfigError(Exception):
-    pass
+    """Parent class of all exceptions raised by EditorConfig"""
 
 
 from ConfigParser import ParsingError as _ParsingError

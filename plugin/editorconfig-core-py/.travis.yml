@@ -1,0 +1,32 @@
+language: python
+
+# We support from Python 2.4 to 2.7. However, 2.4 is not supported by travis,
+# so it is not listed here
+python:
+  - "2.5"
+  - "2.6"
+  - "2.7"
+  - "jython"
+
+# we need cmake, and jython if the python version is "jython"
+install:
+  - sudo apt-get install cmake
+  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.5.2/jython_installer-2.5.2.jar?r=http%3A%2F%2Fwww.jython.org%2Fdownloads.html&ts=1338089844&use_mirror=iweb'
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; export PATH=$HOME/jython:$PATH;jython --version; fi
+
+# Before run the test case, we need to make jython run some other code
+before_script:
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then jython -c "print ''"; fi
+
+# test script
+script:
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then cmake -DPYTHON_EXECUTABLE="$(which jython)" . ; else cmake . ; fi
+  - ctest -V --output-on-failure .
+
+# Notify the mailing list
+notifications:
+ recipients:
+   - editorconfig@googlegroups.com
+ email:
+   on_success: change
+   on_failure: always
