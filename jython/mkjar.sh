@@ -31,7 +31,6 @@ mv install/jython.jar jython_editorconfig.jar
 rm ./Lib
 ln -s "$editorconfig_py_dir" ./Lib
 echo 'from editorconfig.main import main
-import sys
 
 try:
     main()
