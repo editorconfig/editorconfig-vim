@@ -31,8 +31,13 @@ mv install/jython.jar jython_editorconfig.jar
 rm ./Lib
 ln -s "$editorconfig_py_dir" ./Lib
 echo 'from editorconfig.main import main
+import sys
 
-main()' >__run__.py
+try:
+    main()
+except SystemExit:
+    pass
+' >__run__.py
 chmod +x __run__.py
 
 zip -r jython_editorconfig.jar __run__.py Lib/README.rst Lib/editorconfig/*.py
