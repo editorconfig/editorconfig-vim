@@ -7,6 +7,23 @@ The EditorConfig Python Core can be easily used by text editor plugins written i
 .. _`Vim`: https://github.com/editorconfig/editorconfig-vim
 .. _`Gedit`: https://github.com/editorconfig/editorconfig-gedit
 
+
+Use as a library
+----------------
+
+For instructions on using the EditorConfig Python Core as a Python library see :doc:`usage`.
+
+
+Using with an external Python interpreter
+-----------------------------------------
+
+The EditorConfig Python Core can be used with an external Python interpreter by executing the ``main.py`` file.  The ``main.py`` file can be executed like so::
+
+    python editorconfig-core-py/main.py /home/zoidberg/humans/anatomy.md
+
+For more information on command line usage of the EditorConfig Python Core see :doc:`command_line_usage`.
+
+
 Bundling EditorConfig Python Core with Plugin
 ---------------------------------------------
 
