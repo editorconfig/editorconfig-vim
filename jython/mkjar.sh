@@ -41,7 +41,6 @@ except SystemExit:
 chmod +x __run__.py
 
 zip -r jython_editorconfig.jar __run__.py Lib/README.rst Lib/editorconfig/*.py
-chmod +x jython_editorconfig.jar
 
 # Copy jython_editorconfig.jar to dest dir and create the editorconfig shell
 # script
