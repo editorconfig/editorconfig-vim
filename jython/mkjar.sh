@@ -31,24 +31,11 @@ mv install/jython.jar jython_editorconfig.jar
 # package EditorConfig python files
 rm ./Lib
 ln -s "$editorconfig_py_dir" ./Lib
-echo 'from editorconfig.main import main
 
-try:
-    main()
-except SystemExit:
-    pass
-' >__run__.py
-chmod +x __run__.py
-
-zip -r jython_editorconfig.jar __run__.py Lib/README.rst Lib/editorconfig/*.py
+zip -r jython_editorconfig.jar Lib/README.rst Lib/editorconfig/*.py
 
 # Copy jython_editorconfig.jar to dest dir and create the editorconfig shell
 # script
 mkdir -p "$output_dir"
 cd "$output_dir"
 cp $tmp_dir/jython_editorconfig.jar .
-echo '#!/bin/sh
-
-script_dir=$(cd "$(dirname "$0")"; pwd)
-java -cp "$script_dir/jython_editorconfig.jar" org.python.util.jython -jar "$script_dir/jython_editorconfig.jar" $*' >editorconfig
-chmod +x editorconfig
