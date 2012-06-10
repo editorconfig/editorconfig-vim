@@ -38,7 +38,9 @@
     <symlink link="${tmp.dir}/Lib" resource="${editorconfig.py.dir}" overwrite="true" />
     <mkdir dir="${build.dir}" />
     <jar destfile="${build.dir}/editorconfig.jar">
-      <fileset dir="./classes" />
+      <fileset dir="./classes">
+        <include name="**/*.class" />
+      </fileset>
       <zipfileset src="${tmp.dir}/jython.jar" />
       <zipfileset src="./jython-engine/build/jython-engine.jar" />
       <fileset dir="${tmp.dir}">
