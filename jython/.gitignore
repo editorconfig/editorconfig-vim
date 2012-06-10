@@ -1,1 +1,4 @@
 *.class
+/classes
+/build
+/tmp

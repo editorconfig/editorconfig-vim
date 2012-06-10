@@ -9,5 +9,3 @@ build
 *.cmake
 CMakeFiles
 CMakeCache.txt
-/jython/jar
-/jython/tmp
