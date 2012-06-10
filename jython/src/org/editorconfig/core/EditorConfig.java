@@ -31,7 +31,7 @@ public class EditorConfig {
     }
 
     // Constructor
-    EditorConfig()
+    public EditorConfig()
             throws ScriptException {
         ScriptEngineManager manager = new ScriptEngineManager();
 
