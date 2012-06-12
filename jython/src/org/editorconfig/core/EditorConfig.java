@@ -7,7 +7,6 @@ import javax.script.ScriptException;
 import java.util.List;
 import java.util.LinkedList;
 
-
 public class EditorConfig {
 
     private ScriptEngine jythonEngine;
@@ -45,9 +44,29 @@ public class EditorConfig {
      * Get EditorConfig properties
      */
     public List<OutPair> getProperties(String filename)
-            throws ScriptException {
+            throws EditorConfigException, ScriptException {
 
-        jythonEngine.eval("options = get_properties('" + filename + "')");
+        jythonEngine.eval("try:\n" +
+                "\toptions = get_properties('" + filename + "')\n" +
+                "except exceptions.ParsingError:\n" +
+                "\te = 'ParsingError'\n" +
+                "except exceptions.PathError:\n" +
+                "\te = 'PathError'\n" +
+                "except exceptions.VersionError:\n" +
+                "\te = 'VersionError'\n" +
+                "except exceptions.EditorConfigError:\n" +
+                "\te = 'EditorConfigError'\n" +
+                "else:\n" +
+                "\te = 'None'");
+
+        String except = jythonEngine.get("e").toString();
+        if(except.equals("ParsingError"))
+            throw new ParsingException("Failed to parse .editorconfig file.");
+        else if(except.equals("PathError"))
+            throw new PathException("Invalid file name specified. Must be absolute path.");
+        else if(except.equals("VersionError"))
+            throw new VersionException("Invalid Version Specified.");
+
         jythonEngine.eval("option_count = len(options)");
         jythonEngine.eval("option_items = options.items()");
  
