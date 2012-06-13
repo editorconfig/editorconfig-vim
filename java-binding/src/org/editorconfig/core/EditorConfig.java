@@ -7,29 +7,49 @@ import javax.script.ScriptException;
 import java.util.List;
 import java.util.LinkedList;
 
+/**
+ * EditorConfig handler
+ */
 public class EditorConfig {
 
     private ScriptEngine jythonEngine;
 
+    /**
+     * String-String pair to store the parsing result.
+     */
     public class OutPair {
         private String key;
         private String val;
-        
+
+        /*
+         * Constructor
+         */
         OutPair(String key, String val) {
             this.key = key;
             this.val = val;
         }
-        
+
+        /**
+         * Return the key of the current pair.
+         */
         public String getKey() {
             return this.key;
         }
-        
+
+        /**
+         * Return the value of the current pair.
+         */
         public String getVal() {
             return this.val;
         }
     }
 
-    // Constructor
+    /**
+     * EditorConfig constructor.
+     *
+     * @throws javax.script.ScriptException If a Jython exception happens.
+     * 
+     */
     public EditorConfig()
             throws ScriptException {
         ScriptEngineManager manager = new ScriptEngineManager();
@@ -41,7 +61,27 @@ public class EditorConfig {
     }
     
     /**
-     * Get EditorConfig properties
+     * Parse editorconfig files corresponding to the file path given by
+     * filename, and return the parsing result.
+     *
+     * @param filename The full path to be parsed. The path is usually the path
+     * of the file which is currently edited by the editor.
+     *
+     * @return The parsing result stored in a list of {@link
+     * EditorConfig.OutPair}.
+     *
+     * @throws org.editorconfig.core.ParsingException If an
+     * {@code .editorconfig} file could not be parsed
+     *
+     * @throws org.editorconfig.core.PathException If an invalid file path is
+     * specified as {@code filename}
+     *
+     * @throws org.editorconfig.core.EditorConfigException If an EditorConfig
+     * exception occurs. Usually one of {@link ParsingException} or {@link
+     * PathException}.
+     *
+     * @throws javax.script.ScriptException If a Jython exception happens.
+     *
      */
     public List<OutPair> getProperties(String filename)
             throws EditorConfigException, ScriptException {

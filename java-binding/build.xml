@@ -49,6 +49,11 @@
     </jar>
   </target>
 
+  <target name="doc">
+    <mkdir dir="./doc" />
+    <javadoc sourcepath="./src" destdir="./doc" />
+  </target>
+
   <target name="all" depends="pack-jython-editorconfig">
   </target>
 </project>

@@ -1,7 +1,9 @@
 package org.editorconfig.core;
 
-
-// throwed when an EditorConfig file is failed to be parsed
+/**
+ * Exception throwed by EditorConfig.getProperties() if an EditorConfig file
+ * could not be parsed
+ */
 public class ParsingException extends EditorConfigException {
 
     ParsingException(String msg) {
