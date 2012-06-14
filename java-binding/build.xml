@@ -46,6 +46,8 @@
       <fileset dir="${tmp.dir}">
         <include name="Lib/editorconfig/**.py" />
       </fileset>
+      <fileset file="./README.md" />
+      <fileset file="./LICENSE.txt" />
     </jar>
   </target>
 
