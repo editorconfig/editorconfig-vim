@@ -43,6 +43,10 @@ for(int i = 0; i < l.size(); ++i) {
 
 A more complex example is in the `example` directory.
 
+## Lisence
+
+All source files of the Java binding are distributed under the PSF license. See LICENSE.txt for details.
+
 [EditorConfig]: http://editorconfig.org
 [EditorConfig Python Core]: https://github.com/editorconfig/editorconfig-core-py
 [Jython]: http://www.jython.org
