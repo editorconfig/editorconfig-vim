@@ -51,6 +51,9 @@ directory.
 All source files of the Java binding are distributed under the PSF license. See
 LICENSE.txt for details.
 
+Copyright (C) 2006, Sun Microsystems, Inc.
+Copyright (C) 2012, EditorConfig Team
+
 [EditorConfig]: http://editorconfig.org
 [EditorConfig Python Core]: https://github.com/editorconfig/editorconfig-core-py
 [Jython]: http://www.jython.org
