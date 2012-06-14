@@ -41,13 +41,18 @@ for(int i = 0; i < l.size(); ++i) {
 }
 ```
 
-A more complex example is in the `example` directory.
+A more complex example is in the `example` directory. There is an
+[online documentation][] for API details, or you could run `ant doc` to
+generate html documentation. The generated documentation will locate in `doc`
+directory.
 
 ## Lisence
 
-All source files of the Java binding are distributed under the PSF license. See LICENSE.txt for details.
+All source files of the Java binding are distributed under the PSF license. See
+LICENSE.txt for details.
 
 [EditorConfig]: http://editorconfig.org
 [EditorConfig Python Core]: https://github.com/editorconfig/editorconfig-core-py
 [Jython]: http://www.jython.org
 [Ant]: http://ant.apache.org
+[online documentation]: http://javadocs.editorconfig.org
