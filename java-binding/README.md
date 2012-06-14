@@ -1,7 +1,7 @@
 # EditorConfig Java Binding
 
-This directory is for [EditorConfig][] Java Binding. This binding is a Java
-wrapper for [EditorConfig Python Core][], made possible by [Jython][].
+This directory is for [EditorConfig][] Core Java Binding. This binding is a
+Java wrapper for [EditorConfig Python Core][], made possible by [Jython][].
 
 ## EditorConfig Project
 
