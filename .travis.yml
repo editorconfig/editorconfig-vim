@@ -23,8 +23,8 @@ script:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then cmake -DPYTHON_EXECUTABLE="$(which jython)" . ; else cmake . ; fi
   - ctest -V --output-on-failure .
   - cd java-binding
-  - ant
-  - ant doc
+  - ant -v
+  - ant -v doc
 
 # Notify the mailing list
 notifications:
