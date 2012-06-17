@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Jython Engine" default="all" basedir=".">
+
+  <!-- Property Definitions -->
+
+  <property name="app.name" value="jython-engine"/>
+  <property name="src.dir"  value="../src"/>
+  <property name="lib.dir"  value="../lib"/>
+  <property name="build.dir"  value="../build"/>
+  <property name="dist.jar" value="${build.dir}/${app.name}.jar"/>
+  <property name="classes.dir"  value="${build.dir}/classes"/>
+
+  <target name="prepare">
+    <mkdir dir="${classes.dir}"/>
+  </target>
+
+
+  <target name="clean">
+     <delete dir="${build.dir}"/>
+  </target>
+
+  <path id="javac.classpath">
+    <pathelement path="${jsr223.jar}" />
+    <pathelement path="${jython.jar}" />
+  </path>
+
+  <target name="compile" depends="prepare" description="Compiles the sources">
+    <javac srcdir="${src.dir}"
+           destdir="${classes.dir}"
+           debug="on" deprecation="on">
+      <classpath refid="javac.classpath" />
+    </javac>
+    <copy todir="${classes.dir}/META-INF/services">
+      <fileset dir="${src.dir}/META-INF/services"/>
+    </copy>
+  </target>
+
+  <target name="deploy" depends="compile" description="Creates a deployment bundle">
+    <jar jarfile="${dist.jar}"
+         basedir="${classes.dir}"/>
+  </target>
+
+  <target name="all" depends="deploy" description="Builds sources and deployment jar"/>
+
+</project>

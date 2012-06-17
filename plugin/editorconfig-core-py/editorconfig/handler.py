@@ -19,12 +19,14 @@ __all__ = ['EditorConfigHandler']
 
 def get_filenames(path, filename):
     """Yield full filepath for filename in each directory in and above path"""
+    path_list = []
     while True:
-        yield os.path.join(path, filename)
+        path_list.append(os.path.join(path, filename))
         newpath = os.path.dirname(path)
         if path == newpath:
             break
         path = newpath
+    return path_list
 
 
 class EditorConfigHandler(object):
@@ -115,3 +117,8 @@ class EditorConfigHandler(object):
         if ("indent_size" in opts and "tab_width" not in opts and
             opts["indent_size"] != "tab"):
             opts["tab_width"] = opts["indent_size"]
+
+        # Set indent_size to tab_width if indent_size is "tab"
+        if ("indent_size" in opts and "tab_width" in opts and
+            opts["indent_size"] == "tab"):
+            opts["indent_size"] = opts["tab_width"]
