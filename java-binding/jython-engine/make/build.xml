@@ -22,7 +22,7 @@
 
   <path id="javac.classpath">
     <pathelement path="${jsr223.jar}" />
-    <pathelement path="${lib.dir}/jython.jar" />
+    <pathelement path="${jython.jar}" />
   </path>
 
   <target name="compile" depends="prepare" description="Compiles the sources">
