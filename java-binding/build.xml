@@ -48,6 +48,10 @@
       </fileset>
       <fileset file="./README.md" />
       <fileset file="./LICENSE.txt" />
+      <fileset dir=".">
+        <include name="jython-engine/LICENSE.TXT" />
+        <include name="jython-engine/THIRDPARTYLICENSES.TXT" />
+      </fileset>
     </jar>
   </target>
 
