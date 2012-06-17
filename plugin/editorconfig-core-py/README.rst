@@ -54,6 +54,9 @@ Basic example use of EditorConfig Python Core as a library::
         for key, value in options.items():
             print "%s=%s" % (key, value)
 
+For details, please take a look at the `online documentation
+<http://pydocs.editorconfig.org>`_.
+
 Running Test Cases
 ==================
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+
+<project name="EditorConfigJava" default="all" basedir=".">
+
+  <property name="tmp.dir" value="${user.dir}/tmp" />
+  <property name="editorconfig.py.dir" value="${user.dir}/.." />
+  <property name="build.dir" value="${user.dir}/build" />
+
+  <!-- Build EditorConfig Java wrapper -->
+  <target name="build-java-wrapper">
+    <mkdir dir="./classes" />
+    <javac srcdir="./src" destdir="./classes" />
+  </target>
+
+  <!-- Download jython installer -->
+  <property name="jython.url" value="http://downloads.sourceforge.net/project/jython/jython/2.2.1/jython_installer-2.2.1.jar?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fjython%2Ffiles%2Fjython%2F2.2.1%2F&amp;ts=1338203268" />
+  <target name="download-jython">
+    <mkdir dir="${tmp.dir}" />
+    <get src="${jython.url}" dest="${tmp.dir}/jython_installer.jar" usetimestamp="true" verbose="true" />
+  </target>
+
+  <!-- unpack jython installer -->
+  <target name="unpack-jython">
+    <java jar="${tmp.dir}/jython_installer.jar" fork="true">
+      <arg value="-s" />
+      <arg value="-v" />
+      <arg value="-d" />
+      <arg value="${tmp.dir}/install" />
+      <arg value="-t" />
+      <arg value="standalone" />
+    </java>
+    <move file="${tmp.dir}/install/jython.jar" todir="${tmp.dir}" />
+  </target>
+
+  <!-- Build the Jython engine -->
+  <target name="build-jython-engine" depends="unpack-jython">
+    <ant dir="./jython-engine/make" inheritall="false">
+      <property name="jython.jar" value="${tmp.dir}/jython.jar" />
+    </ant>
+  </target>
+
+  <!-- pack jython EditorConfig -->
+  <target name="pack-jython-editorconfig" depends="build-java-wrapper,download-jython,build-jython-engine">
+    <symlink link="${tmp.dir}/Lib" resource="${editorconfig.py.dir}" overwrite="true" />
+    <mkdir dir="${build.dir}" />
+    <jar destfile="${build.dir}/editorconfig.jar">
+      <fileset dir="./classes">
+        <include name="**/*.class" />
+      </fileset>
+      <zipfileset src="${tmp.dir}/jython.jar" />
+      <zipfileset src="./jython-engine/build/jython-engine.jar" />
+      <fileset dir="${tmp.dir}">
+        <include name="Lib/editorconfig/**.py" />
+      </fileset>
+      <fileset file="./README.md" />
+      <fileset file="./LICENSE.txt" />
+      <fileset dir=".">
+        <include name="jython-engine/LICENSE.TXT" />
+        <include name="jython-engine/THIRDPARTYLICENSES.TXT" />
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="doc">
+    <mkdir dir="./doc" />
+    <javadoc sourcepath="./src" destdir="./doc" />
+  </target>
+
+  <target name="all" depends="pack-jython-editorconfig">
+  </target>
+</project>
