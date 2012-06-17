@@ -359,6 +359,11 @@ function! s:UseConfigFiles_Python_Builtin() " {{{2
     let l:config = {}
     let l:ret = 0
 
+    " ignore buffers that do not have a file path associated
+    if empty(expand('%:p'))
+        return 0
+    endif
+
     python << EEOOFF
 
 ec_data['filename'] = vim.eval("expand('%:p')")
@@ -408,6 +413,11 @@ function! s:SpawnExternalParser(cmd) " {{{2
 " s:UseConfigFiles_ExternalCommand()
 
     let l:cmd = a:cmd
+
+    " ignore buffers that do not have a file path associated
+    if empty(expand("%:p"))
+        return
+    endif
 
     " if editorconfig is present, we use this as our parser
     if !empty(l:cmd)
