@@ -117,3 +117,8 @@ class EditorConfigHandler(object):
         if ("indent_size" in opts and "tab_width" not in opts and
             opts["indent_size"] != "tab"):
             opts["tab_width"] = opts["indent_size"]
+
+        # Set indent_size to tab_width if indent_size is "tab"
+        if ("indent_size" in opts and "tab_width" in opts and
+            opts["indent_size"] == "tab"):
+            opts["indent_size"] = opts["tab_width"]
