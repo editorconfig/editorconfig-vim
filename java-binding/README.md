@@ -1,7 +1,8 @@
 # EditorConfig Java Binding
 
 This directory is for [EditorConfig][] Core Java Binding. This binding is a
-Java wrapper for [EditorConfig Python Core][], made possible by [Jython][].
+Java wrapper for [EditorConfig Python Core][], made possible by [Jython][] and
+the [Scripting][] project.
 
 ## EditorConfig Project
 
@@ -51,12 +52,11 @@ directory.
 All source files of the Java binding are distributed under the PSF license. See
 LICENSE.txt for details.
 
-Copyright (C) 2006, Sun Microsystems, Inc.
-
 Copyright (C) 2012, EditorConfig Team
 
-[EditorConfig]: http://editorconfig.org
-[EditorConfig Python Core]: https://github.com/editorconfig/editorconfig-core-py
-[Jython]: http://www.jython.org
 [Ant]: http://ant.apache.org
+[EditorConfig Python Core]: https://github.com/editorconfig/editorconfig-core-py
+[EditorConfig]: http://editorconfig.org
+[Jython]: http://www.jython.org
+[Scripting]: http://java.net/projects/scripting
 [online documentation]: http://javadocs.editorconfig.org
