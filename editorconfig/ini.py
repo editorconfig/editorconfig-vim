@@ -15,8 +15,10 @@ Changes to original ConfigParser:
 
 import re
 import posixpath
+import codecs
 from os import sep
 from os.path import normcase, dirname
+
 from editorconfig.exceptions import ParsingError
 from editorconfig.fnmatch import fnmatch
 from editorconfig.odict import OrderedDict
@@ -95,6 +97,8 @@ class EditorConfigParser(object):
             line = fp.readline()
             if not line:
                 break
+            if lineno == 0 and line.startswith(codecs.BOM_UTF8):
+                line = line[len(codecs.BOM_UTF8):]  # Strip UTF-8 BOM
             lineno = lineno + 1
             # comment or blank line?
             if line.strip() == '' or line[0] in '#;':
