@@ -28,8 +28,6 @@ script:
 
 # Notify the mailing list
 notifications:
- recipients:
-   - admin@editorconfig.org
  email:
    on_success: change
    on_failure: always
