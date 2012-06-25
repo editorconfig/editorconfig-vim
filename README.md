@@ -1,6 +1,7 @@
 # EditorConfig Vim Plugin
 
-This is an [EditorConfig][] plugin for Vim.
+This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
+[GitHub][] and [Vim online][].
 
 ## Installation
 
@@ -30,4 +31,6 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 
 [EditorConfig]: http://editorconfig.org
 [EditorConfig core]: https://github.com/editorconfig/editorconfig-core
+[GitHub]: https://github.com/editorconfig/editorconfig-vim
 [properties]: http://editorconfig.org/#supported-properties
+[Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
