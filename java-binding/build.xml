@@ -2,9 +2,9 @@
 
 <project name="EditorConfigJava" default="all" basedir=".">
 
-  <property name="tmp.dir" value="${user.dir}/tmp" />
-  <property name="editorconfig.py.dir" value="${user.dir}/.." />
-  <property name="build.dir" value="${user.dir}/build" />
+  <property name="tmp.dir" value="./tmp" />
+  <property name="editorconfig.py.dir" value="./.." />
+  <property name="build.dir" value="./build" />
 
   <!-- Build EditorConfig Java wrapper -->
   <target name="build-java-wrapper">
