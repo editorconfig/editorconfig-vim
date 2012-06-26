@@ -41,7 +41,9 @@
 
   <!-- pack jython EditorConfig -->
   <target name="pack-jython-editorconfig" depends="build-java-wrapper,download-jython,build-jython-engine">
-    <symlink link="${tmp.dir}/Lib" resource="${editorconfig.py.dir}" overwrite="true" />
+    <delete dir="${tmp.dir}/Lib" />
+    <mkdir dir="${tmp.dir}/Lib" />
+    <copydir src="${editorconfig.py.dir}/editorconfig" dest="${tmp.dir}/Lib/" />
     <mkdir dir="${build.dir}" />
     <jar destfile="${build.dir}/editorconfig.jar">
       <fileset dir="./classes">
