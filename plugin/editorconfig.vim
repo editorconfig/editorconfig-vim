@@ -371,7 +371,7 @@ ec_data['conf_file'] = ".editorconfig"
 
 try:
     ec_data['options'] = editorconfig.get_properties(ec_data['filename'])
-except editorconfig_except.EditorConfigError as e:
+except editorconfig_except.EditorConfigError, e:
     if int(vim.eval('g:EditorConfig_verbose')) != 0:
         print >> sys.stderr, str(e)
     vim.command('let l:ret = 1')
