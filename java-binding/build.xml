@@ -2,8 +2,7 @@
 
 <project name="EditorConfigJava" default="all" basedir=".">
 
-  <!-- Three paths. Should be relative path. -->
-  <property name="tmp.dir" value="./tmp" />
+  <property name="tmp.dir" value="${basedir}/tmp" />
   <property name="editorconfig.py.dir" value="./.." />
   <property name="build.dir" value="./build" />
 
@@ -36,7 +35,7 @@
   <!-- Build the Jython engine -->
   <target name="build-jython-engine" depends="unpack-jython">
     <ant dir="./jython-engine/make" inheritall="false">
-      <property name="jython.jar" value="${user.dir}/${tmp.dir}/jython.jar" />
+      <property name="jython.jar" value="${tmp.dir}/jython.jar" />
     </ant>
   </target>
 
