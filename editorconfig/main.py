@@ -39,9 +39,6 @@ def main():
         print str(err)
         usage(command_name, error=True)
         sys.exit(2)
-    if len(args) > 1:
-        usage(command_name, error=True)
-        sys.exit(2)
 
     version_tuple = VERSION
     conf_filename = '.editorconfig'
@@ -63,13 +60,17 @@ def main():
     if len(args) < 1:
         usage(command_name, error=True)
         sys.exit(2)
-    filename = args[0]
+    filenames = args
+    multiple_files = len(args) > 1
 
-    handler = EditorConfigHandler(filename, conf_filename, version_tuple)
-    try:
-        options = handler.get_configurations()
-    except (ParsingError, PathError, VersionError), e:
-        print >> sys.stderr, str(e)
-        sys.exit(2)
-    for key, value in options.items():
-        print "%s=%s" % (key, value)
+    for filename in filenames:
+        handler = EditorConfigHandler(filename, conf_filename, version_tuple)
+        try:
+            options = handler.get_configurations()
+        except (ParsingError, PathError, VersionError), e:
+            print >> sys.stderr, str(e)
+            sys.exit(2)
+        if multiple_files:
+            print "[%s]" % filename
+        for key, value in options.items():
+            print "%s=%s" % (key, value)
