@@ -3,10 +3,11 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.List;
+import java.io.UnsupportedEncodingException;
 import org.editorconfig.core.*;
 
 public class TestEditorConfig {
-    public static void main(String[] args) throws ScriptException {
+    public static void main(String[] args) throws ScriptException, UnsupportedEncodingException {
         EditorConfig ec = new EditorConfig();
         List<EditorConfig.OutPair> l = null;
         try {

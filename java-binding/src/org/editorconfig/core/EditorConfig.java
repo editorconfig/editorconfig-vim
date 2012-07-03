@@ -1,11 +1,12 @@
 package org.editorconfig.core;
 
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
+import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.List;
-import java.util.LinkedList;
 
 /**
  * EditorConfig handler
@@ -51,11 +52,17 @@ public class EditorConfig {
      * 
      */
     public EditorConfig()
-            throws ScriptException {
+            throws ScriptException, UnsupportedEncodingException {
         ScriptEngineManager manager = new ScriptEngineManager();
 
         jythonEngine = manager.getEngineByName("python");
 
+        String jarPath = java.net.URLDecoder.decode(
+                EditorConfig.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
+                "UTF-8");
+        jythonEngine.eval("import sys");
+        jythonEngine.eval("sys.path.insert(0, r\"\"\"" + jarPath + "\"\"\")");
+        
         jythonEngine.eval("from editorconfig import get_properties");
         jythonEngine.eval("from editorconfig import exceptions");
     }
