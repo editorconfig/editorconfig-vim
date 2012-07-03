@@ -61,7 +61,7 @@ public class EditorConfig {
                 EditorConfig.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
                 "UTF-8");
         jythonEngine.eval("import sys");
-        jythonEngine.eval("sys.path.insert(0, r\"\"\"" + jarPath + "\"\"\")");
+        jythonEngine.eval("sys.path.insert(0, r\"\"\"" + jarPath + "/Lib\"\"\")");
         
         jythonEngine.eval("from editorconfig import get_properties");
         jythonEngine.eval("from editorconfig import exceptions");
