@@ -3,15 +3,14 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
 import org.editorconfig.core.*;
 
 public class TestEditorConfig {
-    public static void main(String[] args) throws ScriptException, UnsupportedEncodingException {
+    public static void main(String[] args) throws ScriptException {
         EditorConfig ec = new EditorConfig();
         List<EditorConfig.OutPair> l = null;
         try {
-            l = ec.getProperties("/home/xuhong/xusrc/editorconfig-core-py/a.py");
+            l = ec.getProperties(System.getProperty("user.dir") + "/a.py");
         } catch(EditorConfigException e) {
             System.out.println(e);
             System.exit(1);

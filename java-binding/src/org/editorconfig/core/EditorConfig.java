@@ -1,6 +1,5 @@
 package org.editorconfig.core;
 
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.script.ScriptEngine;
@@ -50,19 +49,42 @@ public class EditorConfig {
      *
      * @throws javax.script.ScriptException If a Jython exception happens.
      * 
+     * @see #EditorConfig(List)
      */
     public EditorConfig()
-            throws ScriptException, UnsupportedEncodingException {
+            throws ScriptException {
+
+        this(null);
+
+
+    }
+
+    /**
+     * EditorConfig constructor.
+     *
+     * Same as {@link EditorConfig()}, but with an additional parameter
+     * {@code jarLocations}.
+     *
+     * @param jarLocations The possible locations of {@code editorconfig.jar}
+     * file. This parameter is used in some cases, {@code editorconfig.jar}
+     * cannot locate itself (e.g. java program launched in GNOME desktop
+     * environment may have this kind of issue). However, some modules are
+     * packed in {@code editorconfig.jar} file, so this file must be located
+     * for this library to work correctly.
+     *
+     * @see #EditorConfig()
+     */
+    public EditorConfig(List<String> jarLocations)
+            throws ScriptException {
         ScriptEngineManager manager = new ScriptEngineManager();
 
         jythonEngine = manager.getEngineByName("python");
 
-        String jarPath = java.net.URLDecoder.decode(
-                EditorConfig.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
-                "UTF-8");
-        jythonEngine.eval("import sys");
-        jythonEngine.eval("sys.path.insert(0, r\"\"\"" + jarPath + "/Lib\"\"\")");
-        
+        // Add all "jarLocations/Lib" to sys.path
+        if(jarLocations != null)
+            for(String jarPath : jarLocations)
+                jythonEngine.eval("sys.path.insert(0, r\"\"\"" + jarPath + "/Lib\"\"\")");
+
         jythonEngine.eval("from editorconfig import get_properties");
         jythonEngine.eval("from editorconfig import exceptions");
     }
