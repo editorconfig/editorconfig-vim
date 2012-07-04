@@ -116,7 +116,7 @@ public class EditorConfig {
             throws EditorConfigException, ScriptException {
 
         jythonEngine.eval("try:\n" +
-                "\toptions = get_properties('" + filename + "')\n" +
+                "\toptions = get_properties(r\"\"\"" + filename + "\"\"\")\n" +
                 "except exceptions.ParsingError:\n" +
                 "\te = 'ParsingError'\n" +
                 "except exceptions.PathError:\n" +
