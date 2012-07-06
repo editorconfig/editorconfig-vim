@@ -6,7 +6,7 @@ import java.util.List;
 import org.editorconfig.core.*;
 
 public class TestEditorConfig {
-    public static void main(String[] args) throws ScriptException {
+    public static void main(String[] args) throws EditorConfigException {
         EditorConfig ec = new EditorConfig();
         List<EditorConfig.OutPair> l = null;
         try {
