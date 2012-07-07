@@ -62,7 +62,7 @@ public class EditorConfig {
     /**
      * EditorConfig constructor.
      *
-     * Same as {@link EditorConfig()}, but with an additional parameter
+     * Same as {@link #EditorConfig()}, but with an additional parameter
      * {@code jarLocations}.
      *
      * @param jarLocations The possible locations of {@code editorconfig.jar}

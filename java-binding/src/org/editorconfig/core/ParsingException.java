@@ -1,8 +1,8 @@
 package org.editorconfig.core;
 
 /**
- * Exception throwed by EditorConfig.getProperties() if an EditorConfig file
- * could not be parsed
+ * Exception throwed by {@link EditorConfig#getProperties(String)} if an
+ * EditorConfig file could not be parsed
  */
 public class ParsingException extends EditorConfigException {
 

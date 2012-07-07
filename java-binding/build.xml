@@ -54,9 +54,17 @@
     </jar>
   </target>
 
-  <target name="doc">
+  <target name="doc" depends="unpack-jython">
     <mkdir dir="./doc" />
-    <javadoc sourcepath="./src" destdir="./doc" locale="en_US" windowtitle="EditorConfig Java Library API Documentation" />
+    <javadoc sourcepath="./src" destdir="./doc" locale="en_US"
+      windowtitle="EditorConfig Java Library API Documentation"
+      linksource="true" nodeprecatedlist="true">
+      <classpath>
+        <fileset file="${tmp.dir}/jython.jar" />
+      </classpath>
+
+      <link href="http://docs.oracle.com/javase/6/docs/api/" />
+    </javadoc>
   </target>
 
   <target name="all" depends="pack-jython-editorconfig">

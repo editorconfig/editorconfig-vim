@@ -1,8 +1,8 @@
 package org.editorconfig.core;
 
 /**
- * Exception throwed by EditorConfig.getProperties() if an invalid version
- * number is specified
+ * Exception throwed by {@link EditorConfig#getProperties(String)} if an
+ * invalid version number is specified
  */
 public class VersionException extends EditorConfigException {
     
