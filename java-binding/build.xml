@@ -56,7 +56,7 @@
 
   <target name="doc">
     <mkdir dir="./doc" />
-    <javadoc sourcepath="./src" destdir="./doc" />
+    <javadoc sourcepath="./src" destdir="./doc" locale="en_US" windowtitle="EditorConfig Java Library API Documentation" />
   </target>
 
   <target name="all" depends="pack-jython-editorconfig">

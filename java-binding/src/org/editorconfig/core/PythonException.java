@@ -2,8 +2,8 @@ package org.editorconfig.core;
 
 
 /**
- * Exception throwed by EditorConfig() if an exception from the internal Python
- * interpreter (Jython) is thrown
+ * Exception throwed by {@link EditorConfig#EditorConfig()} if an exception
+ * from the internal Python interpreter (Jython) is thrown
  */
 public class PythonException extends EditorConfigException {
 
