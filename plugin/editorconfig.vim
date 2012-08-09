@@ -516,7 +516,63 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
+    if has_key(a:config, "insert_final_newline")
+        augroup insert_final_newline
+        autocmd! insert_final_newline
+        if a:config["insert_final_newline"] == "false"
+            setl noeol
+            autocmd insert_final_newline BufWritePre <buffer> call <SID>TempSetBinary()
+            autocmd insert_final_newline BufWritePost <buffer> call <SID>TempUnsetBinary()
+        else
+            setl eol
+        endif
+    endif
+
     call editorconfig#ApplyHooks(a:config)
+endfunction
+
+function! s:TempSetBinary()
+" If file is not binary then set it to binary before save
+    let s:old_binary = &binary
+    if ! &binary
+        let s:saved_view = winsaveview()
+        
+        " Prepend BOM character to first line if applicable
+        if &bomb
+            if &fileencoding == "utf-8"
+                let s:bomb_chars = "\ufeff"
+            elseif &fileencoding == "utf-16be"
+                let s:bomb_chars = "\ufeff"
+            elseif &fileencoding == "utf-16le"
+                let s:bomb_chars = "\ufefe"
+            endif
+        else
+            let s:bomb_chars = ""
+        endif
+        exec ("1s/^/" . s:bomb_chars)
+
+        setl binary
+        setl noeol
+        if (&fileformat == "dos" || &fileformat == "mac") && line('$') > 1
+            undojoin | exec "silent 1,$-1normal! A\<C-V>\<C-M>"
+        endif
+        if &fileformat == "mac"
+            undojoin | %join!
+        endif
+    endif
+endfunction
+
+function! s:TempUnsetBinary()
+    if ! s:old_binary
+        if &fileformat == "dos" && line('$') > 1
+            undojoin | silent 1,$-1s/\r$//e
+        elseif &fileformat == "mac"
+            undojoin | silent %s/\r/\r/ge
+        endif
+        undojoin | exec ("1s/^" . s:bomb_chars . "//")
+        setlocal nobinary
+        call winrestview(s:saved_view)
+    endif
 endfunction
 
 " }}}
