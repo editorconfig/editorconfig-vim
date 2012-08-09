@@ -528,6 +528,14 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
+    if has_key(a:config, "trim_trailing_whitespace")
+        augroup trim_trailing_whitespace
+        autocmd! trim_trailing_whitespace
+        if a:config["trim_trailing_whitespace"] == "true"
+            autocmd trim_trailing_whitespace BufWritePre <buffer> :%s/\s\+$//e
+        endif
+    endif
+
     call editorconfig#ApplyHooks(a:config)
 endfunction
 
