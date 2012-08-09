@@ -497,6 +497,25 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
+    if has_key(a:config, "charset")
+        if a:config["charset"] == "utf-8"
+            setl fileencoding=utf-8
+            setl nobomb
+        elseif a:config["charset"] == "utf-8-bom"
+            setl fileencoding=utf-8
+            setl bomb
+        elseif a:config["charset"] == "latin1"
+            setl fileencoding=latin1
+            setl nobomb
+        elseif a:config["charset"] == "utf-16be"
+            setl fileencoding=utf-16be
+            setl bomb
+        elseif a:config["charset"] == "utf-16le"
+            setl fileencoding=utf-16le
+            setl bomb
+        endif
+    endif
+
     call editorconfig#ApplyHooks(a:config)
 endfunction
 
