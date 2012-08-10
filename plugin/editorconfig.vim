@@ -1,15 +1,15 @@
 " Copyright (c) 2011-2012 EditorConfig Team
 " All rights reserved.
-" 
+"
 " Redistribution and use in source and binary forms, with or without
 " modification, are permitted provided that the following conditions are met:
-" 
+"
 " 1. Redistributions of source code must retain the above copyright notice,
 "    this list of conditions and the following disclaimer.
 " 2. Redistributions in binary form must reproduce the above copyright notice,
 "    this list of conditions and the following disclaimer in the documentation
 "    and/or other materials provided with the distribution.
-" 
+"
 " THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 " AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 " IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -190,7 +190,7 @@ function! s:InitializePythonExternal() " {{{2
         return 2
     endif
 
-    " Find python interp 
+    " Find python interp
     if !exists('g:editorconfig_python_interp') ||
                 \ empty('g:editorconfig_python_interp')
         let s:editorconfig_python_interp = s:FindPythonInterp()
@@ -244,7 +244,7 @@ try:
 except:
     vim.command('let l:ret = 3')
 
-del sys.path[0] 
+del sys.path[0]
 
 ec_data = {}  # used in order to keep clean Python namespace
 
@@ -259,7 +259,7 @@ endfunction
 
 " Do some initalization for the case that the user has specified core mode {{{1
 if !empty(s:editorconfig_core_mode)
- 
+
     if s:editorconfig_core_mode == 'external_command'
         if s:InitializeExternalCommand()
             echo 'EditorConfig: Failed to initialize external_command mode'
@@ -351,6 +351,8 @@ augroup editorconfig
 autocmd! editorconfig
 autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
 autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
+
+augroup END
 
 " UseConfigFiles function for different mode {{{1
 function! s:UseConfigFiles_Python_Builtin() " {{{2
@@ -517,23 +519,27 @@ function! s:ApplyConfig(config) " {{{1
     endif
 
     if has_key(a:config, "insert_final_newline")
-        augroup insert_final_newline
-        autocmd! insert_final_newline
+        augroup editorconfig_insert_final_newline
+        autocmd! editorconfig_insert_final_newline
         if a:config["insert_final_newline"] == "false"
             setl noeol
-            autocmd insert_final_newline BufWritePre <buffer> call <SID>TempSetBinary()
-            autocmd insert_final_newline BufWritePost <buffer> call <SID>TempUnsetBinary()
+            autocmd editorconfig_insert_final_newline BufWritePre <buffer> call s:TempSetBinary()
+            autocmd editorconfig_insert_final_newline BufWritePost <buffer> call s:TempUnsetBinary()
         else
             setl eol
         endif
+
+        augroup END " editorconfig_insert_final_newline group
     endif
 
     if has_key(a:config, "trim_trailing_whitespace")
-        augroup trim_trailing_whitespace
-        autocmd! trim_trailing_whitespace
+        augroup editorconfig_trim_trailing_whitespace
+        autocmd! editorconfig_trim_trailing_whitespace
         if a:config["trim_trailing_whitespace"] == "true"
-            autocmd trim_trailing_whitespace BufWritePre <buffer> :%s/\s\+$//e
+            autocmd editorconfig_trim_trailing_whitespace BufWritePre <buffer> :%s/\s\+$//e
         endif
+
+        augroup END " editorconfig_trim_trailing_whitespace group
     endif
 
     call editorconfig#ApplyHooks(a:config)
@@ -541,17 +547,17 @@ endfunction
 
 function! s:TempSetBinary()
 " If file is not binary then set it to binary before save
-    let s:old_binary = &binary
-    if ! &binary
+    let s:old_binary = &l:binary
+    if ! &l:binary
         let s:saved_view = winsaveview()
-        
+
         " Prepend BOM character to first line if applicable
         if &bomb
-            if &fileencoding == "utf-8"
+            if &l:fileencoding == "utf-8"
                 let s:bomb_chars = "\ufeff"
-            elseif &fileencoding == "utf-16be"
+            elseif &l:fileencoding == "utf-16be"
                 let s:bomb_chars = "\ufeff"
-            elseif &fileencoding == "utf-16le"
+            elseif &l:fileencoding == "utf-16le"
                 let s:bomb_chars = "\ufefe"
             endif
         else
@@ -561,10 +567,10 @@ function! s:TempSetBinary()
 
         setl binary
         setl noeol
-        if (&fileformat == "dos" || &fileformat == "mac") && line('$') > 1
+        if (&l:fileformat == "dos" || &l:fileformat == "mac") && line('$') > 1
             undojoin | exec "silent 1,$-1normal! A\<C-V>\<C-M>"
         endif
-        if &fileformat == "mac"
+        if &l:fileformat == "mac"
             undojoin | %join!
         endif
     endif
@@ -572,9 +578,9 @@ endfunction
 
 function! s:TempUnsetBinary()
     if ! s:old_binary
-        if &fileformat == "dos" && line('$') > 1
+        if &l:fileformat == "dos" && line('$') > 1
             undojoin | silent 1,$-1s/\r$//e
-        elseif &fileformat == "mac"
+        elseif &l:fileformat == "mac"
             undojoin | silent %s/\r/\r/ge
         endif
         undojoin | exec ("1s/^" . s:bomb_chars . "//")
