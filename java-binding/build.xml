@@ -67,6 +67,12 @@
     </javadoc>
   </target>
 
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="classes" />
+    <delete dir="tmp" />
+  </target>
+
   <target name="all" depends="pack-jython-editorconfig">
   </target>
 </project>
