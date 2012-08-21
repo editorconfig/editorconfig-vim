@@ -27,6 +27,9 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 * indent_size
 * tab_width
 * end_of_line
+* charset
+* trim_trailing_whitespace
+* insert_final_newline
 * root (only used by EditorConfig core)
 
 [EditorConfig]: http://editorconfig.org
