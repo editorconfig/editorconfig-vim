@@ -102,7 +102,8 @@ class EditorConfigHandler(object):
         opts = self.options
 
         # Lowercase option value for certain options
-        for name in ["end_of_line", "indent_style", "indent_size"]:
+        for name in ["end_of_line", "indent_style", "indent_size",
+            "insert_final_newline", "trim_trailing_whitespace", "charset"]:
             if name in opts:
                 opts[name] = opts[name].lower()
 
