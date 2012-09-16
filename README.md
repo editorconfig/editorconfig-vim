@@ -32,6 +32,19 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 * insert_final_newline
 * root (only used by EditorConfig core)
 
+## Known Issues
+
+undo actions are lost in this situation:
+
+1.  code is written
+2.  "undo" action (via u command) is used to undo some code changes
+3.  file is saved (via :w)
+4.  "redo" action (via C-r command) is used to redo the code changes
+
+When insert_final_newline = false, the redo step (step 4) does not work.
+Instead a single invisible action is performed again, marking the file as
+changed when nothing changed.
+
 [EditorConfig]: http://editorconfig.org
 [EditorConfig core]: https://github.com/editorconfig/editorconfig-core
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
