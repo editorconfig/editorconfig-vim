@@ -34,6 +34,7 @@ def fnmatch(name, pat):
     - ``?``       matches any single character
     - ``[seq]``   matches any character in seq
     - ``[!seq]``  matches any char not in seq
+    - ``{s1,s2}`` matches any of the strings given (separated by commas)
 
     An initial period in FILENAME is not special.
     Both FILENAME and PATTERN are first case-normalized
@@ -93,6 +94,22 @@ def translate(pat):
                 elif stuff[0] == '^':
                     stuff = '\\' + stuff
                 res = '%s[%s]' % (res, stuff)
+        elif c == '{':
+            j = i
+            groups = []
+            while j < n and pat[j] != '}':
+                k = j
+                while k < n and (pat[k] not in (',', '}') or pat[k-1] == '\\'):
+                    k = k+1
+                groups.append(pat[j:k])
+                j = k
+                if j < n and pat[j] == ',':
+                    j = j+1
+            if j >= n or j == i:
+                res = res + '{'
+            else:
+                res = '%s(%s)' % (res, '|'.join(map(re.escape, groups)))
+                i = j+1
         else:
             res = res + re.escape(c)
     return res + '\Z(?ms)'
