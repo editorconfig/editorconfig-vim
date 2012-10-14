@@ -105,8 +105,10 @@ def translate(pat):
                 j = k
                 if j < n and pat[j] == ',':
                     j = j+1
-            if j >= n or j == i:
-                res = res + '{'
+                    if j < n and pat[j] == '}':
+                        groups.append('')
+            if j >= n or len(groups) < 2:
+                res = res + '\\{'
             else:
                 res = '%s(%s)' % (res, '|'.join(map(re.escape, groups)))
                 i = j+1
