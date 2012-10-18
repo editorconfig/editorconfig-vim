@@ -6,7 +6,6 @@ setup(
     version=editorconfig.__version__,
     author='EditorConfig Team',
     packages=['editorconfig'],
-    namespace_packages=['editorconfig'],
     url='http://editorconfig.org/',
     license='LICENSE.txt',
     description='EditorConfig File Locator and Interpreter for Python',
