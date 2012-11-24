@@ -1,0 +1,3 @@
+[submodule "plugin/editorconfig-core-py/tests"]
+	path = plugin/editorconfig-core-py/tests
+	url = https://github.com/editorconfig/editorconfig-core-test.git
