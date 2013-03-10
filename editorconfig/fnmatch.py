@@ -29,12 +29,12 @@ def fnmatch(name, pat):
 
     Patterns are Unix shell style:
 
-    - ``*``       matches everything except path separator
-    - ``**``      matches everything
-    - ``?``       matches any single character
-    - ``[seq]``   matches any character in seq
-    - ``[!seq]``  matches any char not in seq
-    - ``{s1,s2}`` matches any of the strings given (separated by commas)
+    - ``*``             matches everything except path separator
+    - ``**``            matches everything
+    - ``?``             matches any single character
+    - ``[seq]``         matches any character in seq
+    - ``[!seq]``        matches any char not in seq
+    - ``{s1,s2,s3}``    matches any of the strings given (separated by commas)
 
     An initial period in FILENAME is not special.
     Both FILENAME and PATTERN are first case-normalized
