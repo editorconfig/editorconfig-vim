@@ -65,6 +65,7 @@ def translate(pat):
 
     i, n = 0, len(pat)
     res = ''
+    escaped = False
     while i < n:
         c = pat[i]
         i = i+1
@@ -99,9 +100,13 @@ def translate(pat):
             groups = []
             while j < n and pat[j] != '}':
                 k = j
-                while k < n and (pat[k] not in (',', '}') or pat[k-1] == '\\'):
+                while k < n and (pat[k] not in (',', '}') or escaped):
+                    escaped = pat[k] == '\\' and not escaped
                     k = k+1
-                groups.append(pat[j:k])
+                group = pat[j:k]
+                for char in (',', '}', '\\'):
+                    group = group.replace('\\' + char, char)
+                groups.append(group)
                 j = k
                 if j < n and pat[j] == ',':
                     j = j+1
