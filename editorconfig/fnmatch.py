@@ -83,12 +83,13 @@ def translate(pat):
                 j = j+1
             if j < n and pat[j] == ']':
                 j = j+1
-            while j < n and pat[j] != ']':
+            while j < n and (pat[j] != ']' or escaped):
+                escaped = pat[j] == '\\' and not escaped
                 j = j+1
             if j >= n:
                 res = res + '\\['
             else:
-                stuff = pat[i:j].replace('\\','\\\\')
+                stuff = pat[i:j]
                 i = j+1
                 if stuff[0] == '!':
                     stuff = '^' + stuff[1:]
