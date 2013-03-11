@@ -14,9 +14,8 @@ There are two ways for installation:
 
 - If your Vim is not compiled with `+python` feature, please first download the
   [EditorConfig core][] and follow the instructions in the README and INSTALL
-  files to install it. Once EditorConfig core is installed, copy the
-  `editorconfig.vim` file to your `~/.vim/plugin` directory to install the
-  editorconfig plugin.
+  files to install it. This plugin would NOT work if neither `+python` nor
+  EditorConfig core is available.
 
 
 ## Supported properties
