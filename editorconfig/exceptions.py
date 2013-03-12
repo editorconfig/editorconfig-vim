@@ -9,7 +9,10 @@ class EditorConfigError(Exception):
     """Parent class of all exceptions raised by EditorConfig"""
 
 
-from ConfigParser import ParsingError as _ParsingError
+try:
+    from ConfigParser import ParsingError as _ParsingError
+except:
+    from configparser import ParsingError as _ParsingError
 
 
 class ParsingError(_ParsingError, EditorConfigError):
