@@ -6,6 +6,8 @@ python:
   - "2.5"
   - "2.6"
   - "2.7"
+  - "3.2"
+  - "3.3"
 
 # For testing with JYTHON=true, we will use Jython 2.2 instead of the python
 # version provided by Travis CI
