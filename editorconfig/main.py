@@ -22,13 +22,13 @@ def usage(command, error=False):
         out = sys.stderr
     else:
         out = sys.stdout
-    print("%s [OPTIONS] FILENAME" % command, file=out)
-    print('-f                 '
-            'Specify conf filename other than ".editorconfig".', file=out)
-    print("-b                 ",
-            "Specify version (used by devs to test compatibility).", file=out)
-    print("-h OR --help       Print this help message.", file=out)
-    print("-v OR --version    Display version information.", file=out)
+    out.write("%s [OPTIONS] FILENAME\n" % command)
+    out.write('-f                 '
+            'Specify conf filename other than ".editorconfig".\n')
+    out.write("-b                 "
+            "Specify version (used by devs to test compatibility).\n")
+    out.write("-h OR --help       Print this help message.\n")
+    out.write("-v OR --version    Display version information.\n")
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
         try:
             options = handler.get_configurations()
         except (ParsingError, PathError, VersionError) as e:
-            print(str(e), file=sys.stderr)
+            sys.stderr(str(e))
             sys.exit(2)
         if multiple_files:
             print("[%s]" % filename)
