@@ -21,6 +21,10 @@ matrix:
       env: JYTHON=true
     - python: "2.6"
       env: JYTHON=true
+    - python: "3.2"
+      env: JYTHON=true
+    - python: "3.3"
+      env: JYTHON=true
 
 # we need cmake, and jython if JYTHON=true
 install:
