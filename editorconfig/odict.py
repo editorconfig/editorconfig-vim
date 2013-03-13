@@ -176,7 +176,7 @@ class OrderedDict(dict):
         >>> d
         OrderedDict([(2, 1), (3, 2)])
         """
-        if isinstance(key, types.SliceType):
+        if isinstance(key, slice):
             # FIXME: efficiency?
             keys = self._sequence[key]
             for entry in keys:
@@ -388,7 +388,7 @@ class OrderedDict(dict):
         >>> d
         OrderedDict([(9, 8), (1, 2), (2, 3), (3, 4)])
         """
-        if isinstance(key, types.SliceType):
+        if isinstance(key, slice):
             if not isinstance(val, OrderedDict):
                 # FIXME: allow a list of tuples?
                 raise TypeError('slice assignment requires an OrderedDict')
@@ -448,7 +448,7 @@ class OrderedDict(dict):
         >>> type(b[2:4])
         <class '__main__.OrderedDict'>
         """
-        if isinstance(key, types.SliceType):
+        if isinstance(key, slice):
             # FIXME: does this raise the error we want?
             keys = self._sequence[key]
             # FIXME: efficiency?
@@ -933,7 +933,7 @@ class Keys(object):
         You can only do slice assignment if the new set of keys is a reordering
         of the original set.
         """
-        if isinstance(index, types.SliceType):
+        if isinstance(index, slice):
             # FIXME: efficiency?
             # check length is the same
             indexes = range(len(self._main._sequence))[index]
@@ -1013,7 +1013,7 @@ class Items(object):
 
     def __getitem__(self, index):
         """Fetch the item at position i."""
-        if isinstance(index, types.SliceType):
+        if isinstance(index, slice):
             # fetching a slice returns an OrderedDict
             return self._main[index].items()
         key = self._main._sequence[index]
@@ -1021,7 +1021,7 @@ class Items(object):
 
     def __setitem__(self, index, item):
         """Set item at position i to item."""
-        if isinstance(index, types.SliceType):
+        if isinstance(index, slice):
             # NOTE: item must be an iterable (list of tuples)
             self._main[index] = OrderedDict(item)
         else:
@@ -1038,7 +1038,7 @@ class Items(object):
     def __delitem__(self, i):
         """Delete the item at position i."""
         key = self._main._sequence[i]
-        if isinstance(i, types.SliceType):
+        if isinstance(i, slice):
             for k in key:
                 # FIXME: efficiency?
                 del self._main[k]
@@ -1123,7 +1123,7 @@ class Values(object):
 
     def __getitem__(self, index):
         """Fetch the value at position i."""
-        if isinstance(index, types.SliceType):
+        if isinstance(index, slice):
             return [self._main[key] for key in self._main._sequence[index]]
         else:
             return self._main[self._main._sequence[index]]
