@@ -40,7 +40,9 @@ may want to import and use the EditorConfig Python Core directly.
 Using as a Library
 ==================
 
-Basic example use of EditorConfig Python Core as a library::
+Basic example use of EditorConfig Python Core as a library:
+
+.. code-block:: python
 
     from editorconfig import get_properties, EditorConfigError
 
