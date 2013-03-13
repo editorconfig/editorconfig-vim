@@ -1,7 +1,14 @@
-"""EditorConfig Python2/3 compatibility tools"""
+"""EditorConfig Python2/Python3/Jython compatibility utilities"""
 import sys
+import types
 
-__all__ = ['u']
+__all__ = ['slice', 'u']
+
+
+if sys.version_info[0] == 2:
+    slice = types.SliceType
+else:
+    slice = slice
 
 
 if sys.version_info[0] == 2:

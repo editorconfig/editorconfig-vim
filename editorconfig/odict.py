@@ -66,7 +66,10 @@ INTP_VER = sys.version_info[:2]
 if INTP_VER < (2, 2):
     raise RuntimeError("Python v.2.2 or later required")
 
-import types, warnings
+import warnings
+
+from editorconfig.compat import slice
+
 
 class OrderedDict(dict):
     """
@@ -1135,7 +1138,7 @@ class Values(object):
         You can only do slice assignment to values if you supply a sequence of
         equal length to the slice you are replacing.
         """
-        if isinstance(index, types.SliceType):
+        if isinstance(index, slice):
             keys = self._main._sequence[index]
             if len(keys) != len(value):
                 raise ValueError('attempt to assign sequence of size %s '
