@@ -46,7 +46,7 @@ A more complex example is in the `example` directory. There is an
 generate html documentation. The generated documentation will locate in `doc`
 directory.
 
-## Lisence
+## License
 
 All source files of the Java binding are distributed under the PSF license. See
 LICENSE.txt for details.
