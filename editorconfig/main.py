@@ -35,8 +35,8 @@ def main():
     command_name = sys.argv[0]
     try:
         opts, args = getopt.getopt(sys.argv[1:], "vhb:f:", ["version", "help"])
-    except getopt.GetoptError as err:
-        print(str(err))
+    except getopt.GetoptError:
+        print(str(sys.exc_info()[1]))  # For Python 2/3 compatibility
         usage(command_name, error=True)
         sys.exit(2)
 
@@ -67,8 +67,8 @@ def main():
         handler = EditorConfigHandler(filename, conf_filename, version_tuple)
         try:
             options = handler.get_configurations()
-        except (ParsingError, PathError, VersionError) as e:
-            sys.stderr(str(e))
+        except (ParsingError, PathError, VersionError):
+            print(str(sys.exc_info()[1]))  # For Python 2/3 compatibility
             sys.exit(2)
         if multiple_files:
             print("[%s]" % filename)
