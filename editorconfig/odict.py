@@ -832,7 +832,7 @@ class OrderedDict(dict):
         1
         >>> d.index(4)
         Traceback (most recent call last):
-        ValueError: list.index(x): x not in list
+        ValueError: 4 is not in list
         """
         return self._sequence.index(key)
 
