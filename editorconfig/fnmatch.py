@@ -24,6 +24,7 @@ __all__ = ["fnmatch", "fnmatchcase", "translate"]
 
 _cache = {}
 
+
 def fnmatch(name, pat):
     """Test whether FILENAME matches PATTERN.
 
@@ -45,6 +46,7 @@ def fnmatch(name, pat):
     name = os.path.normcase(name).replace(os.sep, "/")
     return fnmatchcase(name, pat)
 
+
 def fnmatchcase(name, pat):
     """Test whether FILENAME matches PATTERN, including case.
 
@@ -57,6 +59,7 @@ def fnmatchcase(name, pat):
         _cache[pat] = re.compile(res)
     return _cache[pat].match(name) is not None
 
+
 def translate(pat):
     """Translate a shell PATTERN to a regular expression.
 
@@ -68,7 +71,7 @@ def translate(pat):
     escaped = False
     while i < n:
         c = pat[i]
-        i = i+1
+        i = i + 1
         if c == '*':
             j = i
             if j < n and pat[j] == '*':
@@ -80,17 +83,17 @@ def translate(pat):
         elif c == '[':
             j = i
             if j < n and pat[j] == '!':
-                j = j+1
+                j = j + 1
             if j < n and pat[j] == ']':
-                j = j+1
+                j = j + 1
             while j < n and (pat[j] != ']' or escaped):
                 escaped = pat[j] == '\\' and not escaped
-                j = j+1
+                j = j + 1
             if j >= n:
                 res = res + '\\['
             else:
                 stuff = pat[i:j]
-                i = j+1
+                i = j + 1
                 if stuff[0] == '!':
                     stuff = '^' + stuff[1:]
                 elif stuff[0] == '^':
@@ -103,21 +106,21 @@ def translate(pat):
                 k = j
                 while k < n and (pat[k] not in (',', '}') or escaped):
                     escaped = pat[k] == '\\' and not escaped
-                    k = k+1
+                    k = k + 1
                 group = pat[j:k]
                 for char in (',', '}', '\\'):
                     group = group.replace('\\' + char, char)
                 groups.append(group)
                 j = k
                 if j < n and pat[j] == ',':
-                    j = j+1
+                    j = j + 1
                     if j < n and pat[j] == '}':
                         groups.append('')
             if j >= n or len(groups) < 2:
                 res = res + '\\{'
             else:
                 res = '%s(%s)' % (res, '|'.join(map(re.escape, groups)))
-                i = j+1
+                i = j + 1
         else:
             res = res + re.escape(c)
     return res + '\Z(?ms)'
