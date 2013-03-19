@@ -31,5 +31,5 @@ def split_version(version):
         split_version = list(match.groups())
         if split_version[3] is None:
             split_version[3] = "final"
-        split_version = map(int, split_version[:3]) + split_version[3:]
+        split_version = list(map(int, split_version[:3])) + split_version[3:]
         return tuple(split_version)

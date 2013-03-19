@@ -14,7 +14,7 @@ from editorconfig.exceptions import ParsingError, PathError, VersionError
 
 
 def version():
-    print "Version %s" % __version__
+    print("Version %s" % __version__)
 
 
 def usage(command, error=False):
@@ -22,21 +22,21 @@ def usage(command, error=False):
         out = sys.stderr
     else:
         out = sys.stdout
-    print >> out, "%s [OPTIONS] FILENAME" % command
-    print >> out, ('-f                 '
-            'Specify conf filename other than ".editorconfig".')
-    print >> out, ("-b                 "
-            "Specify version (used by devs to test compatibility).")
-    print >> out, "-h OR --help       Print this help message."
-    print >> out, "-v OR --version    Display version information."
+    out.write("%s [OPTIONS] FILENAME\n" % command)
+    out.write('-f                 '
+            'Specify conf filename other than ".editorconfig".\n')
+    out.write("-b                 "
+            "Specify version (used by devs to test compatibility).\n")
+    out.write("-h OR --help       Print this help message.\n")
+    out.write("-v OR --version    Display version information.\n")
 
 
 def main():
     command_name = sys.argv[0]
     try:
         opts, args = getopt.getopt(sys.argv[1:], "vhb:f:", ["version", "help"])
-    except getopt.GetoptError, err:
-        print str(err)
+    except getopt.GetoptError:
+        print(str(sys.exc_info()[1]))  # For Python 2/3 compatibility
         usage(command_name, error=True)
         sys.exit(2)
 
@@ -67,10 +67,10 @@ def main():
         handler = EditorConfigHandler(filename, conf_filename, version_tuple)
         try:
             options = handler.get_configurations()
-        except (ParsingError, PathError, VersionError), e:
-            print >> sys.stderr, str(e)
+        except (ParsingError, PathError, VersionError):
+            print(str(sys.exc_info()[1]))  # For Python 2/3 compatibility
             sys.exit(2)
         if multiple_files:
-            print "[%s]" % filename
+            print("[%s]" % filename)
         for key, value in options.items():
-            print "%s=%s" % (key, value)
+            print("%s=%s" % (key, value))

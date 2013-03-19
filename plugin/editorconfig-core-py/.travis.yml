@@ -6,6 +6,8 @@ python:
   - "2.5"
   - "2.6"
   - "2.7"
+  - "3.2"
+  - "3.3"
 
 # For testing with JYTHON=true, we will use Jython 2.2 instead of the python
 # version provided by Travis CI
@@ -18,6 +20,10 @@ matrix:
     - python: "2.5"
       env: JYTHON=true
     - python: "2.6"
+      env: JYTHON=true
+    - python: "3.2"
+      env: JYTHON=true
+    - python: "3.3"
       env: JYTHON=true
 
 # we need cmake, and jython if JYTHON=true
