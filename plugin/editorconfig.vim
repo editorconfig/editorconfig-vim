@@ -385,7 +385,8 @@ EEOOFF
 
     python << EEOOFF
 for key, value in ec_data['options'].items():
-    vim.command('let l:config[' + repr(key) + '] = ' + repr(value))
+    vim.command("let l:config['" + key.replace("'", "''") + "'] = " +
+        "'" + value.replace("'", "''") + "'")
 
 EEOOFF
 
