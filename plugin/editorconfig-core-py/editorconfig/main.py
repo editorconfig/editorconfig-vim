@@ -14,7 +14,7 @@ from editorconfig.exceptions import ParsingError, PathError, VersionError
 
 
 def version():
-    print("Version %s" % __version__)
+    print("EditorConfig Python Core Version %s" % __version__)
 
 
 def usage(command, error=False):
