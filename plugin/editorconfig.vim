@@ -519,20 +519,6 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    if has_key(a:config, "insert_final_newline")
-        augroup editorconfig_insert_final_newline
-        autocmd! editorconfig_insert_final_newline
-        if a:config["insert_final_newline"] == "false"
-            setl noeol
-            autocmd editorconfig_insert_final_newline BufWritePre <buffer> call s:TempSetBinary()
-            autocmd editorconfig_insert_final_newline BufWritePost <buffer> call s:TempUnsetBinary()
-        else
-            setl eol
-        endif
-
-        augroup END " editorconfig_insert_final_newline group
-    endif
-
     if has_key(a:config, "trim_trailing_whitespace")
         augroup editorconfig_trim_trailing_whitespace
         autocmd! editorconfig_trim_trailing_whitespace
@@ -544,50 +530,6 @@ function! s:ApplyConfig(config) " {{{1
     endif
 
     call editorconfig#ApplyHooks(a:config)
-endfunction
-
-function! s:TempSetBinary()
-" If file is not binary then set it to binary before save
-    let s:old_binary = &l:binary
-    if ! &l:binary
-        let s:saved_view = winsaveview()
-
-        " Prepend BOM character to first line if applicable
-        if &bomb
-            if &l:fileencoding == "utf-8"
-                let s:bomb_chars = "\ufeff"
-            elseif &l:fileencoding == "utf-16be"
-                let s:bomb_chars = "\ufeff"
-            elseif &l:fileencoding == "utf-16le"
-                let s:bomb_chars = "\ufefe"
-            endif
-        else
-            let s:bomb_chars = ""
-        endif
-        exec ("1s/^/" . s:bomb_chars)
-
-        setl binary
-        setl noeol
-        if (&l:fileformat == "dos" || &l:fileformat == "mac") && line('$') > 1
-            undojoin | exec "silent 1,$-1normal! A\<C-V>\<C-M>"
-        endif
-        if &l:fileformat == "mac"
-            undojoin | %join!
-        endif
-    endif
-endfunction
-
-function! s:TempUnsetBinary()
-    if ! s:old_binary
-        if &l:fileformat == "dos" && line('$') > 1
-            undojoin | silent 1,$-1s/\r$//e
-        elseif &l:fileformat == "mac"
-            undojoin | silent %s/\r/\r/ge
-        endif
-        undojoin | exec ("1s/^" . s:bomb_chars . "//")
-        setlocal nobinary
-        call winrestview(s:saved_view)
-    endif
 endfunction
 
 " }}}
