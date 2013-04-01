@@ -19,7 +19,7 @@
   </target>
 
   <!-- Download jython installer -->
-  <property name="jython.url" value="http://downloads.sourceforge.net/project/jython/jython/2.2.1/jython_installer-2.2.1.jar?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fjython%2Ffiles%2Fjython%2F2.2.1%2F&amp;ts=1338203268" />
+  <property name="jython.url" value="http://downloads.sourceforge.net/project/jython/jython/2.2.1/jython_installer-2.2.1.jar" />
   <target name="download-jython">
     <mkdir dir="${tmp.dir}" />
     <get src="${jython.url}" dest="${tmp.dir}/jython_installer.jar" usetimestamp="true" verbose="true" />
