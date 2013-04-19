@@ -116,7 +116,7 @@ function! s:FindPythonFiles() " {{{1
     let l:python_core_files_dir = substitute(
                 \ fnamemodify(l:python_core_files_dir, ':p'), '/$', '', '')
 
-    set noshellslash
+    let &shellslash = l:old_shellslash
 
     return l:python_core_files_dir
 endfunction
