@@ -433,7 +433,8 @@ function! s:SpawnExternalParser(cmd) " {{{2
         " message
         if v:shell_error != 0
             echohl ErrorMsg
-            echo 'Failed to execute "' . l:cmd . '"'
+            echo 'Failed to execute "' . l:cmd . '". Exit code: ' .
+                        \ v:shell_error
             echohl None
             return
         endif
