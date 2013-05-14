@@ -426,6 +426,10 @@ function! s:SpawnExternalParser(cmd) " {{{2
     if !empty(l:cmd)
         let l:config = {}
 
+        " In Windows, 'shellslash' also changes the behavior of 'shellescape'.
+        " It makes 'shellescape' behave like in UNIX environment. So ':setl
+        " noshellslash' before evaluating 'shellescape' and restore the
+        " settings afterwards.
         let l:old_shellslash = &l:shellslash
         setlocal noshellslash
         let l:cmd = l:cmd . ' ' . shellescape(expand('%:p'))
