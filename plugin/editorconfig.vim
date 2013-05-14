@@ -435,6 +435,9 @@ function! s:SpawnExternalParser(cmd) " {{{2
             echohl ErrorMsg
             echo 'Failed to execute "' . l:cmd . '". Exit code: ' .
                         \ v:shell_error
+            echo ''
+            echo 'Message:'
+            echo l:parsing_result
             echohl None
             return
         endif
