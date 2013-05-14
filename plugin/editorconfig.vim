@@ -426,7 +426,10 @@ function! s:SpawnExternalParser(cmd) " {{{2
     if !empty(l:cmd)
         let l:config = {}
 
+        let l:old_shellslash = &l:shellslash
+        setlocal noshellslash
         let l:cmd = l:cmd . ' ' . shellescape(expand('%:p'))
+        let &l:shellslash = l:old_shellslash
         let l:parsing_result = split(system(l:cmd), '\n')
 
         " if editorconfig core's exit code is not zero, give out an error
