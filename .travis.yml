@@ -39,7 +39,7 @@ before_script:
 # test script
 script:
   - if [ "$JYTHON" == "true" ]; then cmake -DPYTHON_EXECUTABLE="$(which jython)" . ; else cmake . ; fi
-  - ctest -V --output-on-failure .
+  - ctest -VV --output-on-failure .
 
 # Notify the mailing list
 notifications:
