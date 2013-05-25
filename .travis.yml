@@ -15,6 +15,6 @@ script:
   rspec tests/spec/editorconfig_spec.rb
 
 notifications:
- email:
-   on_success: change
-   on_failure: always
+  email:
+    on_success: change
+    on_failure: always
