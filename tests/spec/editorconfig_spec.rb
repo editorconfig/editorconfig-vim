@@ -1,0 +1,110 @@
+require 'vimrunner'
+
+$vim = Vimrunner.start
+$vim.add_plugin(File.expand_path('../../..', __FILE__), 'plugin/editorconfig.vim')
+
+# The base path of the testing files
+BASE_PATH = File.expand_path('../plugin_tests/test_files/', __FILE__)
+
+# file_name is the file name that should be open by Vim
+# expected_values is a Hash that contains all the Vim options we need to test
+def test_editorconfig(file_name, expected_values)
+  $vim.edit(File.join(BASE_PATH, file_name))
+
+  expected_values.each do |key, val|
+    $vim.echo("&l:#{key}").should == val
+  end
+
+  $vim.command 'bd!'
+end
+
+describe 'plugin/editorconfig.vim' do
+  after(:all) do
+    $vim.kill
+  end
+
+  describe '#all' do
+    it '3_space.py' do
+      test_editorconfig '3_space.txt',
+        expandtab: '1',
+        shiftwidth: '3',
+        tabstop: '3'
+    end
+  end
+
+  it '4_space.py' do
+    test_editorconfig '4_space.py',
+      expandtab: '1',
+      shiftwidth: '4',
+      tabstop: '8'
+  end
+
+  it 'space.txt' do
+    test_editorconfig 'space.txt',
+      expandtab: '1',
+      shiftwidth: $vim.echo('&l:tabstop')
+  end
+
+  it 'tab.txt' do
+    test_editorconfig 'tab.txt',
+      expandtab: '0'
+  end
+
+  it '4_tab.txt' do
+    test_editorconfig '4_tab.txt',
+      expandtab: '0',
+      shiftwidth: '4',
+      tabstop: '4'
+  end
+
+  it '4_tab_width_of_8' do
+    test_editorconfig '4_tab_width_of_8.txt',
+      expandtab: '0',
+      shiftwidth: '4',
+      tabstop: '8'
+  end
+
+  it 'lf.txt' do
+    test_editorconfig 'lf.txt',
+      fileformat: 'unix'
+  end
+
+  it 'crlf.txt' do
+    test_editorconfig 'crlf.txt',
+      fileformat: 'dos'
+  end
+
+  it 'cr.txt' do
+    test_editorconfig 'cr.txt',
+      fileformat: 'mac'
+  end
+
+  it 'utf-8.txt' do
+    test_editorconfig 'utf-8.txt',
+      fileencoding: 'utf-8',
+      bomb: '0'
+  end
+
+  it 'utf-8-bom.txt' do
+    test_editorconfig 'utf-8-bom.txt',
+      fileencoding: 'utf-8',
+      bomb: '1'
+  end
+
+  it 'utf-16be.txt' do
+    test_editorconfig 'utf-16be.txt',
+      fileencoding: 'utf-16'
+  end
+
+  it 'utf-16le.txt' do
+    test_editorconfig 'utf-16le.txt',
+      fileencoding: 'utf-16le'
+  end
+
+  it 'latin1.txt' do
+    test_editorconfig 'latin1.txt',
+      fileencoding: 'latin1'
+  end
+
+  # insert_final_newline tests are omitted, since they are not supported
+end
