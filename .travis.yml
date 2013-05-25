@@ -1,0 +1,20 @@
+language: ruby
+
+rvm:
+  - 1.9.3
+
+gemfile: tests/Gemfile
+
+before_install: sudo apt-get install vim-gtk
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
+script:
+  rspec tests/spec/editorconfig_spec.rb
+
+notifications:
+ email:
+   on_success: change
+   on_failure: always
