@@ -501,7 +501,7 @@ function! s:ApplyConfig(config) " {{{1
 
     endif
 
-    if has_key(a:config, "end_of_line")
+    if has_key(a:config, "end_of_line") && &l:modifiable
         if a:config["end_of_line"] == "lf"
             setl fileformat=unix
         elseif a:config["end_of_line"] == "crlf"
@@ -511,7 +511,7 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    if has_key(a:config, "charset")
+    if has_key(a:config, "charset") && &l:modifiable
         if a:config["charset"] == "utf-8"
             setl fileencoding=utf-8
             setl nobomb
