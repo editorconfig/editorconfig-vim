@@ -540,6 +540,19 @@ function! s:ApplyConfig(config) " {{{1
         augroup END " editorconfig_trim_trailing_whitespace group
     endif
 
+    if has_key(a:config, 'max_line_length')
+        let l:max_line_length = str2nr(a:config['max_line_length'])
+
+        if l:max_line_length > 0
+            let &l:textwidth = l:max_line_length
+
+            " highlight the column
+            if exists('+colorcolumn')
+                let &l:colorcolumn = l:max_line_length
+            endif
+        endif
+    endif
+
     call editorconfig#ApplyHooks(a:config)
 endfunction
 
