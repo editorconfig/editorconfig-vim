@@ -12,7 +12,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 
 script:
-  rspec tests/spec/editorconfig_spec.rb
+  bundle exec rspec tests/spec/editorconfig_spec.rb
 
 notifications:
   email:
