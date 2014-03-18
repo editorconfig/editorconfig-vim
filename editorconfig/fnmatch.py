@@ -43,7 +43,7 @@ def fnmatch(name, pat):
     If you don't want this, use fnmatchcase(FILENAME, PATTERN).
     """
 
-    name = os.path.normcase(name).replace(os.sep, "/")
+    name = os.path.normpath(name).replace(os.sep, "/")
     return fnmatchcase(name, pat)
 
 
