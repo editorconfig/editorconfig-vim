@@ -1,9 +1,8 @@
 language: python
 
-# We support from Python 2.4 to 2.7. However, 2.4 is not supported by travis,
-# so it is not listed here
+# We support from Python 2.4 to 2.7. However, 2.4 and 2.5 are not supported by
+# travis, so they are not listed here
 python:
-  - "2.5"
   - "2.6"
   - "2.7"
   - "3.2"
@@ -28,8 +27,8 @@ matrix:
 
 # we need cmake, and jython if JYTHON=true
 install:
-  - sudo apt-get install cmake ant
-  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.2.1/jython_installer-2.2.1.jar?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fjython%2Ffiles%2Fjython%2F2.2.1%2F&ts=1338180153&use_mirror=iweb'
+  - sudo apt-get install cmake
+  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.2.1/jython_installer-2.2.1.jar'
   - if [ "$JYTHON" == "true" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; export PATH=$HOME/jython:$PATH;jython --version; fi
 
 # Before run the test case, we need to make jython run some code
@@ -39,10 +38,7 @@ before_script:
 # test script
 script:
   - if [ "$JYTHON" == "true" ]; then cmake -DPYTHON_EXECUTABLE="$(which jython)" . ; else cmake . ; fi
-  - ctest -V --output-on-failure .
-  - cd java-binding
-  - ant -v
-  - ant -v doc
+  - ctest -VV --output-on-failure .
 
 # Notify the mailing list
 notifications:
