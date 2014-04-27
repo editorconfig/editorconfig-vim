@@ -30,7 +30,7 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 * end_of_line
 * charset
 * trim_trailing_whitespace
-* max_line_width
+* max_line_length
 * root (only used by EditorConfig core)
 
 ## Bugs and Feature Requests
