@@ -162,6 +162,10 @@ function! s:InitializeExternalCommand() " {{{2
                     \ 'D:\Program Files\editorconfig\bin\editorconfig',
                     \ 'E:\Program Files\editorconfig\bin\editorconfig',
                     \ 'F:\Program Files\editorconfig\bin\editorconfig',
+                    \ 'C:\Program Files (x86)\editorconfig\bin\editorconfig',
+                    \ 'D:\Program Files (x86)\editorconfig\bin\editorconfig',
+                    \ 'E:\Program Files (x86)\editorconfig\bin\editorconfig',
+                    \ 'F:\Program Files (x86)\editorconfig\bin\editorconfig',
                     \ 'editorconfig.py']
     endif
 
