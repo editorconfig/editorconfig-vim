@@ -540,6 +540,12 @@ function! s:ApplyConfig(config) " {{{1
         augroup END " editorconfig_trim_trailing_whitespace group
     endif
 
+    if has_key(a:config, "insert_final_newline")
+        if a:config["insert_final_newline"] == "false"
+            silent! SetNoEOL    " Use the PreserveNoEOL plugin to accomplish it
+        endif
+    endif
+
     if has_key(a:config, 'max_line_length')
         let l:max_line_length = str2nr(a:config['max_line_length'])
 
