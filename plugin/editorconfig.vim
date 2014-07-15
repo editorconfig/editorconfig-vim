@@ -534,14 +534,21 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    if has_key(a:config, "trim_trailing_whitespace")
+    " use a buffer variable test because we need per buffer handling, but buffer
+    " local generic autocmds are not individually targetable for deletion and
+    " a self clearing group of buffer local autocmds clobbers all buffers but
+    " the one it is last defined in.
+    if get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
         augroup editorconfig_trim_trailing_whitespace
-        autocmd! editorconfig_trim_trailing_whitespace
-        if a:config["trim_trailing_whitespace"] == "true"
-            autocmd editorconfig_trim_trailing_whitespace BufWritePre <buffer> :%s/\s\+$//e
-        endif
-
-        augroup END " editorconfig_trim_trailing_whitespace group
+            autocmd! editorconfig_trim_trailing_whitespace
+            autocmd BufWritePre * if get(b:,
+                \ 'editorconfig_trim_trailing_whitespace', 0) == 1
+                \ | :%s/\s\+$//e
+                \ | endif
+        augroup END
+        let b:editorconfig_trim_trailing_whitespace = 1
+    elseif exists('b:editorconfig_trim_trailing_whitespace')
+        unlet b:editorconfig_trim_trailing_whitespace
     endif
 
     if has_key(a:config, "insert_final_newline")
