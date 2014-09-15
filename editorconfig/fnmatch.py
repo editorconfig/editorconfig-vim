@@ -24,6 +24,9 @@ __all__ = ["fnmatch", "fnmatchcase", "translate"]
 
 _cache = {}
 
+_brace1 = re.compile(r'(?:^|[^\\])\{')
+_brace2 = re.compile(r'(?:^|[^\\])\}')
+
 
 def fnmatch(name, pat):
     """Test whether FILENAME matches PATTERN.
@@ -60,15 +63,17 @@ def fnmatchcase(name, pat):
     return _cache[pat].match(name) is not None
 
 
-def translate(pat):
+def translate(pat, nested=False):
     """Translate a shell PATTERN to a regular expression.
 
     There is no way to quote meta-characters.
     """
 
     i, n = 0, len(pat)
+    brace_level = 0
     res = ''
     escaped = False
+    matching_braces = len(_brace1.findall(pat)) == len(_brace2.findall(pat))
     while i < n:
         c = pat[i]
         i = i + 1
@@ -90,7 +95,7 @@ def translate(pat):
                 escaped = pat[j] == '\\' and not escaped
                 j = j + 1
             if j >= n:
-                res = res + '\\['
+                res += res + '\\['
             else:
                 stuff = pat[i:j]
                 i = j + 1
@@ -101,26 +106,41 @@ def translate(pat):
                 res = '%s[%s]' % (res, stuff)
         elif c == '{':
             j = i
-            groups = []
-            while j < n and pat[j] != '}':
-                k = j
-                while k < n and (pat[k] not in (',', '}') or escaped):
-                    escaped = pat[k] == '\\' and not escaped
-                    k = k + 1
-                group = pat[j:k]
-                for char in (',', '}', '\\'):
-                    group = group.replace('\\' + char, char)
-                groups.append(group)
-                j = k
-                if j < n and pat[j] == ',':
-                    j = j + 1
-                    if j < n and pat[j] == '}':
-                        groups.append('')
-            if j >= n or len(groups) < 2:
-                res = res + '\\{'
-            else:
-                res = '%s(%s)' % (res, '|'.join(map(re.escape, groups)))
+            has_comma = False
+            while j < n and (pat[j] != '}' or escaped):
+                if pat[j] == ',' and not escaped:
+                    has_comma = True
+                    break
+                escaped = pat[j] == '\\' and not escaped
+                j = j + 1
+            if not has_comma and j < n:
+                res = '%s\\{%s\\}' % (res, translate(pat[i:j], nested=True))
                 i = j + 1
-        else:
+            elif matching_braces:
+                res = res + '(?:'
+                brace_level += 1
+            else:
+                res = res + '\\{'
+        elif c == ',':
+            if brace_level > 0 and not escaped:
+                res = res + '|'
+            else:
+                res = res + '\\,'
+        elif c == '}':
+            if brace_level > 0 and not escaped:
+                res = res + ')'
+                brace_level -= 1
+            else:
+                res = res + '\\}'
+        elif c != '\\':
             res = res + re.escape(c)
-    return res + '\Z(?ms)'
+        if c == '\\':
+            if escaped:
+                res = res + re.escape(c)
+            escaped = not escaped
+        else:
+            escaped = False
+    if nested:
+        return res
+    else:
+        return res + '\Z(?ms)'
