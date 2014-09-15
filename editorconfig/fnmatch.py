@@ -136,6 +136,7 @@ def translate(pat, nested=False):
             escaped = not escaped
         else:
             escaped = False
+    res = res.encode('utf-8')
     if nested:
         return res
     else:
