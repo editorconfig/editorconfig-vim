@@ -71,6 +71,7 @@ def translate(pat, nested=False):
 
     i, n = 0, len(pat)
     brace_level = 0
+    in_brackets = False
     res = ''
     escaped = False
     matching_braces = len(_brace1.findall(pat)) == len(_brace2.findall(pat))
@@ -86,24 +87,19 @@ def translate(pat, nested=False):
         elif c == '?':
             res = res + '.'
         elif c == '[':
-            j = i
-            if j < n and pat[j] == '!':
-                j = j + 1
-            if j < n and pat[j] == ']':
-                j = j + 1
-            while j < n and (pat[j] != ']' or escaped):
-                escaped = pat[j] == '\\' and not escaped
-                j = j + 1
-            if j >= n:
-                res += res + '\\['
+            if in_brackets:
+                res = res + '\\['
+            elif i < n and pat[i] in '!^':
+                i = i + 1
+                res = res + '[^'
             else:
-                stuff = pat[i:j]
-                i = j + 1
-                if stuff[0] == '!':
-                    stuff = '^' + stuff[1:]
-                elif stuff[0] == '^':
-                    stuff = '\\' + stuff
-                res = '%s[%s]' % (res, stuff)
+                res = res + '['
+            in_brackets = True
+        elif c in '-]':
+            if in_brackets:
+                res = res + c
+            else:
+                res = res + '\\' + c
         elif c == '{':
             j = i
             has_comma = False
