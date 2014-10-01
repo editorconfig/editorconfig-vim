@@ -17,7 +17,7 @@ import re
 from codecs import open
 import posixpath
 from os import sep
-from os.path import normcase, dirname
+from os.path import normpath, dirname
 
 from editorconfig.exceptions import ParsingError
 from editorconfig.fnmatch import fnmatch
@@ -59,7 +59,7 @@ class EditorConfigParser(object):
 
     def matches_filename(self, config_filename, glob):
         """Return True if section glob matches filename"""
-        config_dirname = normcase(dirname(config_filename)).replace(sep, '/')
+        config_dirname = normpath(dirname(config_filename)).replace(sep, '/')
         glob = glob.replace("\\#", "#")
         glob = glob.replace("\\;", ";")
         if '/' in glob:
