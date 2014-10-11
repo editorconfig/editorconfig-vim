@@ -24,15 +24,15 @@ There are two ways for installation:
 
 The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 
-* indent_style
-* indent_size
-* tab_width
-* end_of_line
-* charset
-* insert_final_newline ([PreserveNoEOL][] is required for this property)
-* trim_trailing_whitespace
-* max_line_length
-* root (only used by EditorConfig core)
+* `indent_style`
+* `indent_size`
+* `tab_width`
+* `end_of_line`
+* `charset`
+* `insert_final_newline` ([PreserveNoEOL][] is required for this property)
+* `trim_trailing_whitespace`
+* `max_line_length`
+* `root` (only used by EditorConfig core)
 
 ## Bugs and Feature Requests
 
