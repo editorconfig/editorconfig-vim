@@ -24,8 +24,8 @@ __all__ = ["fnmatch", "fnmatchcase", "translate"]
 
 _cache = {}
 
-_brace1 = re.compile(r'(?:^|[^\\])\{')
-_brace2 = re.compile(r'(?:^|[^\\])\}')
+LEFT_BRACE = re.compile(r'(?:^|[^\\])\{')
+RIGHT_BRACE = re.compile(r'(?:^|[^\\])\}')
 
 
 def fnmatch(name, pat):
@@ -74,7 +74,8 @@ def translate(pat, nested=False):
     in_brackets = False
     res = ''
     escaped = False
-    matching_braces = len(_brace1.findall(pat)) == len(_brace2.findall(pat))
+    matching_braces = (len(LEFT_BRACE.findall(pat)) ==
+                       len(RIGHT_BRACE.findall(pat)))
     while i < n:
         c = pat[i]
         i = i + 1
