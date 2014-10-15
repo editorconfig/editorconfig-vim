@@ -69,7 +69,7 @@ def translate(pat, nested=False):
     There is no way to quote meta-characters.
     """
 
-    i, n = 0, len(pat)
+    i, n = 0, len(pat)  # Current index (i) and length (n) of pattern
     brace_level = 0
     in_brackets = False
     res = ''
