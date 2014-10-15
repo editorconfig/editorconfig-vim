@@ -95,11 +95,14 @@ def translate(pat, nested=False):
             else:
                 res = res + '['
             in_brackets = True
-        elif c in '-]':
+        elif c == '-':
             if in_brackets:
                 res = res + c
             else:
                 res = res + '\\' + c
+        elif c == ']':
+            res = res + c
+            in_brackets = False
         elif c == '{':
             j = i
             has_comma = False
