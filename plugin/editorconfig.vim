@@ -352,10 +352,9 @@ endfunction
 " command, autoload {{{1
 command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 augroup editorconfig
-autocmd! editorconfig
-autocmd editorconfig BufNewFile,BufReadPost * call s:UseConfigFiles()
-autocmd editorconfig BufNewFile,BufRead .editorconfig set filetype=dosini
-
+    autocmd!
+    autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
+    autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
 augroup END
 
 " UseConfigFiles function for different mode {{{1
