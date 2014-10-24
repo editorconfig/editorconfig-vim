@@ -475,6 +475,11 @@ function! s:SpawnExternalParser(cmd) " {{{2
 endfunction
 
 function! s:ApplyConfig(config) " {{{1
+    " Only process normal buffers (do not treat help files as '.txt' files)
+    if !empty(&buftype)
+        return
+    endif
+
 " Set the indentation style according to the config values
 
     if has_key(a:config, "indent_style")
