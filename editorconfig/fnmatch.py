@@ -90,12 +90,24 @@ def translate(pat, nested=False):
         elif c == '[':
             if in_brackets:
                 res = res + '\\['
-            elif i < n and pat[i] in '!^':
-                i = i + 1
-                res = res + '[^'
             else:
-                res = res + '['
-            in_brackets = True
+                j = i
+                has_slash = False
+                while j < n and pat[j] != ']':
+                    if pat[j] == '/' and pat[j-1] != '\\':
+                        has_slash = True
+                        break
+                    j += 1
+                if has_slash:
+                    res = res + '\\[' + pat[i:j+1] + '\\]'
+                    i = j + 2
+                else:
+                    if i < n and pat[i] in '!^':
+                        i = i + 1
+                        res = res + '[^'
+                    else:
+                        res = res + '['
+                    in_brackets = True
         elif c == '-':
             if in_brackets:
                 res = res + c
