@@ -126,18 +126,18 @@ def translate(pat, nested=False):
     numeric_groups = []
     while i < n:
         c = pat[i]
-        i = i + 1
+        i += 1
         if c == '*':
             j = i
             if j < n and pat[j] == '*':
-                res = res + '.*'
+                res += '.*'
             else:
-                res = res + '[^/]*'
+                res += '[^/]*'
         elif c == '?':
-            res = res + '.'
+            res += '.'
         elif c == '[':
             if in_brackets:
-                res = res + '\\['
+                res += '\\['
             else:
                 j = i
                 has_slash = False
@@ -147,22 +147,22 @@ def translate(pat, nested=False):
                         break
                     j += 1
                 if has_slash:
-                    res = res + '\\[' + pat[i:j+1] + '\\]'
+                    res += '\\[' + pat[i:j+1] + '\\]'
                     i = j + 2
                 else:
                     if i < n and pat[i] in '!^':
-                        i = i + 1
-                        res = res + '[^'
+                        i += 1
+                        res += '[^'
                     else:
-                        res = res + '['
+                        res += '['
                     in_brackets = True
         elif c == '-':
             if in_brackets:
-                res = res + c
+                res += c
             else:
-                res = res + '\\' + c
+                res += '\\' + c
         elif c == ']':
-            res = res + c
+            res += c
             in_brackets = False
         elif c == '{':
             j = i
@@ -172,47 +172,47 @@ def translate(pat, nested=False):
                     has_comma = True
                     break
                 escaped = pat[j] == '\\' and not escaped
-                j = j + 1
+                j += 1
             if not has_comma and j < n:
                 num_range = NUMERIC_RANGE.match(pat[i:j])
                 if num_range:
                     numeric_groups.append(map(int, num_range.groups()))
-                    res = res + "([+-]?\d+)"
+                    res += "([+-]?\d+)"
                 else:
                     inner_res, inner_groups = translate(pat[i:j], nested=True)
-                    res = res + '\\{%s\\}' % (inner_res,)
+                    res += '\\{%s\\}' % (inner_res,)
                     numeric_groups += inner_groups
                 i = j + 1
             elif matching_braces:
-                res = res + '(?:'
+                res += '(?:'
                 brace_level += 1
             else:
-                res = res + '\\{'
+                res += '\\{'
         elif c == ',':
             if brace_level > 0 and not escaped:
-                res = res + '|'
+                res += '|'
             else:
-                res = res + '\\,'
+                res += '\\,'
         elif c == '}':
             if brace_level > 0 and not escaped:
-                res = res + ')'
+                res += ')'
                 brace_level -= 1
             else:
-                res = res + '\\}'
+                res += '\\}'
         elif c == '/':
             if pat[i:i+3] == "**/":
-                res = res + "(?:/|/.*/)"
+                res += "(?:/|/.*/)"
                 i += 3
             else:
-                res = res + '/'
+                res += '/'
         elif c != '\\':
-            res = res + re.escape(c)
+            res += re.escape(c)
         if c == '\\':
             if escaped:
-                res = res + re.escape(c)
+                res += re.escape(c)
             escaped = not escaped
         else:
             escaped = False
     if not nested:
-        res = res + '\Z(?ms)'
+        res += '\Z(?ms)'
     return res, numeric_groups
