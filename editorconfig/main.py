@@ -37,8 +37,8 @@ def main():
     try:
         opts, args = getopt.getopt(list(map(force_unicode, sys.argv[1:])),
                                    "vhb:f:", ["version", "help"])
-    except getopt.GetoptError:
-        print(str(sys.exc_info()[1]))  # For Python 2/3 compatibility
+    except getopt.GetoptError as e:
+        print(str(e))
         usage(command_name, error=True)
         sys.exit(2)
 
@@ -70,7 +70,7 @@ def main():
         try:
             options = handler.get_configurations()
         except (ParsingError, PathError, VersionError):
-            print(str(sys.exc_info()[1]))  # For Python 2/3 compatibility
+            print(str(e))
             sys.exit(2)
         if multiple_files:
             print("[%s]" % filename)
