@@ -8,36 +8,11 @@ python:
   - "3.2"
   - "3.3"
 
-# For testing with JYTHON=true, we will use Jython 2.2 instead of the python
-# version provided by Travis CI
-env:
-  - JYTHON=true
-  - JYTHON=false
-
-matrix:
-  exclude:
-    - python: "2.5"
-      env: JYTHON=true
-    - python: "2.6"
-      env: JYTHON=true
-    - python: "3.2"
-      env: JYTHON=true
-    - python: "3.3"
-      env: JYTHON=true
-
-# we need cmake, and jython if JYTHON=true
 install:
   - sudo apt-get install cmake
-  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.2.1/jython_installer-2.2.1.jar'
-  - if [ "$JYTHON" == "true" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; export PATH=$HOME/jython:$PATH;jython --version; fi
-
-# Before run the test case, we need to make jython run some code
-before_script:
-  - if [ "$JYTHON" == "true" ]; then jython -c "print ''"; fi
 
 # test script
 script:
-  - if [ "$JYTHON" == "true" ]; then cmake -DPYTHON_EXECUTABLE="$(which jython)" . ; else cmake . ; fi
   - ctest -VV --output-on-failure .
 
 # Notify the mailing list

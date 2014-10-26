@@ -24,6 +24,10 @@ __all__ = ["fnmatch", "fnmatchcase", "translate"]
 
 _cache = {}
 
+LEFT_BRACE = re.compile(r'(?:^|[^\\])\{')
+RIGHT_BRACE = re.compile(r'(?:^|[^\\])\}')
+NUMERIC_RANGE = re.compile(r'([+-]?\d+)\.\.([+-]?\d+)')
+
 
 def fnmatch(name, pat):
     """Test whether FILENAME matches PATTERN.
@@ -47,6 +51,14 @@ def fnmatch(name, pat):
     return fnmatchcase(name, pat)
 
 
+def cached_translate(pat):
+    if not pat in _cache:
+        res, num_groups = translate(pat)
+        regex = re.compile(res)
+        _cache[pat] = regex, num_groups
+    return _cache[pat]
+
+
 def fnmatchcase(name, pat):
     """Test whether FILENAME matches PATTERN, including case.
 
@@ -54,21 +66,32 @@ def fnmatchcase(name, pat):
     its arguments.
     """
 
-    if not pat in _cache:
-        res = translate(pat)
-        _cache[pat] = re.compile(res)
-    return _cache[pat].match(name) is not None
+    regex, num_groups = cached_translate(pat)
+    match = regex.match(name)
+    if not match:
+        return False
+    pattern_matched = True
+    for (num, (min_num, max_num)) in zip(match.groups(), num_groups):
+        if num[0] == '0' or not (min_num <= int(num) <= max_num):
+            pattern_matched = False
+            break
+    return pattern_matched
 
 
-def translate(pat):
+def translate(pat, nested=False):
     """Translate a shell PATTERN to a regular expression.
 
     There is no way to quote meta-characters.
     """
 
-    i, n = 0, len(pat)
+    i, n = 0, len(pat)  # Current index (i) and length (n) of pattern
+    brace_level = 0
+    in_brackets = False
     res = ''
     escaped = False
+    matching_braces = (len(LEFT_BRACE.findall(pat)) ==
+                       len(RIGHT_BRACE.findall(pat)))
+    numeric_groups = []
     while i < n:
         c = pat[i]
         i = i + 1
@@ -81,46 +104,83 @@ def translate(pat):
         elif c == '?':
             res = res + '.'
         elif c == '[':
-            j = i
-            if j < n and pat[j] == '!':
-                j = j + 1
-            if j < n and pat[j] == ']':
-                j = j + 1
-            while j < n and (pat[j] != ']' or escaped):
-                escaped = pat[j] == '\\' and not escaped
-                j = j + 1
-            if j >= n:
+            if in_brackets:
                 res = res + '\\['
             else:
-                stuff = pat[i:j]
-                i = j + 1
-                if stuff[0] == '!':
-                    stuff = '^' + stuff[1:]
-                elif stuff[0] == '^':
-                    stuff = '\\' + stuff
-                res = '%s[%s]' % (res, stuff)
+                j = i
+                has_slash = False
+                while j < n and pat[j] != ']':
+                    if pat[j] == '/' and pat[j-1] != '\\':
+                        has_slash = True
+                        break
+                    j += 1
+                if has_slash:
+                    res = res + '\\[' + pat[i:j+1] + '\\]'
+                    i = j + 2
+                else:
+                    if i < n and pat[i] in '!^':
+                        i = i + 1
+                        res = res + '[^'
+                    else:
+                        res = res + '['
+                    in_brackets = True
+        elif c == '-':
+            if in_brackets:
+                res = res + c
+            else:
+                res = res + '\\' + c
+        elif c == ']':
+            res = res + c
+            in_brackets = False
         elif c == '{':
             j = i
-            groups = []
-            while j < n and pat[j] != '}':
-                k = j
-                while k < n and (pat[k] not in (',', '}') or escaped):
-                    escaped = pat[k] == '\\' and not escaped
-                    k = k + 1
-                group = pat[j:k]
-                for char in (',', '}', '\\'):
-                    group = group.replace('\\' + char, char)
-                groups.append(group)
-                j = k
-                if j < n and pat[j] == ',':
-                    j = j + 1
-                    if j < n and pat[j] == '}':
-                        groups.append('')
-            if j >= n or len(groups) < 2:
-                res = res + '\\{'
-            else:
-                res = '%s(%s)' % (res, '|'.join(map(re.escape, groups)))
+            has_comma = False
+            while j < n and (pat[j] != '}' or escaped):
+                if pat[j] == ',' and not escaped:
+                    has_comma = True
+                    break
+                escaped = pat[j] == '\\' and not escaped
+                j = j + 1
+            if not has_comma and j < n:
+                num_range = NUMERIC_RANGE.match(pat[i:j])
+                if num_range:
+                    numeric_groups.append(map(int, num_range.groups()))
+                    res = res + "([+-]?\d+)"
+                else:
+                    inner_res, inner_groups = translate(pat[i:j], nested=True)
+                    res = res + '\\{%s\\}' % (inner_res,)
+                    numeric_groups += inner_groups
                 i = j + 1
-        else:
+            elif matching_braces:
+                res = res + '(?:'
+                brace_level += 1
+            else:
+                res = res + '\\{'
+        elif c == ',':
+            if brace_level > 0 and not escaped:
+                res = res + '|'
+            else:
+                res = res + '\\,'
+        elif c == '}':
+            if brace_level > 0 and not escaped:
+                res = res + ')'
+                brace_level -= 1
+            else:
+                res = res + '\\}'
+        elif c == '/':
+            if pat[i:i+3] == "**/":
+                res = res + "(?:/|/.*/)"
+                i += 3
+            else:
+                res = res + '/'
+        elif c != '\\':
             res = res + re.escape(c)
-    return res + '\Z(?ms)'
+        if c == '\\':
+            if escaped:
+                res = res + re.escape(c)
+            escaped = not escaped
+        else:
+            escaped = False
+    if not nested:
+        res = res + '\Z(?ms)'
+    return res, numeric_groups
