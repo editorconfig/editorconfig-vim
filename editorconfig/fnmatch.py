@@ -120,7 +120,7 @@ def translate(pat, nested=False):
     brace_level = 0
     in_brackets = False
     result = ''
-    escaped = False
+    is_escaped = False
     matching_braces = (len(LEFT_BRACE.findall(pat)) ==
                        len(RIGHT_BRACE.findall(pat)))
     numeric_groups = []
@@ -167,11 +167,11 @@ def translate(pat, nested=False):
         elif current_char == '{':
             pos = index
             has_comma = False
-            while pos < length and (pat[pos] != '}' or escaped):
-                if pat[pos] == ',' and not escaped:
+            while pos < length and (pat[pos] != '}' or is_escaped):
+                if pat[pos] == ',' and not is_escaped:
                     has_comma = True
                     break
-                escaped = pat[pos] == '\\' and not escaped
+                is_escaped = pat[pos] == '\\' and not is_escaped
                 pos += 1
             if not has_comma and pos < length:
                 num_range = NUMERIC_RANGE.match(pat[index:pos])
@@ -190,12 +190,12 @@ def translate(pat, nested=False):
             else:
                 result += '\\{'
         elif current_char == ',':
-            if brace_level > 0 and not escaped:
+            if brace_level > 0 and not is_escaped:
                 result += '|'
             else:
                 result += '\\,'
         elif current_char == '}':
-            if brace_level > 0 and not escaped:
+            if brace_level > 0 and not is_escaped:
                 result += ')'
                 brace_level -= 1
             else:
@@ -209,11 +209,11 @@ def translate(pat, nested=False):
         elif current_char != '\\':
             result += re.escape(current_char)
         if current_char == '\\':
-            if escaped:
+            if is_escaped:
                 result += re.escape(current_char)
-            escaped = not escaped
+            is_escaped = not is_escaped
         else:
-            escaped = False
+            is_escaped = False
     if not nested:
         result += '\Z(?ms)'
     return result, numeric_groups
