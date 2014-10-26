@@ -116,103 +116,104 @@ def translate(pat, nested=False):
     There is no way to quote meta-characters.
     """
 
-    i, n = 0, len(pat)  # Current index (i) and length (n) of pattern
+    index, length = 0, len(pat)  # Current index and length of pattern
     brace_level = 0
     in_brackets = False
-    res = ''
+    result = ''
     escaped = False
     matching_braces = (len(LEFT_BRACE.findall(pat)) ==
                        len(RIGHT_BRACE.findall(pat)))
     numeric_groups = []
-    while i < n:
-        c = pat[i]
-        i += 1
+    while index < length:
+        c = pat[index]
+        index += 1
         if c == '*':
-            j = i
-            if j < n and pat[j] == '*':
-                res += '.*'
+            pos = index
+            if pos < length and pat[pos] == '*':
+                result += '.*'
             else:
-                res += '[^/]*'
+                result += '[^/]*'
         elif c == '?':
-            res += '.'
+            result += '.'
         elif c == '[':
             if in_brackets:
-                res += '\\['
+                result += '\\['
             else:
-                j = i
+                pos = index
                 has_slash = False
-                while j < n and pat[j] != ']':
-                    if pat[j] == '/' and pat[j-1] != '\\':
+                while pos < length and pat[pos] != ']':
+                    if pat[pos] == '/' and pat[pos-1] != '\\':
                         has_slash = True
                         break
-                    j += 1
+                    pos += 1
                 if has_slash:
-                    res += '\\[' + pat[i:j+1] + '\\]'
-                    i = j + 2
+                    result += '\\[' + pat[index:pos+1] + '\\]'
+                    index = pos + 2
                 else:
-                    if i < n and pat[i] in '!^':
-                        i += 1
-                        res += '[^'
+                    if index < length and pat[index] in '!^':
+                        index += 1
+                        result += '[^'
                     else:
-                        res += '['
+                        result += '['
                     in_brackets = True
         elif c == '-':
             if in_brackets:
-                res += c
+                result += c
             else:
-                res += '\\' + c
+                result += '\\' + c
         elif c == ']':
-            res += c
+            result += c
             in_brackets = False
         elif c == '{':
-            j = i
+            pos = index
             has_comma = False
-            while j < n and (pat[j] != '}' or escaped):
-                if pat[j] == ',' and not escaped:
+            while pos < length and (pat[pos] != '}' or escaped):
+                if pat[pos] == ',' and not escaped:
                     has_comma = True
                     break
-                escaped = pat[j] == '\\' and not escaped
-                j += 1
-            if not has_comma and j < n:
-                num_range = NUMERIC_RANGE.match(pat[i:j])
+                escaped = pat[pos] == '\\' and not escaped
+                pos += 1
+            if not has_comma and pos < length:
+                num_range = NUMERIC_RANGE.match(pat[index:pos])
                 if num_range:
                     numeric_groups.append(map(int, num_range.groups()))
-                    res += "([+-]?\d+)"
+                    result += "([+-]?\d+)"
                 else:
-                    inner_res, inner_groups = translate(pat[i:j], nested=True)
-                    res += '\\{%s\\}' % (inner_res,)
+                    inner_result, inner_groups = translate(pat[index:pos],
+                                                           nested=True)
+                    result += '\\{%s\\}' % (inner_result,)
                     numeric_groups += inner_groups
-                i = j + 1
+                index = pos + 1
             elif matching_braces:
-                res += '(?:'
+                result += '(?:'
                 brace_level += 1
             else:
-                res += '\\{'
+                result += '\\{'
         elif c == ',':
             if brace_level > 0 and not escaped:
-                res += '|'
+                result += '|'
             else:
-                res += '\\,'
+                result += '\\,'
         elif c == '}':
             if brace_level > 0 and not escaped:
-                res += ')'
+                result += ')'
                 brace_level -= 1
             else:
-                res += '\\}'
+                result += '\\}'
         elif c == '/':
-            if pat[i:i+3] == "**/":
-                res += "(?:/|/.*/)"
-                i += 3
+            if pat[index:index+3] == "**/":
+                result += "(?:/|/.*/)"
+                index += 3
             else:
-                res += '/'
+                result += '/'
         elif c != '\\':
-            res += re.escape(c)
+            result += re.escape(c)
         if c == '\\':
             if escaped:
-                res += re.escape(c)
+                result += re.escape(c)
             escaped = not escaped
         else:
             escaped = False
     if not nested:
-        res += '\Z(?ms)'
-    return res, numeric_groups
+        result += '\Z(?ms)'
+    return result, numeric_groups
