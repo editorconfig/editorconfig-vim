@@ -1,4 +1,4 @@
-"""EditorConfig Python2/Python3/Jython compatibility utilities"""
+"""EditorConfig Python2/Python3 compatibility utilities"""
 import sys
 import types
 

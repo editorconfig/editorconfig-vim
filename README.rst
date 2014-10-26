@@ -69,7 +69,7 @@ using the following commands::
     ctest .
 
 Use ``-DPYTHON_EXECUTABLE`` to run the tests using an alternative versions of
-Python (Python 3, Jython, etc.)::
+Python (e.g. Python 3)::
 
     cmake -DPYTHON_EXECUTABLE=/usr/bin/python3 .
     ctest .
