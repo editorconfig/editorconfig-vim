@@ -147,7 +147,7 @@ def translate(pat, nested=False):
                         break
                     pos += 1
                 if has_slash:
-                    result += '\\[' + pat[index:pos+1] + '\\]'
+                    result += '\\[' + pat[index:(pos + 1)] + '\\]'
                     index = pos + 2
                 else:
                     if index < length and pat[index] in '!^':
@@ -201,7 +201,7 @@ def translate(pat, nested=False):
             else:
                 result += '\\}'
         elif c == '/':
-            if pat[index:index+3] == "**/":
+            if pat[index:(index + 3)] == "**/":
                 result += "(?:/|/.*/)"
                 index += 3
             else:
