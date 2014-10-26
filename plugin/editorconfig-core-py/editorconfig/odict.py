@@ -38,8 +38,6 @@ from __future__ import generators
 import sys
 import warnings
 
-from editorconfig.compat import slice
-
 
 __docformat__ = "restructuredtext en"
 __all__ = ['OrderedDict']

@@ -120,22 +120,22 @@ def translate(pat, nested=False):
     brace_level = 0
     in_brackets = False
     result = ''
-    escaped = False
+    is_escaped = False
     matching_braces = (len(LEFT_BRACE.findall(pat)) ==
                        len(RIGHT_BRACE.findall(pat)))
     numeric_groups = []
     while index < length:
-        c = pat[index]
+        current_char = pat[index]
         index += 1
-        if c == '*':
+        if current_char == '*':
             pos = index
             if pos < length and pat[pos] == '*':
                 result += '.*'
             else:
                 result += '[^/]*'
-        elif c == '?':
+        elif current_char == '?':
             result += '.'
-        elif c == '[':
+        elif current_char == '[':
             if in_brackets:
                 result += '\\['
             else:
@@ -156,22 +156,22 @@ def translate(pat, nested=False):
                     else:
                         result += '['
                     in_brackets = True
-        elif c == '-':
+        elif current_char == '-':
             if in_brackets:
-                result += c
+                result += current_char
             else:
-                result += '\\' + c
-        elif c == ']':
-            result += c
+                result += '\\' + current_char
+        elif current_char == ']':
+            result += current_char
             in_brackets = False
-        elif c == '{':
+        elif current_char == '{':
             pos = index
             has_comma = False
-            while pos < length and (pat[pos] != '}' or escaped):
-                if pat[pos] == ',' and not escaped:
+            while pos < length and (pat[pos] != '}' or is_escaped):
+                if pat[pos] == ',' and not is_escaped:
                     has_comma = True
                     break
-                escaped = pat[pos] == '\\' and not escaped
+                is_escaped = pat[pos] == '\\' and not is_escaped
                 pos += 1
             if not has_comma and pos < length:
                 num_range = NUMERIC_RANGE.match(pat[index:pos])
@@ -189,31 +189,31 @@ def translate(pat, nested=False):
                 brace_level += 1
             else:
                 result += '\\{'
-        elif c == ',':
-            if brace_level > 0 and not escaped:
+        elif current_char == ',':
+            if brace_level > 0 and not is_escaped:
                 result += '|'
             else:
                 result += '\\,'
-        elif c == '}':
-            if brace_level > 0 and not escaped:
+        elif current_char == '}':
+            if brace_level > 0 and not is_escaped:
                 result += ')'
                 brace_level -= 1
             else:
                 result += '\\}'
-        elif c == '/':
+        elif current_char == '/':
             if pat[index:(index + 3)] == "**/":
                 result += "(?:/|/.*/)"
                 index += 3
             else:
                 result += '/'
-        elif c != '\\':
-            result += re.escape(c)
-        if c == '\\':
-            if escaped:
-                result += re.escape(c)
-            escaped = not escaped
+        elif current_char != '\\':
+            result += re.escape(current_char)
+        if current_char == '\\':
+            if is_escaped:
+                result += re.escape(current_char)
+            is_escaped = not is_escaped
         else:
-            escaped = False
+            is_escaped = False
     if not nested:
         result += '\Z(?ms)'
     return result, numeric_groups

@@ -2,7 +2,7 @@
 
 from editorconfig.versiontools import join_version
 
-VERSION = (0, 11, 5, "development")
+VERSION = (0, 12, 0, "final")
 
 __all__ = ['get_properties', 'EditorConfigError', 'exceptions']
 

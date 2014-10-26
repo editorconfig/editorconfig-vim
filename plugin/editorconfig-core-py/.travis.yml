@@ -1,12 +1,12 @@
 language: python
 
-# We support from Python 2.4 to 2.7. However, 2.4 and 2.5 are not supported by
-# travis, so they are not listed here
 python:
   - "2.6"
   - "2.7"
   - "3.2"
   - "3.3"
+  - "3.4"
+  - "pypy"
 
 install:
   - sudo apt-get install cmake

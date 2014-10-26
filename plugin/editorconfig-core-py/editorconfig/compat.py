@@ -1,8 +1,7 @@
 """EditorConfig Python2/Python3 compatibility utilities"""
 import sys
-import types
 
-__all__ = ['slice', 'force_unicode', 'u']
+__all__ = ['force_unicode', 'u']
 
 
 if sys.version_info[0] == 2:
@@ -15,12 +14,6 @@ def force_unicode(string):
     if not isinstance(string, text_type):
         string = text_type(string, encoding='utf-8')
     return string
-
-
-if sys.version_info[0] == 2:
-    slice = types.SliceType
-else:
-    slice = slice
 
 
 if sys.version_info[0] == 2:
