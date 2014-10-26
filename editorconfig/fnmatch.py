@@ -167,6 +167,12 @@ def translate(pat, nested=False):
                 brace_level -= 1
             else:
                 res = res + '\\}'
+        elif c == '/':
+            if pat[i:i+3] == "**/":
+                res = res + "(?:/|/.*/)"
+                i += 3
+            else:
+                res = res + '/'
         elif c != '\\':
             res = res + re.escape(c)
         if c == '\\':
