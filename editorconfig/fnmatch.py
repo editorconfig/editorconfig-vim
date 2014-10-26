@@ -26,6 +26,7 @@ _cache = {}
 
 LEFT_BRACE = re.compile(r'(?:^|[^\\])\{')
 RIGHT_BRACE = re.compile(r'(?:^|[^\\])\}')
+NUMERIC_RANGE = re.compile(r'([+-]?\d+)\.\.([+-]?\d+)')
 
 
 def fnmatch(name, pat):
@@ -50,6 +51,14 @@ def fnmatch(name, pat):
     return fnmatchcase(name, pat)
 
 
+def cached_translate(pat):
+    if not pat in _cache:
+        res, num_groups = translate(pat)
+        regex = re.compile(res)
+        _cache[pat] = regex, num_groups
+    return _cache[pat]
+
+
 def fnmatchcase(name, pat):
     """Test whether FILENAME matches PATTERN, including case.
 
@@ -57,10 +66,16 @@ def fnmatchcase(name, pat):
     its arguments.
     """
 
-    if not pat in _cache:
-        res = translate(pat)
-        _cache[pat] = re.compile(res)
-    return _cache[pat].match(name) is not None
+    regex, num_groups = cached_translate(pat)
+    match = regex.match(name)
+    if not match:
+        return False
+    pattern_matched = True
+    for (num, (min_num, max_num)) in zip(match.groups(), num_groups):
+        if num[0] == '0' or not (min_num <= int(num) <= max_num):
+            pattern_matched = False
+            break
+    return pattern_matched
 
 
 def translate(pat, nested=False):
@@ -76,6 +91,7 @@ def translate(pat, nested=False):
     escaped = False
     matching_braces = (len(LEFT_BRACE.findall(pat)) ==
                        len(RIGHT_BRACE.findall(pat)))
+    numeric_groups = []
     while i < n:
         c = pat[i]
         i = i + 1
@@ -126,7 +142,14 @@ def translate(pat, nested=False):
                 escaped = pat[j] == '\\' and not escaped
                 j = j + 1
             if not has_comma and j < n:
-                res = '%s\\{%s\\}' % (res, translate(pat[i:j], nested=True))
+                num_range = NUMERIC_RANGE.match(pat[i:j])
+                if num_range:
+                    numeric_groups.append(map(int, num_range.groups()))
+                    res = res + "([+-]?\d+)"
+                else:
+                    inner_res, inner_groups = translate(pat[i:j], nested=True)
+                    res = res + '\\{%s\\}' % (inner_res,)
+                    numeric_groups += inner_groups
                 i = j + 1
             elif matching_braces:
                 res = res + '(?:'
@@ -153,7 +176,6 @@ def translate(pat, nested=False):
         else:
             escaped = False
     res = res.encode('utf-8')
-    if nested:
-        return res
-    else:
-        return res + '\Z(?ms)'
+    if not nested:
+        res = res + '\Z(?ms)'
+    return res, numeric_groups
