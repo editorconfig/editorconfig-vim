@@ -125,17 +125,17 @@ def translate(pat, nested=False):
                        len(RIGHT_BRACE.findall(pat)))
     numeric_groups = []
     while index < length:
-        c = pat[index]
+        current_char = pat[index]
         index += 1
-        if c == '*':
+        if current_char == '*':
             pos = index
             if pos < length and pat[pos] == '*':
                 result += '.*'
             else:
                 result += '[^/]*'
-        elif c == '?':
+        elif current_char == '?':
             result += '.'
-        elif c == '[':
+        elif current_char == '[':
             if in_brackets:
                 result += '\\['
             else:
@@ -156,15 +156,15 @@ def translate(pat, nested=False):
                     else:
                         result += '['
                     in_brackets = True
-        elif c == '-':
+        elif current_char == '-':
             if in_brackets:
-                result += c
+                result += current_char
             else:
-                result += '\\' + c
-        elif c == ']':
-            result += c
+                result += '\\' + current_char
+        elif current_char == ']':
+            result += current_char
             in_brackets = False
-        elif c == '{':
+        elif current_char == '{':
             pos = index
             has_comma = False
             while pos < length and (pat[pos] != '}' or escaped):
@@ -189,28 +189,28 @@ def translate(pat, nested=False):
                 brace_level += 1
             else:
                 result += '\\{'
-        elif c == ',':
+        elif current_char == ',':
             if brace_level > 0 and not escaped:
                 result += '|'
             else:
                 result += '\\,'
-        elif c == '}':
+        elif current_char == '}':
             if brace_level > 0 and not escaped:
                 result += ')'
                 brace_level -= 1
             else:
                 result += '\\}'
-        elif c == '/':
+        elif current_char == '/':
             if pat[index:(index + 3)] == "**/":
                 result += "(?:/|/.*/)"
                 index += 3
             else:
                 result += '/'
-        elif c != '\\':
-            result += re.escape(c)
-        if c == '\\':
+        elif current_char != '\\':
+            result += re.escape(current_char)
+        if current_char == '\\':
             if escaped:
-                result += re.escape(c)
+                result += re.escape(current_char)
             escaped = not escaped
         else:
             escaped = False
