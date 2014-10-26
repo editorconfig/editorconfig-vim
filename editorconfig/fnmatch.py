@@ -24,9 +24,41 @@ __all__ = ["fnmatch", "fnmatchcase", "translate"]
 
 _cache = {}
 
-LEFT_BRACE = re.compile(r'(?:^|[^\\])\{')
-RIGHT_BRACE = re.compile(r'(?:^|[^\\])\}')
-NUMERIC_RANGE = re.compile(r'([+-]?\d+)\.\.([+-]?\d+)')
+LEFT_BRACE = re.compile(
+    r"""
+
+    (?: ^ | [^\\] )     # Beginning of string or a character besides "\"
+
+    \{                  # "{"
+
+    """, re.VERBOSE
+)
+
+RIGHT_BRACE = re.compile(
+    r"""
+
+    (?: ^ | [^\\] )     # Beginning of string or a character besides "\"
+
+    \}                  # "}"
+
+    """, re.VERBOSE
+)
+
+NUMERIC_RANGE = re.compile(
+    r"""
+    (               # Capture a number
+        [+-] ?      # Zero or one "+" or "-" characters
+        \d +        # One or more digits
+    )
+
+    \.\.            # ".."
+
+    (               # Capture a number
+        [+-] ?      # Zero or one "+" or "-" characters
+        \d +        # One or more digits
+    )
+    """, re.VERBOSE
+)
 
 
 def fnmatch(name, pat):
