@@ -538,22 +538,12 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    " use a buffer variable test because we need per buffer handling, but buffer
-    " local generic autocmds are not individually targetable for deletion and
-    " a self clearing group of buffer local autocmds clobbers all buffers but
-    " the one it is last defined in.
-    if get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
-        augroup editorconfig_trim_trailing_whitespace
-            autocmd! editorconfig_trim_trailing_whitespace
-            autocmd BufWritePre * if get(b:,
-                \ 'editorconfig_trim_trailing_whitespace', 0) == 1
-                \ | :%s/\s\+$//e
-                \ | endif
-        augroup END
-        let b:editorconfig_trim_trailing_whitespace = 1
-    elseif exists('b:editorconfig_trim_trailing_whitespace')
-        unlet b:editorconfig_trim_trailing_whitespace
-    endif
+    augroup editorconfig_trim_trailing_whitespace
+        autocmd! BufWritePre <buffer>
+        if get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
+            autocmd BufWritePre <buffer> call s:TrimTrailingWhitespace()
+        endif
+    augroup END
 
     if has_key(a:config, "insert_final_newline")
         if a:config["insert_final_newline"] == "false"
@@ -578,6 +568,16 @@ function! s:ApplyConfig(config) " {{{1
 endfunction
 
 " }}}
+
+function! s:TrimTrailingWhitespace() " {{{{
+    " don't lose user position when trimming trailing whitespace
+    let s:view = winsaveview()
+    try
+        %s/\s\+$//e
+    finally
+        call winrestview(s:view)
+    endtry
+endfunction " }}}
 
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
