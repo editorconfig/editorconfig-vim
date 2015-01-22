@@ -559,7 +559,7 @@ function! s:ApplyConfig(config) " {{{1
 
             " highlight the column
             if exists('+colorcolumn')
-                let &l:colorcolumn = l:max_line_length
+                let &l:colorcolumn = join(range(l:max_line_length,&l:columns),',')
             endif
         endif
     endif
