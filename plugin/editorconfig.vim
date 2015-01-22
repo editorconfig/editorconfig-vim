@@ -557,9 +557,9 @@ function! s:ApplyConfig(config) " {{{1
         if l:max_line_length > 0
             let &l:textwidth = l:max_line_length
 
-            " highlight the column
+            " highlight the columns following max_line_length
             if exists('+colorcolumn')
-                let &l:colorcolumn = join(range(l:max_line_length,&l:columns),',')
+                let &l:colorcolumn = join(range(l:max_line_length+1,&l:columns),',')
             endif
         endif
     endif
