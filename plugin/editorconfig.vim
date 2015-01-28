@@ -49,11 +49,16 @@ if !exists('g:EditorConfig_verbose')
     let g:EditorConfig_verbose = 0
 endif
 
+if !exists('g:EditorConfig_max_line_indicator')
+    let g:EditorConfig_max_line_indicator = 'line'
+endif
+
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
     let s:editorconfig_core_mode = g:EditorConfig_core_mode
 else
     let s:editorconfig_core_mode = ''
 endif
+
 
 function! s:FindPythonInterp() " {{{1
 " Find python interp. If found, return python command; if not found, return ''
@@ -551,15 +556,20 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    if has_key(a:config, 'max_line_length')
-        let l:max_line_length = str2nr(a:config['max_line_length'])
+    " highlight the columns following max_line_length
+    if exists('+colorcolumn')
+        if has_key(a:config, 'max_line_length')
+            let l:max_line_length = str2nr(a:config['max_line_length'])
 
-        if l:max_line_length > 0
-            let &l:textwidth = l:max_line_length
+            if l:max_line_length > 0
+                let &l:textwidth = l:max_line_length
 
-            " highlight the columns following max_line_length
-            if exists('+colorcolumn')
-                let &l:colorcolumn = join(range(l:max_line_length+1,&l:columns),',')
+                if g:EditorConfig_max_line_indicator == 'line'
+                    let &l:colorcolumn = l:max_line_length + 1
+                elseif g:EditorConfig_max_line_indicator == 'fill'
+                    let &l:colorcolumn = join(
+                                \ range(l:max_line_length+1,&l:columns),',')
+                endif
             endif
         endif
     endif
