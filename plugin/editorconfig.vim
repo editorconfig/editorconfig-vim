@@ -560,10 +560,12 @@ function! s:ApplyConfig(config) " {{{1
     if has_key(a:config, 'max_line_length')
         let l:max_line_length = str2nr(a:config['max_line_length'])
 
-        if l:max_line_length > 0
+        if l:max_line_length >= 0
             let &l:textwidth = l:max_line_length
+        endif
 
-            if exists('+colorcolumn')
+        if exists('+colorcolumn')
+            if l:max_line_length > 0
                 if g:EditorConfig_max_line_indicator == 'line'
                     let &l:colorcolumn = l:max_line_length + 1
                 elseif g:EditorConfig_max_line_indicator == 'fill'
