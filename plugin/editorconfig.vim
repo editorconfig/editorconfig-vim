@@ -557,13 +557,13 @@ function! s:ApplyConfig(config) " {{{1
     endif
 
     " highlight the columns following max_line_length
-    if exists('+colorcolumn')
-        if has_key(a:config, 'max_line_length')
-            let l:max_line_length = str2nr(a:config['max_line_length'])
+    if has_key(a:config, 'max_line_length')
+        let l:max_line_length = str2nr(a:config['max_line_length'])
 
-            if l:max_line_length > 0
-                let &l:textwidth = l:max_line_length
+        if l:max_line_length > 0
+            let &l:textwidth = l:max_line_length
 
+            if exists('+colorcolumn')
                 if g:EditorConfig_max_line_indicator == 'line'
                     let &l:colorcolumn = l:max_line_length + 1
                 elseif g:EditorConfig_max_line_indicator == 'fill'
