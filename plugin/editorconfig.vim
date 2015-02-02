@@ -1,4 +1,4 @@
-" Copyright (c) 2011-2012 EditorConfig Team
+" Copyright (c) 2011-2015 EditorConfig Team
 " All rights reserved.
 "
 " Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,10 @@ endif
 
 if !exists('g:EditorConfig_max_line_indicator')
     let g:EditorConfig_max_line_indicator = 'line'
+endif
+
+if !exists('g:EditorConfig_exclude_patterns')
+    let g:EditorConfig_exclude_patterns = []
 endif
 
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
@@ -340,6 +344,19 @@ if empty(s:editorconfig_core_mode)
 endif
 
 function! s:UseConfigFiles()
+
+    " ignore buffers without a name
+    if empty(expand('%:p'))
+        return
+    endif
+
+    " Ignore specific patterns
+    for pattern in g:EditorConfig_exclude_patterns
+        if expand('%:p') =~ pattern
+            return
+        endif
+    endfor
+
     if s:editorconfig_core_mode == 'external_command'
         call s:UseConfigFiles_ExternalCommand()
     elseif s:editorconfig_core_mode == 'python_builtin'
