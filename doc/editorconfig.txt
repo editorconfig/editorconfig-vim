@@ -88,7 +88,7 @@ If "g:EditorConfig_core_mode" is not specified, this plugin will automatically
 choose a mode that could work for you. The checking sequence is:
 python_builtin, external_command, python_external.
 
-                                            *g:EditorConfig_execlude_patterns*
+                                            *g:EditorConfig_exclude_patterns*
 This is a list contains file path patterns which will be ignored by
 EditorConfig plugin. When the path of the opened buffer (i.e.
 "expand('%:p')") matches any of the patterns in the list, EditorConfig will
@@ -96,7 +96,7 @@ not load for this file. The default is an empty list.
 
 Example: Avoid loading EditorConfig for any remote files over ssh
 >
- let g:EditorConfig_execlude_patterns = ['scp://.*']
+ let g:EditorConfig_exclude_patterns = ['scp://.*']
 <
 
                                             *g:EditorConfig_exec_path*
