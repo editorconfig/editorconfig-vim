@@ -14,7 +14,7 @@ There are two ways for installation:
   the most simple way to install this plugin is to 
   download the archive and extract it into your Vim runtime directory (`~/.vim`
   on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
-  You can verify if `+python` is supported by running `:ver`.
+  You can verify if the `+python` feature is included by running `:ver`.
 
 - If your Vim is not compiled with `+python` feature, please first download the
   [EditorConfig core][] and follow the instructions in the README and INSTALL
