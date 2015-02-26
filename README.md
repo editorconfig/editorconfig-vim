@@ -10,9 +10,11 @@ This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
 There are two ways for installation:
 
 - If your Vim is compiled with `+python` feature (this is usually true on most
-  Linux distributions), the most simple way to install this plugin is to
+  Linux distributions and with the main Windows binary installers), 
+  the most simple way to install this plugin is to 
   download the archive and extract it into your Vim runtime directory (`~/.vim`
-  on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
+  on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows). 
+  You can verify if `+python` is supported by running `:py print 2+2`.
 
 - If your Vim is not compiled with `+python` feature, please first download the
   [EditorConfig core][] and follow the instructions in the README and INSTALL
