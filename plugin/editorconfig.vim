@@ -508,6 +508,8 @@ function! s:ApplyConfig(config) " {{{1
             setl noexpandtab
         elseif a:config["indent_style"] == "space"
             setl expandtab
+        elseif a:config["indent_style"] == "none"
+            setl indentexpr&
         endif
     endif
     if has_key(a:config, "tab_width")
