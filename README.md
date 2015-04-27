@@ -36,6 +36,33 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 * `max_line_length`
 * `root` (only used by EditorConfig core)
 
+## Recommended Options
+
+All of the options which are supported are documented in [editorConfig.txt][]
+and can be viewed by executing the following: `:help editorconfig`.
+
+#### Excluded patterns.
+
+To ensure that this plugin works well with [Tim Pope's fugitive][], use the
+following patterns array:
+
+> let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
+
+If you wanted to avoid loading EditorConfig for any remote files over ssh:
+
+> let g:EditorConfig_exclude_patterns = ['scp://.\*']
+
+Of course these two items could be combined into the following:
+
+> let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
+
+#### Exec Path
+
+The file path to the EditorConfig core executable. You could set this value in
+your |vimrc| like this:
+
+> let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
+
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the main 
@@ -48,3 +75,4 @@ Feel free to submit bugs, feature requests, and other issues to the main
 [Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
 [EditorConfig issue tracker]: https://github.com/editorconfig/editorconfig/issues
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
+[Tim Pope's fugitive]: https://github.com/tpope/vim-fugitive
