@@ -49,6 +49,10 @@ if !exists('g:EditorConfig_verbose')
     let g:EditorConfig_verbose = 0
 endif
 
+if !exists('g:EditorConfig_preserve_formatoptions')
+    let g:EditorConfig_preserve_formatoptions = 0
+endif
+
 if !exists('g:EditorConfig_max_line_indicator')
     let g:EditorConfig_max_line_indicator = 'line'
 endif
@@ -579,6 +583,9 @@ function! s:ApplyConfig(config) " {{{1
 
         if l:max_line_length >= 0
             let &l:textwidth = l:max_line_length
+            if g:EditorConfig_preserve_formatoptions == 0
+                setlocal formatoptions+=tc
+            endif
         endif
 
         if exists('+colorcolumn')
