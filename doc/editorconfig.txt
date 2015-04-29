@@ -170,6 +170,15 @@ path relative to any of the directories in 'runtimepath'. The default value is
 "plugin/editorconfig-core-py", which means all "plugin/editorconfig-core-py"
 directory in 'runtimepath' will be searched.
 
+                                            *g:EditorConfig_preserve_formatoptions*
+Set this to 1 if you don't want your formatoptions modified when
+max_line_length is set:
+>
+ let g:EditorConfig_preserve_formatoptions = 1
+<
+
+This option defaults to 0.
+
                                             *g:EditorConfig_verbose*
 Set this to 1 if you want debug info printed:
 >
