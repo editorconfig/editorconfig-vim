@@ -7,19 +7,20 @@ This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
 
 ## Installation
 
-There are two ways for installation:
+If your Vim is not compiled with `+python` feature (You can verify if the
+`+python` feature is included by running `:ver`.  Most Linux distributions and
+with the official Windows binary have the `+python` feature enabled), please
+first download the [EditorConfig core][] and follow the instructions in the
+README and INSTALL files to install it. This plugin would NOT work if neither
+`+python` nor EditorConfig core is available.
 
-- If your Vim is compiled with `+python` feature (this is usually true on most
-  Linux distributions and with the main Windows binary installers), 
-  the most simple way to install this plugin is to 
-  download the archive and extract it into your Vim runtime directory (`~/.vim`
+To install this plugin, you can use either of the following ways:
+
+- Download the archive and extract it into your Vim runtime directory (`~/.vim`
   on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
-  You can verify if the `+python` feature is included by running `:ver`.
 
-- If your Vim is not compiled with `+python` feature, please first download the
-  [EditorConfig core][] and follow the instructions in the README and INSTALL
-  files to install it. This plugin would NOT work if neither `+python` nor
-  EditorConfig core is available.
+- Use [pathogen][] (the git repository of this plugin is
+  https://github.com/editorconfig/editorconfig-vim.git)
 
 
 ## Supported properties
@@ -71,6 +72,7 @@ Feel free to submit bugs, feature requests, and other issues to the main
 [EditorConfig]: http://editorconfig.org
 [EditorConfig core]: https://github.com/editorconfig/editorconfig-core
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
+[pathogen]: https://github.com/tpope/vim-pathogen
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 [Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
 [EditorConfig issue tracker]: https://github.com/editorconfig/editorconfig/issues
