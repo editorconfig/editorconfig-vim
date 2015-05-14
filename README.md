@@ -66,15 +66,15 @@ your |vimrc| like this:
 
 ## Bugs and Feature Requests
 
-Feel free to submit bugs, feature requests, and other issues to the main 
-[EditorConfig issue tracker][].
+Feel free to submit bugs, feature requests, and other issues to the
+[issue tracker][].
 
 [EditorConfig]: http://editorconfig.org
 [EditorConfig core]: https://github.com/editorconfig/editorconfig-core
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
+[issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
 [pathogen]: https://github.com/tpope/vim-pathogen
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 [Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
-[EditorConfig issue tracker]: https://github.com/editorconfig/editorconfig/issues
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
 [Tim Pope's fugitive]: https://github.com/tpope/vim-fugitive
