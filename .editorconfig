@@ -3,6 +3,7 @@ root = true
 [*]
 end_of_line = LF
 charset = utf-8
+max_line_length = 80
 
 [*.vim]
 indent_style = space
