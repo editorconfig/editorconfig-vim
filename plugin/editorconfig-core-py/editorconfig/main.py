@@ -69,7 +69,7 @@ def main():
         handler = EditorConfigHandler(filename, conf_filename, version_tuple)
         try:
             options = handler.get_configurations()
-        except (ParsingError, PathError, VersionError):
+        except (ParsingError, PathError, VersionError) as e:
             print(str(e))
             sys.exit(2)
         if multiple_files:
