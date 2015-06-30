@@ -22,6 +22,12 @@ To install this plugin, you can use either of the following ways:
 - Use [pathogen][] (the git repository of this plugin is
   https://github.com/editorconfig/editorconfig-vim.git)
 
+- Use [Vundle][] by adding to your `.vimrc` Vundle plugins section:
+
+        Plugin 'editorconfig/editorconfig-vim'
+  
+  Then remember to call `:PluginInstall`.
+
 
 ## Supported properties
 
@@ -74,6 +80,7 @@ Feel free to submit bugs, feature requests, and other issues to the
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
 [issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
 [pathogen]: https://github.com/tpope/vim-pathogen
+[Vundle]: https://github.com/gmarik/Vundle.vim
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 [Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
