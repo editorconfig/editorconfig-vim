@@ -73,15 +73,16 @@ your |vimrc| like this:
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the
-[issue tracker][].
+[issue tracker][]. Be sure you have read the [contribution guideline][]!
 
-[EditorConfig]: http://editorconfig.org
 [EditorConfig core]: https://github.com/editorconfig/editorconfig-core
+[EditorConfig]: http://editorconfig.org
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
-[issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
-[pathogen]: https://github.com/tpope/vim-pathogen
-[Vundle]: https://github.com/gmarik/Vundle.vim
-[properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
-[Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
 [Tim Pope's fugitive]: https://github.com/tpope/vim-fugitive
+[Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
+[Vundle]: https://github.com/gmarik/Vundle.vim
+[contribution guideline]: https://github.com/editorconfig/editorconfig/blob/master/CONTRIBUTING.md#submitting-an-issue
+[issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
+[pathogen]: https://github.com/tpope/vim-pathogen
+[properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
