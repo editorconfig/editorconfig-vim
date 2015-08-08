@@ -38,7 +38,7 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 * `tab_width`
 * `end_of_line`
 * `charset`
-* `insert_final_newline` ([PreserveNoEOL][] is required for this property)
+* `insert_final_newline` (Vim 7.4.785 or later or [PreserveNoEOL][] is required for this property)
 * `trim_trailing_whitespace`
 * `max_line_length`
 * `root` (only used by EditorConfig core)

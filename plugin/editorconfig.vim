@@ -572,8 +572,16 @@ function! s:ApplyConfig(config) " {{{1
     augroup END
 
     if has_key(a:config, "insert_final_newline")
-        if a:config["insert_final_newline"] == "false"
-            silent! SetNoEOL    " Use the PreserveNoEOL plugin to accomplish it
+        if exists('+fixendofline')
+            if a:config["insert_final_newline"] == "false"
+                setl nofixendofline
+            else
+                setl fixendofline
+            endif
+        elseif  exists(':SetNoEOL') == 2
+            if a:config["insert_final_newline"] == "false"
+                silent! SetNoEOL    " Use the PreserveNoEOL plugin to accomplish it
+            endif
         endif
     endif
 
