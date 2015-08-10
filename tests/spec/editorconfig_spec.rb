@@ -106,5 +106,16 @@ describe 'plugin/editorconfig.vim' do
       fileencoding: 'latin1'
   end
 
-  # insert_final_newline tests are omitted, since they are not supported
+  # insert_final_newline by PreserveNoEOL tests are omitted, since they are not supported
+  if $vim.echo("exists('+fixendofline')") == '1'
+    it 'with_newline.txt' do
+      test_editorconfig 'with_newline.txt',
+        fixendofline: '1'
+    end
+
+    it 'without_newline.txt' do
+      test_editorconfig 'without_newline.txt',
+        fixendofline: '0'
+    end
+  end
 end
