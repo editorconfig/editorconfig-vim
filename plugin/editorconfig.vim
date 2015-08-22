@@ -127,7 +127,7 @@ function! s:FindPythonFiles() " {{{1
 
     " expand python core file path to full path, and remove the appending '/'
     let l:python_core_files_dir = substitute(
-                \ fnamemodify(l:python_core_files_dir, ':p'), '/$', '', '')
+                \ fnamemodify(l:python_core_files_dir, ':p:h'), '/$', '', '')
 
     let &shellslash = l:old_shellslash
 
