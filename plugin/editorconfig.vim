@@ -117,9 +117,9 @@ function! s:FindPythonFiles() " {{{1
     let l:old_shellslash = &shellslash
     set shellslash
 
-    let l:python_core_files_dir = substitute(
+    let l:python_core_files_dir = fnamemodify(
                 \ findfile(g:EditorConfig_python_files_dir . '/main.py',
-                \ ','.&runtimepath), '/main.py$', '', '')
+                \ ','.&runtimepath), ':p:h')
 
     if empty(l:python_core_files_dir)
         return ''
