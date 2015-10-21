@@ -459,11 +459,19 @@ function! s:SpawnExternalParser(cmd) " {{{2
         " In Windows, 'shellslash' also changes the behavior of 'shellescape'.
         " It makes 'shellescape' behave like in UNIX environment. So ':setl
         " noshellslash' before evaluating 'shellescape' and restore the
-        " settings afterwards.
-        let l:old_shellslash = &l:shellslash
-        setlocal noshellslash
+        " settings afterwards when 'shell' does not contain 'sh' somewhere.
+        if has('win32') && empty(matchstr(&shell, 'sh'))
+            let l:old_shellslash = &l:shellslash
+            setlocal noshellslash
+        endif
+
         let l:cmd = l:cmd . ' ' . shellescape(expand('%:p'))
-        let &l:shellslash = l:old_shellslash
+
+        " restore 'shellslash'
+        if exists('l:old_shellslash')
+            let &l:shellslash = l:old_shellslash
+        endif
+
         let l:parsing_result = split(system(l:cmd), '\n')
 
         " if editorconfig core's exit code is not zero, give out an error
