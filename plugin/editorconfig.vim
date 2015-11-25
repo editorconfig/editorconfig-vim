@@ -54,7 +54,6 @@ command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 augroup editorconfig
     autocmd!
     autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
-    autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
 augroup END
 
 function! s:UseConfigFiles()
