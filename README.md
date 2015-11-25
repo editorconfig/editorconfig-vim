@@ -7,13 +7,6 @@ This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
 
 ## Installation
 
-If your Vim is not compiled with `+python` feature (You can verify if the
-`+python` feature is included by running `:ver`.  Most Linux distributions and
-with the official Windows binary have the `+python` feature enabled), please
-first download the [EditorConfig core][] and follow the instructions in the
-README and INSTALL files to install it. This plugin would NOT work if neither
-`+python` nor EditorConfig core is available.
-
 To install this plugin, you can use either of the following ways:
 
 - Download the archive and extract it into your Vim runtime directory (`~/.vim`
@@ -25,7 +18,7 @@ To install this plugin, you can use either of the following ways:
 - Use [Vundle][] by adding to your `.vimrc` Vundle plugins section:
 
         Plugin 'editorconfig/editorconfig-vim'
-  
+
   Then remember to call `:PluginInstall`.
 
 
