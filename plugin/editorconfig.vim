@@ -76,10 +76,8 @@ function! s:UseConfigFiles()
 	endif
 
 	let inrange = 0
-	let lines = readfile(fnamemodify(configfile, ':p'))
 	let config = {}
-	for l in range(len(lines))
-		let line = lines[l]
+	for line in readfile(fnamemodify(configfile, ':p'))
 		let mx = '^\[\([^\]]\+\)\]'
 		if line =~ mx
 			let pattern = matchlist(line, mx)[1]
