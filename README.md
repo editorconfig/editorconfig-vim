@@ -45,7 +45,7 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 
 ## Recommended Options
 
-All of the options which are supported are documented in [editorConfig.txt][]
+All of the options which are supported are documented in [editorconfig.txt][]
 and can be viewed by executing the following: `:help editorconfig`.
 
 #### Excluded patterns.
@@ -86,4 +86,4 @@ Feel free to submit bugs, feature requests, and other issues to the
 [issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
 [pathogen]: https://github.com/tpope/vim-pathogen
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
-[editorConfig.txt]: https://github.com/editorconfig/editorconfig-vim/blob/master/doc/editorconfig.txt
+[editorconfig.txt]: https://github.com/editorconfig/editorconfig-vim/blob/master/doc/editorconfig.txt
