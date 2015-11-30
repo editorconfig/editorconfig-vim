@@ -86,3 +86,4 @@ Feel free to submit bugs, feature requests, and other issues to the
 [issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
 [pathogen]: https://github.com/tpope/vim-pathogen
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
+[editorConfig.txt]: https://github.com/editorconfig/editorconfig-vim/blob/master/doc/editorconfig.txt
