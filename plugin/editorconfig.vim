@@ -609,7 +609,9 @@ function! s:ApplyConfig(config) " {{{1
             if l:max_line_length > 0
                 if g:EditorConfig_max_line_indicator == 'line'
                     let &l:colorcolumn = l:max_line_length + 1
-                elseif g:EditorConfig_max_line_indicator == 'fill'
+                elseif g:EditorConfig_max_line_indicator == 'fill' &&
+                            \ l:max_line_length < &l:columns
+                    " Fill only if the columns of screen is large enough
                     let &l:colorcolumn = join(
                                 \ range(l:max_line_length+1,&l:columns),',')
                 endif
