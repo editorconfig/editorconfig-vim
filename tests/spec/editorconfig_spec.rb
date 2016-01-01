@@ -12,7 +12,7 @@ def test_editorconfig(file_name, expected_values)
   $vim.edit(File.join(BASE_PATH, file_name))
 
   expected_values.each do |key, val|
-    $vim.echo("&l:#{key}").should == val
+    expect($vim.echo("&l:#{key}")).to eq(val)
   end
 
   $vim.command 'bd!'
