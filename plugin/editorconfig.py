@@ -11,12 +11,11 @@ try:
 
         import editorconfig
         import editorconfig.exceptions as editorconfig_except
-
     except:
         vim.command('let l:ret = 3')
         raise
-
-    del sys.path[0]
+    finally:
+        del sys.path[0]
 
     # `ec_` prefix is used in order to keep clean Python namespace
     ec_data = {}
