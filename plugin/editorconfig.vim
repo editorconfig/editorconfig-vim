@@ -36,6 +36,8 @@ let g:loaded_EditorConfig = 1
 let s:saved_cpo = &cpo
 set cpo&vim
 
+let s:pyscript_path = expand('<sfile>:p:r') . '.py'
+
 " variables {{{1
 if !exists('g:EditorConfig_exec_path')
     let g:EditorConfig_exec_path = ''
@@ -231,48 +233,23 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
 
     let s:builtin_python_initialized = 1
 
-    let l:ret = 0
-
-    if !has('python')
+    if has('python')
+        let s:pyfile_cmd = 'pyfile'
+        let s:py_cmd = 'py'
+    elseif has('python3')
+        let s:pyfile_cmd = 'py3file'
+        let s:py_cmd = 'py3'
+    else
         return 1
     endif
 
-    python << EEOOFF
+    let l:ret = 0
+    " The following line modifies l:ret. This is a bit confusing but
+    " unfortunately to be compatible with Vim 7.3, we cannot use pyeval. This
+    " should be changed in the future.
+    execute s:pyfile_cmd s:pyscript_path
 
-try:
-    import vim
-    import sys
-except:
-    vim.command('let l:ret = 2')
-
-EEOOFF
-
-    if l:ret != 0
-        return l:ret
-    endif
-
-    python << EEOOFF
-
-try:
-    sys.path.insert(0, vim.eval('a:editorconfig_core_py_dir'))
-
-    import editorconfig
-    import editorconfig.exceptions as editorconfig_except
-
-except:
-    vim.command('let l:ret = 3')
-
-del sys.path[0]
-
-ec_data = {}  # used in order to keep clean Python namespace
-
-EEOOFF
-
-    if l:ret != 0
-        return l:ret
-    endif
-
-    return 0
+    return l:ret
 endfunction
 
 " Do some initalization for the case that the user has specified core mode {{{1
@@ -388,41 +365,22 @@ augroup END
 function! s:UseConfigFiles_Python_Builtin() " {{{2
 " Use built-in python to run the python EditorConfig core
 
-    let l:config = {}
-    let l:ret = 0
-
     " ignore buffers that do not have a file path associated
     if empty(expand('%:p'))
         return 0
     endif
 
-    python << EEOOFF
+    let l:config = {}
 
-ec_data['filename'] = vim.eval("expand('%:p')")
-ec_data['conf_file'] = ".editorconfig"
-
-try:
-    ec_data['options'] = editorconfig.get_properties(ec_data['filename'])
-except editorconfig_except.EditorConfigError as e:
-    if int(vim.eval('g:EditorConfig_verbose')) != 0:
-        print >> sys.stderr, str(e)
-    vim.command('let l:ret = 1')
-
-EEOOFF
+    let l:ret = 0
+    execute s:py_cmd 'ec_UseConfigFiles()'
     if l:ret != 0
         return l:ret
     endif
 
-    python << EEOOFF
-for key, value in ec_data['options'].items():
-    vim.command("let l:config['" + key.replace("'", "''") + "'] = " +
-        "'" + value.replace("'", "''") + "'")
-
-EEOOFF
-
     call s:ApplyConfig(l:config)
 
-    return 0
+    return l:ret
 endfunction
 
 function! s:UseConfigFiles_Python_External() " {{{2
