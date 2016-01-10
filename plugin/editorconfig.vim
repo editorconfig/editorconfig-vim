@@ -233,16 +233,18 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
 
     let s:builtin_python_initialized = 1
 
-    let l:ret = 0
     if has('python')
-        execute 'pyfile ' . s:pyscript_path
-        let s:py_eval = 'pyeval'
+        let s:pyfile_cmd = 'pyfile'
+        let s:py_cmd = 'py'
     elseif has ('python3')
-        execute 'py3file ' . s:pyscript_path
-        let s:py_eval = 'py3eval'
+        let s:pyfile_cmd = 'py3file'
+        let s:py_cmd = 'py3'
     else
-        let l:ret = 1
+        return 1
     endif
+
+    let l:ret = 0
+    execute s:pyfile_cmd s:pyscript_path
 
     return l:ret
 endfunction
@@ -367,7 +369,8 @@ function! s:UseConfigFiles_Python_Builtin() " {{{2
 
     let l:config = {}
 
-    let l:ret = eval(s:py_eval . '(''ec_UseConfigFiles()'')')
+    let l:ret = 0
+    execute s:py_cmd 'ec_UseConfigFiles()'
     if l:ret != 0
         return l:ret
     endif

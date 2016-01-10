@@ -31,13 +31,12 @@ try:
         except editorconfig_except.EditorConfigError as e:
             if int(vim.eval('g:EditorConfig_verbose')) != 0:
                 print(str(e), file=sys.stderr)
-            return 1
+            vim.command('let l:ret = 1')
+            return
 
         for key, value in ec_data['options'].items():
             vim.command("let l:config['" + key.replace("'", "''") + "'] = " +
                 "'" + value.replace("'", "''") + "'")
-
-        return 0
 
 except:
     pass
