@@ -79,7 +79,8 @@ empty. There are 3 modes currently: "external_command", "python_builtin",
 "python_external".
 
     python_builtin:     Use the vim built-in python to run the python version
-                        EditorConfig Core.
+                        EditorConfig Core. In this mode, Python 2.5 or higher
+                        is required.
     python_external:    Use an external python interpreter to run the python
                         version EditorConfig Core.
     external_command:   Run external EditorConfig Core.
