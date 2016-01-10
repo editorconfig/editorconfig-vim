@@ -29,7 +29,7 @@ try:
             ec_data['options'] = editorconfig.get_properties(ec_data['filename'])
         except editorconfig_except.EditorConfigError as e:
             if int(vim.eval('g:EditorConfig_verbose')) != 0:
-                print >> sys.stderr, str(e)
+                print(str(e), file=sys.stderr)
             return 1
 
         for key, value in ec_data['options'].items():
