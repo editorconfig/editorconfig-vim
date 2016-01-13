@@ -327,14 +327,19 @@ endif
 
 function! s:UseConfigFiles()
 
+    let l:buffer_name = expand('%:p')
     " ignore buffers without a name
-    if empty(expand('%:p'))
+    if empty(l:buffer_name)
         return
+    endif
+
+    if g:EditorConfig_verbose
+        echo 'Applying EditorConfig on file \"\"' . l:buffer_name
     endif
 
     " Ignore specific patterns
     for pattern in g:EditorConfig_exclude_patterns
-        if expand('%:p') =~ pattern
+        if l:buffer_name =~ pattern
             return
         endif
     endfor
@@ -443,6 +448,11 @@ function! s:SpawnExternalParser(cmd) " {{{2
             echo l:parsing_result
             echohl None
             return
+        endif
+
+        if g:EditorConfig_verbose
+            echo 'Output from EditorConfig core executable:'
+            echo l:parsing_result
         endif
 
         for one_line in l:parsing_result
