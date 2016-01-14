@@ -334,7 +334,7 @@ function! s:UseConfigFiles()
     endif
 
     if g:EditorConfig_verbose
-        echo 'Applying EditorConfig on file \"\"' . l:buffer_name
+        echo 'Applying EditorConfig on file "' . l:buffer_name . '"'
     endif
 
     " Ignore specific patterns
