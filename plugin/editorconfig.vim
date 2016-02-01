@@ -121,15 +121,15 @@ function! s:FindPythonFiles() " {{{1
 
     let l:python_core_files_dir = fnamemodify(
                 \ findfile(g:EditorConfig_python_files_dir . '/main.py',
-                \ ','.&runtimepath), ':p:h')
+                \ fnameescape(','.&runtimepath)), ':p:h')
 
     if empty(l:python_core_files_dir)
         let l:python_core_files_dir = ''
     else
 
-    " expand python core file path to full path, and remove the appending '/'
-    let l:python_core_files_dir = substitute(
-                \ fnamemodify(l:python_core_files_dir, ':p'), '/$', '', '')
+        " expand python core file path to full path, and remove the appending '/'
+        let l:python_core_files_dir = substitute(
+                    \ fnamemodify(l:python_core_files_dir, ':p'), '/$', '', '')
     endif
 
     let &shellslash = l:old_shellslash
@@ -247,7 +247,7 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
     " The following line modifies l:ret. This is a bit confusing but
     " unfortunately to be compatible with Vim 7.3, we cannot use pyeval. This
     " should be changed in the future.
-    execute s:pyfile_cmd s:pyscript_path
+    execute s:pyfile_cmd fnameescape(s:pyscript_path)
 
     return l:ret
 endfunction
@@ -391,8 +391,8 @@ endfunction
 function! s:UseConfigFiles_Python_External() " {{{2
 " Use external python interp to run the python EditorConfig Core
 
-    let l:cmd = s:editorconfig_python_interp . ' ' .
-                \ s:editorconfig_core_py_dir . '/main.py'
+    let l:cmd = shellescape(s:editorconfig_python_interp) . ' ' .
+                \ shellescape(s:editorconfig_core_py_dir . '/main.py')
 
     call s:SpawnExternalParser(l:cmd)
 
