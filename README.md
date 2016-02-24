@@ -14,18 +14,24 @@ first download the [EditorConfig core][] and follow the instructions in the
 README and INSTALL files to install it. This plugin would NOT work if neither
 `+python` nor EditorConfig core is available.
 
-To install this plugin, you can use either of the following ways:
+To install this plugin, you can use one of the following ways:
 
-- Download the archive and extract it into your Vim runtime directory (`~/.vim`
-  on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
+- Download the [archive][] and extract it into your Vim runtime directory
+  (`~/.vim` on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
+  You should have 3 sub-directories in this runtime directory now: "autoload",
+  "doc" and "plugin".
+
+OR
 
 - Use [pathogen][] (the git repository of this plugin is
   https://github.com/editorconfig/editorconfig-vim.git)
 
+OR
+
 - Use [Vundle][] by adding to your `.vimrc` Vundle plugins section:
 
         Plugin 'editorconfig/editorconfig-vim'
-  
+
   Then remember to call `:PluginInstall`.
 
 
@@ -82,6 +88,7 @@ Feel free to submit bugs, feature requests, and other issues to the
 [Tim Pope's fugitive]: https://github.com/tpope/vim-fugitive
 [Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
 [Vundle]: https://github.com/gmarik/Vundle.vim
+[archive]: https://github.com/editorconfig/editorconfig-vim/archive/master.zip
 [contribution guideline]: https://github.com/editorconfig/editorconfig/blob/master/CONTRIBUTING.md#submitting-an-issue
 [issue tracker]: https://github.com/editorconfig/editorconfig-vim/issues
 [pathogen]: https://github.com/tpope/vim-pathogen
