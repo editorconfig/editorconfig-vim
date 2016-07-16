@@ -5,7 +5,10 @@ rvm:
 
 gemfile: tests/Gemfile
 
-before_install: sudo apt-get update -qq && sudo apt-get install -y vim-gtk
+addons:
+  apt:
+    packages:
+      - vim-gtk
 
 before_script:
   - "export DISPLAY=:99.0"
