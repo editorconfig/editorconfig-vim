@@ -419,11 +419,6 @@ augroup END
 function! s:UseConfigFiles_Python_Builtin() " {{{2
 " Use built-in python to run the python EditorConfig core
 
-    " ignore buffers that do not have a file path associated
-    if empty(expand('%:p'))
-        return 0
-    endif
-
     let l:config = {}
 
     let l:ret = 0
@@ -467,11 +462,6 @@ function! s:SpawnExternalParser(cmd) " {{{2
 " s:UseConfigFiles_ExternalCommand()
 
     let l:cmd = a:cmd
-
-    " ignore buffers that do not have a file path associated
-    if empty(expand("%:p"))
-        return
-    endif
 
     " if editorconfig is present, we use this as our parser
     if !empty(l:cmd)
