@@ -345,11 +345,40 @@ if empty(s:editorconfig_core_mode)
     finish
 endif
 
+function! s:get_filenames(path, filename)
+" Yield full filepath for filename in each directory in and above path
+
+    let l:path_list = []
+    let l:path = a:path
+    while 1
+        let l:path_list += [l:path . '/' . a:filename]
+        let l:newpath = fnamemodify(l:path, ':h')
+        if l:path == l:newpath
+            break
+        endif
+        let l:path = l:newpath
+    endwhile
+    return l:path_list
+endfunction
+
 function! s:UseConfigFiles()
 
     let l:buffer_name = expand('%:p')
     " ignore buffers without a name
     if empty(l:buffer_name)
+        return
+    endif
+
+    " Check if any .editorconfig does exist
+    let l:conf_files = s:get_filenames(expand('%:p:h'), '.editorconfig')
+    let l:conf_found = 0
+    for conf_file in conf_files
+        if filereadable(conf_file)
+            let l:conf_found = 1
+            break
+        endif
+    endfor
+    if !l:conf_found
         return
     endif
 
