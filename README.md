@@ -52,7 +52,8 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
 ## Recommended Options
 
 All of the options which are supported are documented in [editorconfig.txt][]
-and can be viewed by executing the following: `:help editorconfig`.
+and can be viewed by executing the following: `:help editorconfig`. You may
+need to execute `:helptags ALL` so that Vim is aware of editorconfig.txt.
 
 #### Excluded patterns.
 
