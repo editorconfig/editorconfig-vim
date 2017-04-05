@@ -332,7 +332,7 @@ function! s:get_filenames(path, filename)
     let l:path = a:path
     while 1
         let l:path_list += [l:path . '/' . a:filename]
-        let l:newpath = fnamemodify(l:path, ':p:h')
+        let l:newpath = fnamemodify(l:path, ':h')
         if l:path == l:newpath
             break
         endif
