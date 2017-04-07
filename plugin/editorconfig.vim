@@ -403,7 +403,12 @@ endfunction
 
 function! s:UseConfigFiles_ExternalCommand() " {{{2
 " Use external EditorConfig core (The C core, or editorconfig.py)
-    call s:SpawnExternalParser(s:EditorConfig_exec_path)
+
+    call s:DisableShellSlash()
+    let l:exec_path = shellescape(s:EditorConfig_exec_path)
+    call s:ResetShellSlash()
+
+    call s:SpawnExternalParser(l:exec_path)
 endfunction
 
 function! s:SpawnExternalParser(cmd) " {{{2
