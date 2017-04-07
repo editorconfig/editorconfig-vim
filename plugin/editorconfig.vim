@@ -115,9 +115,7 @@ endfunction
 function! s:FindPythonFiles() " {{{1
 " Find EditorConfig Core python files
 
-    " On Windows, we still use slash rather than backslash
-    let l:old_shellslash = &shellslash
-    set shellslash
+    call s:DisableShellSlash()
 
     let l:python_core_files_dir = fnamemodify(
                 \ findfile(g:EditorConfig_python_files_dir . '/main.py',
@@ -132,7 +130,7 @@ function! s:FindPythonFiles() " {{{1
                     \ fnamemodify(l:python_core_files_dir, ':p'), '/$', '', '')
     endif
 
-    let &shellslash = l:old_shellslash
+    call s:ResetShellSlash()
 
     return l:python_core_files_dir
 endfunction
@@ -419,21 +417,11 @@ function! s:SpawnExternalParser(cmd) " {{{2
     if !empty(l:cmd)
         let l:config = {}
 
-        " In Windows, 'shellslash' also changes the behavior of 'shellescape'.
-        " It makes 'shellescape' behave like in UNIX environment. So ':setl
-        " noshellslash' before evaluating 'shellescape' and restore the
-        " settings afterwards when 'shell' does not contain 'sh' somewhere.
-        if has('win32') && empty(matchstr(&shell, 'sh'))
-            let l:old_shellslash = &l:shellslash
-            setlocal noshellslash
-        endif
+        call s:DisableShellSlash()
 
         let l:cmd = l:cmd . ' ' . shellescape(expand('%:p'))
 
-        " restore 'shellslash'
-        if exists('l:old_shellslash')
-            let &l:shellslash = l:old_shellslash
-        endif
+        call s:ResetShellSlash()
 
         let l:parsing_result = split(system(l:cmd), '\n')
 
@@ -605,5 +593,28 @@ endfunction " }}}
 
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
+
+" shellslash handling {{{1
+function! s:DisableShellSlash() " {{{2
+    " disable shellslash for proper escaping of Windows paths
+
+    " In Windows, 'shellslash' also changes the behavior of 'shellescape'.
+    " It makes 'shellescape' behave like in UNIX environment. So ':setl
+    " noshellslash' before evaluating 'shellescape' and restore the
+    " settings afterwards when 'shell' does not contain 'sh' somewhere.
+    if has('win32') && empty(matchstr(&shell, 'sh'))
+        let s:old_shellslash = &l:shellslash
+        setlocal noshellslash
+    endif
+endfunction " }}}
+
+function! s:ResetShellSlash() " {{{2
+    " reset shellslash to the user-set value, if any
+    if exists('s:old_shellslash')
+        let &l:shellslash = s:old_shellslash
+        unlet! s:old_shellslash
+    endif
+endfunction " }}}
+" }}}
 
 " vim: fdm=marker fdc=3
