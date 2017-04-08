@@ -250,79 +250,6 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
     return l:ret
 endfunction
 
-" Do some initalization for the case that the user has specified core mode {{{1
-if !empty(s:editorconfig_core_mode)
-
-    if s:editorconfig_core_mode == 'external_command'
-        if s:InitializeExternalCommand()
-            echo 'EditorConfig: Failed to initialize external_command mode'
-            finish
-        endif
-    else
-        let s:editorconfig_core_py_dir = s:FindPythonFiles()
-
-        if empty(s:editorconfig_core_py_dir)
-            echo 'EditorConfig: '.
-                        \ 'EditorConfig Python Core files could not be found.'
-            finish
-        endif
-
-        if s:editorconfig_core_mode == 'python_builtin' &&
-                    \ s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
-            echo 'EditorConfig: Failed to initialize vim built-in python.'
-            finish
-        elseif s:editorconfig_core_mode == 'python_external' &&
-                    \ s:InitializePythonExternal()
-            echo 'EditorConfig: Failed to find external Python interpreter.'
-            finish
-        endif
-    endif
-endif
-
-" Determine the editorconfig_core_mode we should use {{{1
-while 1
-    " If user has specified a mode, just break
-    if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
-        break
-    endif
-
-    " Find Python core files. If not found, we try external_command mode
-    let s:editorconfig_core_py_dir = s:FindPythonFiles()
-    if empty(s:editorconfig_core_py_dir) " python files are not found
-        if !s:InitializeExternalCommand()
-            let s:editorconfig_core_mode = 'external_command'
-        endif
-        break
-    endif
-
-    " Builtin python mode first
-    if !s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
-        let s:editorconfig_core_mode = 'python_builtin'
-        break
-    endif
-
-    " Then external_command mode
-    if !s:InitializeExternalCommand()
-        let s:editorconfig_core_mode = 'external_command'
-        break
-    endif
-
-    " Finally external python mode
-    if !s:InitializePythonExternal()
-        let s:editorconfig_core_mode = 'python_external'
-        break
-    endif
-
-    break
-endwhile
-
-" No EditorConfig Core is available
-if empty(s:editorconfig_core_mode)
-    echo "EditorConfig: ".
-                \ "No EditorConfig Core is available. The plugin won't work."
-    finish
-endif
-
 function! s:UseConfigFiles()
 
     let l:buffer_name = expand('%:p')
@@ -355,14 +282,6 @@ function! s:UseConfigFiles()
                     \ echohl None
     endif
 endfunction
-
-" command, autoload {{{1
-command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
-augroup editorconfig
-    autocmd!
-    autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
-    autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
-augroup END
 
 " UseConfigFiles function for different mode {{{1
 function! s:UseConfigFiles_Python_Builtin() " {{{2
@@ -625,5 +544,86 @@ function! s:ResetShellSlash() " {{{2
     endif
 endfunction " }}}
 " }}}
+
+" Do some initalization for the case that the user has specified core mode {{{1
+if !empty(s:editorconfig_core_mode)
+
+    if s:editorconfig_core_mode == 'external_command'
+        if s:InitializeExternalCommand()
+            echo 'EditorConfig: Failed to initialize external_command mode'
+            finish
+        endif
+    else
+        let s:editorconfig_core_py_dir = s:FindPythonFiles()
+
+        if empty(s:editorconfig_core_py_dir)
+            echo 'EditorConfig: '.
+                        \ 'EditorConfig Python Core files could not be found.'
+            finish
+        endif
+
+        if s:editorconfig_core_mode == 'python_builtin' &&
+                    \ s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
+            echo 'EditorConfig: Failed to initialize vim built-in python.'
+            finish
+        elseif s:editorconfig_core_mode == 'python_external' &&
+                    \ s:InitializePythonExternal()
+            echo 'EditorConfig: Failed to find external Python interpreter.'
+            finish
+        endif
+    endif
+endif
+
+" Determine the editorconfig_core_mode we should use {{{1
+while 1
+    " If user has specified a mode, just break
+    if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
+        break
+    endif
+
+    " Find Python core files. If not found, we try external_command mode
+    let s:editorconfig_core_py_dir = s:FindPythonFiles()
+    if empty(s:editorconfig_core_py_dir) " python files are not found
+        if !s:InitializeExternalCommand()
+            let s:editorconfig_core_mode = 'external_command'
+        endif
+        break
+    endif
+
+    " Builtin python mode first
+    if !s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
+        let s:editorconfig_core_mode = 'python_builtin'
+        break
+    endif
+
+    " Then external_command mode
+    if !s:InitializeExternalCommand()
+        let s:editorconfig_core_mode = 'external_command'
+        break
+    endif
+
+    " Finally external python mode
+    if !s:InitializePythonExternal()
+        let s:editorconfig_core_mode = 'python_external'
+        break
+    endif
+
+    break
+endwhile
+
+" No EditorConfig Core is available
+if empty(s:editorconfig_core_mode)
+    echo "EditorConfig: ".
+                \ "No EditorConfig Core is available. The plugin won't work."
+    finish
+endif
+
+" command, autoload {{{1
+command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
+augroup editorconfig
+    autocmd!
+    autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
+    autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
+augroup END
 
 " vim: fdm=marker fdc=3
