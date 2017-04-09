@@ -168,8 +168,8 @@ If the EditorConfig core mode is python_builtin or python_external (see
 |g:EditorConfig_core_mode|), this variable is the directory where the plugin
 looks for the python scripts. This could either be an abosolute path, or a
 path relative to any of the directories in 'runtimepath'. The default value is
-"plugin/editorconfig-core-py", which means all "plugin/editorconfig-core-py"
-directory in 'runtimepath' will be searched.
+"autoload/editorconfig-core-py", which means all
+"autoload/editorconfig-core-py" directory in 'runtimepath' will be searched.
 
                                             *g:EditorConfig_preserve_formatoptions*
 Set this to 1 if you don't want your formatoptions modified when
