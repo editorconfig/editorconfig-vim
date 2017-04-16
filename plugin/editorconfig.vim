@@ -557,6 +557,15 @@ function! s:ApplyConfig(config) " {{{1
         elseif a:config["charset"] == "utf-16le"
             setl fileencoding=utf-16le
             setl bomb
+        else
+            let charset_match = matchlist(a:config["charset"], '\v(.*)-bom$')
+            if empty(charset_match)
+                let &l:fileencoding=a:config["charset"]
+                setl nobomb
+            else
+                let &l:fileencoding=charset_match[1]
+                setl bomb
+            endif
         endif
     endif
 
