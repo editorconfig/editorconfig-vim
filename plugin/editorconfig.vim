@@ -613,13 +613,15 @@ endfunction
 " }}}
 
 function! s:TrimTrailingWhitespace() " {{{{
-    " don't lose user position when trimming trailing whitespace
-    let s:view = winsaveview()
-    try
-        %s/\s\+$//e
-    finally
-        call winrestview(s:view)
-    endtry
+    if &l:modifiable
+        " don't lose user position when trimming trailing whitespace
+        let s:view = winsaveview()
+        try
+            %s/\s\+$//e
+        finally
+            call winrestview(s:view)
+        endtry
+    endif
 endfunction " }}}
 
 let &cpo = s:saved_cpo
