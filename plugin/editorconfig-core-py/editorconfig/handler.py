@@ -26,6 +26,7 @@ def get_filenames(path, filename):
         if path == newpath:
             break
         path = newpath
+    path_list.append(os.path.join(os.path.expanduser('~'), filename))
     return path_list
 
 
