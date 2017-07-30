@@ -63,6 +63,10 @@ if !exists('g:EditorConfig_exclude_patterns')
     let g:EditorConfig_exclude_patterns = []
 endif
 
+if !exists('g:EditorConfig_disable_rules')
+    let g:EditorConfig_disable_rules = []
+endif
+
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
     let s:editorconfig_core_mode = g:EditorConfig_core_mode
 else
@@ -503,18 +507,20 @@ function! s:ApplyConfig(config) " {{{1
 
 " Set the indentation style according to the config values
 
-    if has_key(a:config, "indent_style")
+    if index(g:EditorConfig_disable_rules, 'indent_style') < 0 &&
+                \ has_key(a:config, "indent_style")
         if a:config["indent_style"] == "tab"
             setl noexpandtab
         elseif a:config["indent_style"] == "space"
             setl expandtab
         endif
     endif
-    if has_key(a:config, "tab_width")
+    if index(g:EditorConfig_disable_rules, 'tab_width') < 0 &&
+                \ has_key(a:config, "tab_width")
         let &l:tabstop = str2nr(a:config["tab_width"])
     endif
-    if has_key(a:config, "indent_size")
-
+    if index(g:EditorConfig_disable_rules, 'indent_size') < 0 &&
+                \ has_key(a:config, "indent_size")
         " if indent_size is 'tab', set shiftwidth to tabstop;
         " if indent_size is a positive integer, set shiftwidth to the integer
         " value
@@ -531,7 +537,8 @@ function! s:ApplyConfig(config) " {{{1
 
     endif
 
-    if has_key(a:config, "end_of_line") && &l:modifiable
+    if index(g:EditorConfig_disable_rules, 'end_of_line') < 0 &&
+                \ has_key(a:config, "end_of_line") && &l:modifiable
         if a:config["end_of_line"] == "lf"
             setl fileformat=unix
         elseif a:config["end_of_line"] == "crlf"
@@ -541,7 +548,8 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    if has_key(a:config, "charset") && &l:modifiable
+    if index(g:EditorConfig_disable_rules, 'charset') < 0 &&
+                \ has_key(a:config, "charset") && &l:modifiable
         if a:config["charset"] == "utf-8"
             setl fileencoding=utf-8
             setl nobomb
@@ -562,12 +570,14 @@ function! s:ApplyConfig(config) " {{{1
 
     augroup editorconfig_trim_trailing_whitespace
         autocmd! BufWritePre <buffer>
-        if get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
+        if index(g:EditorConfig_disable_rules, 'trim_trailing_whitespace') < 0 &&
+                    \ get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
             autocmd BufWritePre <buffer> call s:TrimTrailingWhitespace()
         endif
     augroup END
 
-    if has_key(a:config, "insert_final_newline")
+    if index(g:EditorConfig_disable_rules, 'insert_final_newline') < 0 &&
+                \ has_key(a:config, "insert_final_newline")
         if exists('+fixendofline')
             if a:config["insert_final_newline"] == "false"
                 setl nofixendofline
@@ -582,7 +592,8 @@ function! s:ApplyConfig(config) " {{{1
     endif
 
     " highlight the columns following max_line_length
-    if has_key(a:config, 'max_line_length') &&
+    if index(g:EditorConfig_disable_rules, 'max_line_length') < 0 &&
+                \ has_key(a:config, 'max_line_length') &&
                 \ a:config['max_line_length'] != 'off'
         let l:max_line_length = str2nr(a:config['max_line_length'])
 

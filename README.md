@@ -70,6 +70,16 @@ Of course these two items could be combined into the following:
 
 > let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
+#### Disable rules
+
+You could want to override some project-specific EditorConfig rules in global
+or local vimrc in some cases, ie to resolve coflicts of trailing whitespace 
+trimming and buffer autosaving.
+
+> let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+
+You are able to disable all of supported EditorConfig properties.
+
 #### Exec Path
 
 The file path to the EditorConfig core executable. You could set this value in
