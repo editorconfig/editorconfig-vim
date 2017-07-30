@@ -507,20 +507,17 @@ function! s:ApplyConfig(config) " {{{1
 
 " Set the indentation style according to the config values
 
-    if index(g:EditorConfig_disable_rules, 'indent_style') < 0 &&
-                \ has_key(a:config, "indent_style")
+    if s:IsRuleActive('indent_style', a:config)
         if a:config["indent_style"] == "tab"
             setl noexpandtab
         elseif a:config["indent_style"] == "space"
             setl expandtab
         endif
     endif
-    if index(g:EditorConfig_disable_rules, 'tab_width') < 0 &&
-                \ has_key(a:config, "tab_width")
+    if s:IsRuleActive('tab_width', a:config)
         let &l:tabstop = str2nr(a:config["tab_width"])
     endif
-    if index(g:EditorConfig_disable_rules, 'indent_size') < 0 &&
-                \ has_key(a:config, "indent_size")
+    if s:IsRuleActive('indent_size', a:config)
         " if indent_size is 'tab', set shiftwidth to tabstop;
         " if indent_size is a positive integer, set shiftwidth to the integer
         " value
@@ -537,8 +534,8 @@ function! s:ApplyConfig(config) " {{{1
 
     endif
 
-    if index(g:EditorConfig_disable_rules, 'end_of_line') < 0 &&
-                \ has_key(a:config, "end_of_line") && &l:modifiable
+    if s:IsRuleActive('end_of_line', a:config) &&
+                \ &l:modifiable
         if a:config["end_of_line"] == "lf"
             setl fileformat=unix
         elseif a:config["end_of_line"] == "crlf"
@@ -548,8 +545,8 @@ function! s:ApplyConfig(config) " {{{1
         endif
     endif
 
-    if index(g:EditorConfig_disable_rules, 'charset') < 0 &&
-                \ has_key(a:config, "charset") && &l:modifiable
+    if s:IsRuleActive('charset', a:config) &&
+                \ &l:modifiable
         if a:config["charset"] == "utf-8"
             setl fileencoding=utf-8
             setl nobomb
@@ -570,14 +567,13 @@ function! s:ApplyConfig(config) " {{{1
 
     augroup editorconfig_trim_trailing_whitespace
         autocmd! BufWritePre <buffer>
-        if index(g:EditorConfig_disable_rules, 'trim_trailing_whitespace') < 0 &&
+        if s:IsRuleActive('trim_trailing_whitespace', a:config) &&
                     \ get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
             autocmd BufWritePre <buffer> call s:TrimTrailingWhitespace()
         endif
     augroup END
 
-    if index(g:EditorConfig_disable_rules, 'insert_final_newline') < 0 &&
-                \ has_key(a:config, "insert_final_newline")
+    if s:IsRuleActive('insert_final_newline', a:config)
         if exists('+fixendofline')
             if a:config["insert_final_newline"] == "false"
                 setl nofixendofline
@@ -592,8 +588,7 @@ function! s:ApplyConfig(config) " {{{1
     endif
 
     " highlight the columns following max_line_length
-    if index(g:EditorConfig_disable_rules, 'max_line_length') < 0 &&
-                \ has_key(a:config, 'max_line_length') &&
+    if s:IsRuleActive('max_line_length', a:config) &&
                 \ a:config['max_line_length'] != 'off'
         let l:max_line_length = str2nr(a:config['max_line_length'])
 
@@ -634,6 +629,11 @@ function! s:TrimTrailingWhitespace() " {{{{
         endtry
     endif
 endfunction " }}}
+
+function! s:IsRuleActive(name, config) " {{{{
+    return index(g:EditorConfig_disable_rules, a:name) < 0 &&
+                 \ has_key(a:config, a:name)
+endfunction "}}}}
 
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
