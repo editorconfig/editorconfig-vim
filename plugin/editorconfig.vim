@@ -353,7 +353,7 @@ function! s:Initialize() " {{{1
     return 0
 endfunction
 
-function! s:get_filenames(path, filename)
+function! s:GetFilenames(path, filename)
 " Yield full filepath for filename in each directory in and above path
 
     let l:path_list = []
@@ -378,7 +378,7 @@ function! s:UseConfigFiles()
     endif
 
     " Check if any .editorconfig does exist
-    let l:conf_files = s:get_filenames(expand('%:p:h'), '.editorconfig')
+    let l:conf_files = s:GetFilenames(expand('%:p:h'), '.editorconfig')
     let l:conf_found = 0
     for conf_file in conf_files
         if filereadable(conf_file)
