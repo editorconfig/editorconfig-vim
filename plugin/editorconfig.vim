@@ -73,6 +73,8 @@ else
     let s:editorconfig_core_mode = ''
 endif
 
+let s:initialized = 0
+
 " shellslash handling {{{1
 function! s:DisableShellSlash() " {{{2
     " disable shellslash for proper escaping of Windows paths
@@ -276,78 +278,100 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
     return l:ret
 endfunction
 
-" Do some initalization for the case that the user has specified core mode {{{1
-if !empty(s:editorconfig_core_mode)
+function! s:Initialize() " {{{1
+    " Do some initalization for the case that the user has specified core mode {{{2
+    if !empty(s:editorconfig_core_mode)
 
-    if s:editorconfig_core_mode == 'external_command'
-        if s:InitializeExternalCommand()
-            echo 'EditorConfig: Failed to initialize external_command mode'
-            finish
+        if s:editorconfig_core_mode == 'external_command'
+            if s:InitializeExternalCommand()
+                echo 'EditorConfig: Failed to initialize external_command mode'
+                return 1
+            endif
+        else
+            let s:editorconfig_core_py_dir = s:FindPythonFiles()
+
+            if empty(s:editorconfig_core_py_dir)
+                echo 'EditorConfig: '.
+                            \ 'EditorConfig Python Core files could not be found.'
+                return 1
+            endif
+
+            if s:editorconfig_core_mode == 'python_builtin' &&
+                        \ s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
+                echo 'EditorConfig: Failed to initialize vim built-in python.'
+                return 1
+            elseif s:editorconfig_core_mode == 'python_external' &&
+                        \ s:InitializePythonExternal()
+                echo 'EditorConfig: Failed to find external Python interpreter.'
+                return 1
+            endif
         endif
-    else
+    endif
+
+    " Determine the editorconfig_core_mode we should use {{{2
+    while 1
+        " If user has specified a mode, just break
+        if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
+            break
+        endif
+
+        " Find Python core files. If not found, we try external_command mode
         let s:editorconfig_core_py_dir = s:FindPythonFiles()
-
-        if empty(s:editorconfig_core_py_dir)
-            echo 'EditorConfig: '.
-                        \ 'EditorConfig Python Core files could not be found.'
-            finish
+        if empty(s:editorconfig_core_py_dir) " python files are not found
+            if !s:InitializeExternalCommand()
+                let s:editorconfig_core_mode = 'external_command'
+            endif
+            break
         endif
 
-        if s:editorconfig_core_mode == 'python_builtin' &&
-                    \ s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
-            echo 'EditorConfig: Failed to initialize vim built-in python.'
-            finish
-        elseif s:editorconfig_core_mode == 'python_external' &&
-                    \ s:InitializePythonExternal()
-            echo 'EditorConfig: Failed to find external Python interpreter.'
-            finish
+        " Builtin python mode first
+        if !s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
+            let s:editorconfig_core_mode = 'python_builtin'
+            break
         endif
-    endif
-endif
 
-" Determine the editorconfig_core_mode we should use {{{1
-while 1
-    " If user has specified a mode, just break
-    if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
-        break
-    endif
-
-    " Find Python core files. If not found, we try external_command mode
-    let s:editorconfig_core_py_dir = s:FindPythonFiles()
-    if empty(s:editorconfig_core_py_dir) " python files are not found
+        " Then external_command mode
         if !s:InitializeExternalCommand()
             let s:editorconfig_core_mode = 'external_command'
+            break
         endif
+
+        " Finally external python mode
+        if !s:InitializePythonExternal()
+            let s:editorconfig_core_mode = 'python_external'
+            break
+        endif
+
         break
+    endwhile
+
+    " No EditorConfig Core is available
+    if empty(s:editorconfig_core_mode)
+        echo "EditorConfig: ".
+                    \ "No EditorConfig Core is available. The plugin won't work."
+        return 1
     endif
+    " }}}
 
-    " Builtin python mode first
-    if !s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
-        let s:editorconfig_core_mode = 'python_builtin'
-        break
-    endif
+    let s:initialized = 1
+    return 0
+endfunction
 
-    " Then external_command mode
-    if !s:InitializeExternalCommand()
-        let s:editorconfig_core_mode = 'external_command'
-        break
-    endif
+function! s:GetFilenames(path, filename)
+" Yield full filepath for filename in each directory in and above path
 
-    " Finally external python mode
-    if !s:InitializePythonExternal()
-        let s:editorconfig_core_mode = 'python_external'
-        break
-    endif
-
-    break
-endwhile
-
-" No EditorConfig Core is available
-if empty(s:editorconfig_core_mode)
-    echo "EditorConfig: ".
-                \ "No EditorConfig Core is available. The plugin won't work."
-    finish
-endif
+    let l:path_list = []
+    let l:path = a:path
+    while 1
+        let l:path_list += [l:path . '/' . a:filename]
+        let l:newpath = fnamemodify(l:path, ':h')
+        if l:path == l:newpath
+            break
+        endif
+        let l:path = l:newpath
+    endwhile
+    return l:path_list
+endfunction
 
 function! s:UseConfigFiles()
 
@@ -357,8 +381,27 @@ function! s:UseConfigFiles()
         return
     endif
 
+    " Check if any .editorconfig does exist
+    let l:conf_files = s:GetFilenames(expand('%:p:h'), '.editorconfig')
+    let l:conf_found = 0
+    for conf_file in conf_files
+        if filereadable(conf_file)
+            let l:conf_found = 1
+            break
+        endif
+    endfor
+    if !l:conf_found
+        return
+    endif
+
     if g:EditorConfig_verbose
         echo 'Applying EditorConfig on file "' . l:buffer_name . '"'
+    endif
+
+    if !s:initialized
+        if s:Initialize()
+            return
+        endif
     endif
 
     " Ignore specific patterns
@@ -393,11 +436,6 @@ augroup END
 " UseConfigFiles function for different mode {{{1
 function! s:UseConfigFiles_Python_Builtin() " {{{2
 " Use built-in python to run the python EditorConfig core
-
-    " ignore buffers that do not have a file path associated
-    if empty(expand('%:p'))
-        return 0
-    endif
 
     let l:config = {}
 
@@ -442,11 +480,6 @@ function! s:SpawnExternalParser(cmd) " {{{2
 " s:UseConfigFiles_ExternalCommand()
 
     let l:cmd = a:cmd
-
-    " ignore buffers that do not have a file path associated
-    if empty(expand("%:p"))
-        return
-    endif
 
     " if editorconfig is present, we use this as our parser
     if !empty(l:cmd)
