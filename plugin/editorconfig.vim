@@ -491,7 +491,7 @@ function! s:SpawnExternalParser(cmd) " {{{2
 
         call s:ResetShellSlash()
 
-        let l:parsing_result = split(system(l:cmd), '\n')
+        let l:parsing_result = split(system(l:cmd), '[\r\n]')
 
         " if editorconfig core's exit code is not zero, give out an error
         " message
