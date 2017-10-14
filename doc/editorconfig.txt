@@ -140,24 +140,30 @@ On Windows:
 The way to show the line where the maximal length is reached. Accepted values
 are "line", "fill", otherwise there will be no max line indicator.
 
-    "line": the right column of the max line length column will be
-            highlighted, made possible by setting 'colorcolumn' to
-            "max_line_length + 1".
+    "line":      the right column of the max line length column will be
+                 highlighted, made possible by setting 'colorcolumn' to
+                 "max_line_length + 1".
 
-    "fill": all the columns to the right of the max line length column will be
-            highlighted, made possible by setting 'colorcolumn' to a list of
-            numbers starting from "max_line_length + 1" to the number of
-            columns on the screen.
+    "fill":      all the columns to the right of the max line length column
+                 will be highlighted, made possible by setting 'colorcolumn'
+                 to a list of numbers starting from "max_line_length + 1" to
+                 the number of columns on the screen.
 
-    "none": no max line length indicator will be shown. This is the
-            recommended value when you do not want any indicator to be shown,
-            but values other than "line" or "fill" would also work as "none".
+    "exceeding": the right column of the max line length column will be
+                 highlighted on lines that exceed the max line length, made
+                 possible by adding a match for the ColorColumn group.
 
-To set this option, add any of the following 3 lines to your |vimrc| file:
+    "none":      no max line length indicator will be shown. This is the
+                 recommended value when you do not want any indicator to be
+                 shown, but values other than "line" or "fill" would also work
+                 as "none".
+
+To set this option, add any of the following lines to your |vimrc| file:
 
 >
  let g:EditorConfig_max_line_indicator = "line"
  let g:EditorConfig_max_line_indicator = "fill"
+ let g:EditorConfig_max_line_indicator = "exceeding"
  let g:EditorConfig_max_line_indicator = "none"
 <
 
