@@ -373,7 +373,7 @@ function! s:GetFilenames(path, filename)
     return l:path_list
 endfunction
 
-function! s:UseConfigFiles()
+function! s:UseConfigFiles() abort
 
     let l:buffer_name = expand('%:p')
     " ignore buffers without a name
@@ -434,7 +434,7 @@ augroup editorconfig
 augroup END
 
 " UseConfigFiles function for different mode {{{1
-function! s:UseConfigFiles_Python_Builtin() " {{{2
+function! s:UseConfigFiles_Python_Builtin() abort " {{{2
 " Use built-in python to run the python EditorConfig core
 
     let l:config = {}
@@ -532,7 +532,7 @@ function! s:SpawnExternalParser(cmd) " {{{2
     endif
 endfunction
 
-function! s:ApplyConfig(config) " {{{1
+function! s:ApplyConfig(config) abort " {{{1
     " Only process normal buffers (do not treat help files as '.txt' files)
     if !empty(&buftype)
         return
