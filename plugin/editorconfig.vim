@@ -649,7 +649,7 @@ function! s:ApplyConfig(config) " {{{1
                         endif
                     endfor
                     call matchadd('ColorColumn',
-                        \ '\%' . (l:max_line_length + 1) . 'v', 100)
+                        \ '\%' . (l:max_line_length + 1) . 'v.', 100)
                 endif
             endif
         endif
