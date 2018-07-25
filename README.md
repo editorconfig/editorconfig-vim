@@ -74,7 +74,7 @@ Of course these two items could be combined into the following:
 #### Disable rules
 
 You might want to override some project-specific EditorConfig rules in global
-or local vimrc in some cases, e.g., to resolve coflicts of trailing whitespace 
+or local vimrc in some cases, e.g., to resolve conflicts of trailing whitespace 
 trimming and buffer autosaving.
 
 > let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
