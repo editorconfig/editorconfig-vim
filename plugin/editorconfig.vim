@@ -269,11 +269,20 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
         return 1
     endif
 
+    if has('win32unix')
+        " very hacky way of converting a unix path to windows
+        " It should be an absolute path that we get
+        let s:pyscript_path = strpart(s:pyscript_path, 1, 1) . ':' . strpart(s:pyscript_path, 2)
+    endif
+
     let l:ret = 0
     " The following line modifies l:ret. This is a bit confusing but
     " unfortunately to be compatible with Vim 7.3, we cannot use pyeval. This
     " should be changed in the future.
     execute s:pyfile_cmd fnameescape(s:pyscript_path)
+    if g:EditorConfig_verbose
+        echo 'Python script returned: ' . l:ret
+    endif
 
     return l:ret
 endfunction
