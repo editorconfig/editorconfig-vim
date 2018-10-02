@@ -259,12 +259,15 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
 
     let s:builtin_python_initialized = 1
 
-    if has('python')
-        let s:pyfile_cmd = 'pyfile'
-        let s:py_cmd = 'py'
+    if has('pythonx')
+        let s:pyfile_cmd = 'pyxfile'
+        let s:py_cmd = 'pyx'
     elseif has('python3')
         let s:pyfile_cmd = 'py3file'
         let s:py_cmd = 'py3'
+    elseif has('python')
+        let s:pyfile_cmd = 'pyfile'
+        let s:py_cmd = 'py'
     else
         return 1
     endif
