@@ -279,7 +279,7 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
 endfunction
 
 function! s:Initialize() " {{{1
-    " Do some initalization for the case that the user has specified core mode {{{2
+    " Do some initialization for the case that the user has specified core mode {{{2
     if !empty(s:editorconfig_core_mode)
 
         if s:editorconfig_core_mode == 'external_command'

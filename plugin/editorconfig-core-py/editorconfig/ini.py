@@ -145,7 +145,7 @@ class EditorConfigParser(object):
                         optname, vi, optval = mo.group('option', 'vi', 'value')
                         if ';' in optval or '#' in optval:
                             # ';' and '#' are comment delimiters only if
-                            # preceeded by a spacing character
+                            # preceded by a spacing character
                             m = re.search('(.*?) [;#]', optval)
                             if m:
                                 optval = m.group(1)

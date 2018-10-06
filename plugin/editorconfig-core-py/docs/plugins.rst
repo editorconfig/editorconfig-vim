@@ -36,7 +36,7 @@ Bundling as a Submodule in Git
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Git submodules allow one repository to be included inside another.  A submodule
-stores a remote repositry and commit to use for fetching the embedded
+stores a remote repository and commit to use for fetching the embedded
 repository.  Submodules take up very little space in the repository since they
 do not actually include the code of the embedded repository directly.
 
