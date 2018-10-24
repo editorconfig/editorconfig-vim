@@ -7,14 +7,6 @@ This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
 
 ## Installation
 
-If your Vim is not compiled with `+python` or `+python3` feature (You can verify
-if the `+python` or `+python3` feature is included by running `:ver`. Most Linux
-distributions and with the official Windows binary have the `+python` and
-`+python3` feature enabled), please first download the [EditorConfig core][] and
-follow the instructions in the README and INSTALL files to install it. This
-plugin would NOT work if neither `+python`/`+python3` nor EditorConfig core is
-available.
-
 To install this plugin, you can use one of the following ways:
 
 - Download the [archive][] and extract it into your Vim runtime directory
@@ -35,6 +27,35 @@ OR
 
   Then remember to call `:PluginInstall`.
 
+### Installing an editorconfig core
+
+This plugin requires a "core" that can parse `.editorconfig` files.  You can
+use the Python, C, or VimScript cores.  The [EditorConfig Python core][]
+is included with this plugin.
+
+ - If your Vim supports Python, you don't need to install anything besides
+   this plugin.
+ - If your Vim does not support Python, or if the Python core isn't fast
+   enough on your system, you can use the C core or the VimScript core.
+
+This plugin will NOT work if neither Python nor an EditorConfig core is
+available.
+
+### Does my Vim support Python?
+
+Run `:ver` and see if the output includes the `+python` or `+python3` feature.
+Most Linux distributions and the official Windows binary have the `+python` and
+`+python3` features enabled.
+
+### Installing the C core
+
+Download the [EditorConfig C core][] and
+follow the instructions in the `README` and `INSTALL` files to install it.
+
+### Installing the VimScript core
+
+The [EditorConfig VimScript core][] is a Vim plugin, just like this is.
+Therefore, you can install it the same way you installed this plugin.
 
 ## Supported properties
 
@@ -61,23 +82,23 @@ need to execute `:helptags ALL` so that Vim is aware of editorconfig.txt.
 To ensure that this plugin works well with [Tim Pope's fugitive][], use the
 following patterns array:
 
-> let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
+    let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
 
 If you wanted to avoid loading EditorConfig for any remote files over ssh:
 
-> let g:EditorConfig_exclude_patterns = ['scp://.\*']
+    let g:EditorConfig_exclude_patterns = ['scp://.\*']
 
 Of course these two items could be combined into the following:
 
-> let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
+    let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
 #### Disable rules
 
 You might want to override some project-specific EditorConfig rules in global
-or local vimrc in some cases, e.g., to resolve conflicts of trailing whitespace 
+or local vimrc in some cases, e.g., to resolve conflicts of trailing whitespace
 trimming and buffer autosaving.
 
-> let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+    let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
 You are able to disable any supported EditorConfig properties.
 
@@ -86,14 +107,16 @@ You are able to disable any supported EditorConfig properties.
 The file path to the EditorConfig core executable. You could set this value in
 your |vimrc| like this:
 
-> let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
+    let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
 
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the
 [issue tracker][]. Be sure you have read the [contribution guideline][]!
 
-[EditorConfig core]: https://github.com/editorconfig/editorconfig-core
+[EditorConfig C core]: https://github.com/editorconfig/editorconfig-core-c
+[EditorConfig Python core]: https://github.com/editorconfig/editorconfig-core-py
+[EditorConfig VimScript core]: https://github.com/cxw42/editorconfig-core-vimscript
 [EditorConfig]: http://editorconfig.org
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550

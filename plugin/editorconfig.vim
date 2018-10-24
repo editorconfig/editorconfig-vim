@@ -1,4 +1,4 @@
-" Copyright (c) 2011-2015 EditorConfig Team
+" Copyright (c) 2011-2018 EditorConfig Team
 " All rights reserved.
 "
 " Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,7 @@ endif
 
 let s:initialized = 0
 
+" }}}
 " shellslash handling {{{1
 function! s:DisableShellSlash() " {{{2
     " disable shellslash for proper escaping of Windows paths
@@ -98,7 +99,7 @@ function! s:ResetShellSlash() " {{{2
 endfunction " }}}
 " }}}
 
-function! s:FindPythonInterp() " {{{1
+function! s:FindPythonInterp() " Find external Python interpreter {{{1
 " Find python interp. If found, return python command; if not found, return ''
 
     if has('unix')
@@ -140,8 +141,7 @@ function! s:FindPythonInterp() " {{{1
     return ''
 endfunction
 
-function! s:FindPythonFiles() " {{{1
-" Find EditorConfig Core python files
+function! s:FindPythonFiles() " Find EditorConfig Core python files {{{1
 
     call s:DisableShellSlash()
 
@@ -278,13 +278,30 @@ function! s:InitializePythonBuiltin(editorconfig_core_py_dir) " {{{2
     return l:ret
 endfunction
 
-function! s:Initialize() " {{{1
+function! s:InitializeVimCore() " {{{2
+" Initialize vim core.  Returns 1 on failure; 0 on success
+" At the moment, all we need to do is to check that it is installed.
+    try
+        let l:vim_core_ver = editorconfig_core#version()
+    catch
+        return 1
+    endtry
+    return 0
+endfunction
+
+function! s:Initialize() " Initialize the plugin.  {{{1
+    " Returns truthy on error, falsy on success.
     " Do some initialization for the case that the user has specified core mode {{{2
     if !empty(s:editorconfig_core_mode)
 
-        if s:editorconfig_core_mode == 'external_command'
+        if s:editorconfig_core_mode ==? 'external_command'
             if s:InitializeExternalCommand()
                 echo 'EditorConfig: Failed to initialize external_command mode'
+                return 1
+            endif
+        elseif s:editorconfig_core_mode ==? 'vim_core'
+            if s:InitializeVimCore()
+                echo 'EditorConfig: Failed to initialize vim_core mode'
                 return 1
             endif
         else
@@ -296,17 +313,17 @@ function! s:Initialize() " {{{1
                 return 1
             endif
 
-            if s:editorconfig_core_mode == 'python_builtin' &&
+            if s:editorconfig_core_mode ==? 'python_builtin' &&
                         \ s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
                 echo 'EditorConfig: Failed to initialize vim built-in python.'
                 return 1
-            elseif s:editorconfig_core_mode == 'python_external' &&
+            elseif s:editorconfig_core_mode ==? 'python_external' &&
                         \ s:InitializePythonExternal()
                 echo 'EditorConfig: Failed to find external Python interpreter.'
                 return 1
             endif
         endif
-    endif
+    endif " }}}
 
     " Determine the editorconfig_core_mode we should use {{{2
     while 1
@@ -314,6 +331,15 @@ function! s:Initialize() " {{{1
         if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
             break
         endif
+
+        " Try the Vimscript core first
+        try
+            let l:vim_core_ver = editorconfig_core#version()
+            let s:editorconfig_core_mode = 'vim_core'
+            break
+        catch
+            " if the Vim core wasn't loaded, just keep going
+        endtry
 
         " Find Python core files. If not found, we try external_command mode
         let s:editorconfig_core_py_dir = s:FindPythonFiles()
@@ -324,7 +350,7 @@ function! s:Initialize() " {{{1
             break
         endif
 
-        " Builtin python mode first
+        " Builtin python mode
         if !s:InitializePythonBuiltin(s:editorconfig_core_py_dir)
             let s:editorconfig_core_mode = 'python_builtin'
             break
@@ -355,9 +381,9 @@ function! s:Initialize() " {{{1
 
     let s:initialized = 1
     return 0
-endfunction
+endfunction " }}}
 
-function! s:GetFilenames(path, filename)
+function! s:GetFilenames(path, filename) " {{{1
 " Yield full filepath for filename in each directory in and above path
 
     let l:path_list = []
@@ -371,10 +397,9 @@ function! s:GetFilenames(path, filename)
         let l:path = l:newpath
     endwhile
     return l:path_list
-endfunction
+endfunction " }}}
 
-function! s:UseConfigFiles() abort
-
+function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
     let l:buffer_name = expand('%:p')
     " ignore buffers without a name
     if empty(l:buffer_name)
@@ -394,14 +419,15 @@ function! s:UseConfigFiles() abort
         return
     endif
 
-    if g:EditorConfig_verbose
-        echo 'Applying EditorConfig on file "' . l:buffer_name . '"'
-    endif
-
     if !s:initialized
         if s:Initialize()
             return
         endif
+    endif
+
+    if g:EditorConfig_verbose
+        echo 'Applying EditorConfig ' . s:editorconfig_core_mode .
+            \ ' on file "' . l:buffer_name . '"'
     endif
 
     " Ignore specific patterns
@@ -411,11 +437,13 @@ function! s:UseConfigFiles() abort
         endif
     endfor
 
-    if s:editorconfig_core_mode == 'external_command'
+    if s:editorconfig_core_mode ==? 'external_command'
         call s:UseConfigFiles_ExternalCommand()
-    elseif s:editorconfig_core_mode == 'python_builtin'
+    elseif s:editorconfig_core_mode ==? 'vim_core'
+        call s:UseConfigFiles_VimCore()
+    elseif s:editorconfig_core_mode ==? 'python_builtin'
         call s:UseConfigFiles_Python_Builtin()
-    elseif s:editorconfig_core_mode == 'python_external'
+    elseif s:editorconfig_core_mode ==? 'python_external'
         call s:UseConfigFiles_Python_External()
     else
         echohl Error |
@@ -423,7 +451,7 @@ function! s:UseConfigFiles() abort
                     \ s:editorconfig_core_mode |
                     \ echohl None
     endif
-endfunction
+endfunction " }}}
 
 " command, autoload {{{1
 command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
@@ -431,9 +459,9 @@ augroup editorconfig
     autocmd!
     autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
     autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
-augroup END
+augroup END " }}}
 
-" UseConfigFiles function for different mode {{{1
+" UseConfigFiles function for different modes {{{1
 function! s:UseConfigFiles_Python_Builtin() abort " {{{2
 " Use built-in python to run the python EditorConfig core
 
@@ -448,7 +476,7 @@ function! s:UseConfigFiles_Python_Builtin() abort " {{{2
     call s:ApplyConfig(l:config)
 
     return l:ret
-endfunction
+endfunction " }}}
 
 function! s:UseConfigFiles_Python_External() " {{{2
 " Use external python interp to run the python EditorConfig Core
@@ -463,7 +491,7 @@ function! s:UseConfigFiles_Python_External() " {{{2
     call s:SpawnExternalParser(l:cmd)
 
     return 0
-endfunction
+endfunction " }}}
 
 function! s:UseConfigFiles_ExternalCommand() " {{{2
 " Use external EditorConfig core (The C core, or editorconfig.py)
@@ -473,7 +501,19 @@ function! s:UseConfigFiles_ExternalCommand() " {{{2
     call s:ResetShellSlash()
 
     call s:SpawnExternalParser(l:exec_path)
-endfunction
+endfunction " }}}
+
+function! s:UseConfigFiles_VimCore() " {{{2
+" Use the vimscript EditorConfig core
+    try
+        let l:config = editorconfig_core#handler#get_configurations(
+            \ { 'target': expand('%:p') } )
+        call s:ApplyConfig(l:config)
+        return 0    " success
+    catch
+        return 1    " failure
+    endtry
+endfunction " }}}
 
 function! s:SpawnExternalParser(cmd) " {{{2
 " Spawn external EditorConfig. Used by s:UseConfigFiles_Python_External() and
@@ -530,15 +570,17 @@ function! s:SpawnExternalParser(cmd) " {{{2
 
         call s:ApplyConfig(l:config)
     endif
-endfunction
+endfunction " }}}
 
-function! s:ApplyConfig(config) abort " {{{1
+function! s:ApplyConfig(config) abort " Set the buffer options {{{1
     " Only process normal buffers (do not treat help files as '.txt' files)
     if !empty(&buftype)
         return
     endif
 
-" Set the indentation style according to the config values
+    if g:EditorConfig_verbose
+        echo 'Options: ' . string(a:config)
+    endif
 
     if s:IsRuleActive('indent_style', a:config)
         if a:config["indent_style"] == "tab"
@@ -547,9 +589,11 @@ function! s:ApplyConfig(config) abort " {{{1
             setl expandtab
         endif
     endif
+
     if s:IsRuleActive('tab_width', a:config)
         let &l:tabstop = str2nr(a:config["tab_width"])
     endif
+
     if s:IsRuleActive('indent_size', a:config)
         " if indent_size is 'tab', set shiftwidth to tabstop;
         " if indent_size is a positive integer, set shiftwidth to the integer
@@ -660,7 +704,7 @@ endfunction
 
 " }}}
 
-function! s:TrimTrailingWhitespace() " {{{{
+function! s:TrimTrailingWhitespace() " {{{
     if &l:modifiable
         " don't lose user position when trimming trailing whitespace
         let s:view = winsaveview()
@@ -672,10 +716,10 @@ function! s:TrimTrailingWhitespace() " {{{{
     endif
 endfunction " }}}
 
-function! s:IsRuleActive(name, config) " {{{{
+function! s:IsRuleActive(name, config) " {{{
     return index(g:EditorConfig_disable_rules, a:name) < 0 &&
                  \ has_key(a:config, a:name)
-endfunction "}}}}
+endfunction "}}}
 
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
