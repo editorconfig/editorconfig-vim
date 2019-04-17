@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/editorconfig/editorconfig-vim.svg?branch=master)](https://travis-ci.org/editorconfig/editorconfig-vim)
 
-This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
+This is an [EditorConfig][] plugin for Vim. This plugin can be found on both
 [GitHub][] and [Vim online][].
 
 ## Installation
@@ -27,35 +27,10 @@ OR
 
   Then remember to call `:PluginInstall`.
 
-### Installing an editorconfig core
+### No editorconfig core required!
 
-This plugin requires a "core" that can parse `.editorconfig` files.  You can
-use the Python, C, or VimScript cores.  The [EditorConfig Python core][]
-is included with this plugin.
-
- - If your Vim supports Python, you don't need to install anything besides
-   this plugin.
- - If your Vim does not support Python, or if the Python core isn't fast
-   enough on your system, you can use the C core or the VimScript core.
-
-This plugin will NOT work if neither Python nor an EditorConfig core is
-available.
-
-### Does my Vim support Python?
-
-Run `:ver` and see if the output includes the `+python` or `+python3` feature.
-Most Linux distributions and the official Windows binary have the `+python` and
-`+python3` features enabled.
-
-### Installing the C core
-
-Download the [EditorConfig C core][] and
-follow the instructions in the `README` and `INSTALL` files to install it.
-
-### Installing the VimScript core
-
-The [EditorConfig VimScript core][] is a Vim plugin, just like this is.
-Therefore, you can install it the same way you installed this plugin.
+This plugin **includes** the "core", the code that can parse
+`.editorconfig` files.
 
 ## Supported properties
 
@@ -102,21 +77,11 @@ trimming and buffer autosaving.
 
 You are able to disable any supported EditorConfig properties.
 
-#### Exec Path
-
-The file path to the EditorConfig core executable. You could set this value in
-your |vimrc| like this:
-
-    let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
-
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the
 [issue tracker][]. Be sure you have read the [contribution guideline][]!
 
-[EditorConfig C core]: https://github.com/editorconfig/editorconfig-core-c
-[EditorConfig Python core]: https://github.com/editorconfig/editorconfig-core-py
-[EditorConfig VimScript core]: https://github.com/cxw42/editorconfig-core-vimscript
 [EditorConfig]: http://editorconfig.org
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
