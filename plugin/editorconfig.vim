@@ -221,14 +221,37 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
     endif
 endfunction " }}}1
 
-" command, autoload {{{1
-command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
+" Custom commands, and autoloading {{{1
 
-augroup editorconfig
+" Autocommands, and function to enable/disable the plugin {{{2
+function! s:EditorConfigEnable(should_enable)
+    augroup editorconfig
+        autocmd!
+        if a:should_enable
+            autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
+        endif
+    augroup END
+endfunction
+
+" }}}2
+
+" Commands {{{2
+command! EditorConfigEnable call s:EditorConfigEnable(1)
+command! EditorConfigDisable call s:EditorConfigEnable(0)
+
+command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
+" }}}2
+
+" On startup, enable the autocommands
+call s:EditorConfigEnable(1)
+
+" Always set the filetype for .editorconfig files
+augroup editorconfig_dosini
     autocmd!
-    autocmd BufNewFile,BufReadPost,BufFilePost * call s:UseConfigFiles()
     autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
-augroup END " }}}1
+augroup END
+
+" }}}1
 
 " UseConfigFiles function for different modes {{{1
 
