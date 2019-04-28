@@ -1,7 +1,7 @@
 require 'vimrunner'
 
 $vim = Vimrunner.start
-$vim.add_plugin(File.expand_path('../../..', __FILE__), 'plugin/editorconfig.vim')
+$vim.add_plugin(File.expand_path('../../../..', __FILE__), 'plugin/editorconfig.vim')
 
 # The base path of the testing files
 BASE_PATH = File.expand_path('../plugin_tests/test_files/', __FILE__)
