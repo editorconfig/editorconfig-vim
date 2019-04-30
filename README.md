@@ -1,6 +1,7 @@
 # EditorConfig Vim Plugin
 
-[![Build Status](https://travis-ci.org/editorconfig/editorconfig-vim.svg?branch=master)](https://travis-ci.org/editorconfig/editorconfig-vim)
+[![Travis Build Status](https://img.shields.io/travis/cxw42/editorconfig-vim.svg?logo=travis)](https://travis-ci.org/editorconfig/editorconfig-vim)
+[![Appveyor Build Status](https://img.shields.io/appveyor/ci/cxw42/editorconfig-vim.svg?logo=appveyor)](https://ci.appveyor.com/project/cxw42/editorconfig-vim)
 
 This is an [EditorConfig][] plugin for Vim. This plugin can be found on both
 [GitHub][] and [Vim online][].

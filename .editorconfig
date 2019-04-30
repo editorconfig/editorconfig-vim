@@ -22,3 +22,6 @@ max_line_length = 120
 [*.yml]
 indent_style = space
 indent_size = 2
+
+[*.{bat,vbs,ps1}]
+end_of_line = CRLF

@@ -1,9 +1,13 @@
-language: ruby
-
-rvm:
-  - 2.2.4
-
-gemfile: tests/plugin/Gemfile
+matrix:
+  include:
+    - name: "plugin"
+      env: TEST_WHICH=plugin
+      language: ruby
+      rvm:
+        - 2.2.4
+      gemfile: tests/plugin/Gemfile
+    - name: "core"
+      env: TEST_WHICH=core
 
 addons:
   apt:
@@ -15,7 +19,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 
 script:
-  bundle exec rspec tests/plugin/spec/editorconfig_spec.rb
+  ./tests/travis-test.sh
 
 notifications:
   email:
