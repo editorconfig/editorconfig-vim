@@ -1,5 +1,7 @@
-' ecvbslib.vbs: editorconfig-core-vimscript VBScript routines.
-' Copyright (c) 2018 Chris White.  CC-BY-SA 3.0+.
+' ecvbslib.vbs: VBScript routines for use in
+' editorconfig-core-vimscript and editorconfig-vim.
+' Copyright (c) 2018--2019 Chris White.  All rights reserved.
+' Licensed CC-BY-SA, version 3.0 or any later version, at your option.
 
 ' Remove CR and LF in a string
 function nocrlf(strin)

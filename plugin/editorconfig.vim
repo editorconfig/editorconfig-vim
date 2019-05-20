@@ -1,4 +1,5 @@
-" Copyright (c) 2011-2018 EditorConfig Team
+" plugin/editorconfig.vim: EditorConfig native Vimscript plugin file
+" Copyright (c) 2011-2019 EditorConfig Team
 " All rights reserved.
 "
 " Redistribution and use in source and binary forms, with or without

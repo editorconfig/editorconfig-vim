@@ -1,7 +1,10 @@
 ' editorconfig1.vbs: run by editorconfig.bat
 ' runs editorconfig2.ps1
-' Part of editorconfig-core-vimscript
-' Copyright (c) 2018 Chris White.  CC-BY-SA 3.0+.
+' Part of editorconfig-core-vimscript and editorconfig-vim.
+'
+' Copyright (c) 2018--2019 Chris White.  All rights reserved.
+' Licensed CC-BY-SA, version 3.0 or any later version, at your option.
+'
 ' Modified from
 ' https://stackoverflow.com/a/2470557/2877364 by
 ' https://stackoverflow.com/users/2441/aphoria

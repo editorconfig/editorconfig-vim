@@ -1,6 +1,7 @@
 #!/bin/bash
 # editorconfig: Editorconfig Vimscript core CLI
-# Copyright (c) 2018--2019 Chris White.  CC-BY-SA 3.0+.
+# Copyright (c) 2018--2019 Chris White.  All rights reserved.
+# Licensed CC-BY-SA, version 3.0 or any later version, at your option.
 
 # Documentation {{{1
 helpstr=$(cat<<'EOF'

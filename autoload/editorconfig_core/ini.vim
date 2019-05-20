@@ -1,6 +1,30 @@
 " autoload/editorconfig_core/ini.vim: Config-file parser for
-" editorconfig-core-vimscript.  Modifed from the Python core's ini.py.
-" Copyright (c) 2018 Chris White.  All rights reserved.
+" editorconfig-core-vimscript and editorconfig-vim.
+" Modifed from the Python core's ini.py.
+
+" Copyright (c) 2012-2019 EditorConfig Team {{{2
+" All rights reserved.
+"
+" Redistribution and use in source and binary forms, with or without
+" modification, are permitted provided that the following conditions are met:
+"
+" 1. Redistributions of source code must retain the above copyright notice,
+"    this list of conditions and the following disclaimer.
+" 2. Redistributions in binary form must reproduce the above copyright notice,
+"    this list of conditions and the following disclaimer in the documentation
+"    and/or other materials provided with the distribution.
+"
+" THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+" ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+" LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+" CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+" SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+" INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+" CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+" ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+" POSSIBILITY OF SUCH DAMAGE. }}}2
 
 let s:saved_cpo = &cpo
 set cpo&vim
@@ -231,19 +255,16 @@ endfunction " matches_filename
 
 " }}}1
 " === Copyright notices ================================================= {{{2
-""""EditorConfig file parser
-
-"Based on code from ConfigParser.py file distributed with Python 2.6.
-
-"Licensed under PSF License (see LICENSE.PSF file).
-
-"Changes to original ConfigParser:
-
-"- Special characters can be used in section names
-"- Octothorpe can be used for comments (not just at beginning of line)
-"- Only track INI options in sections that match target filename
-"- Stop parsing files with when ``root = true`` is found
-""""
+" Based on code from ConfigParser.py file distributed with Python 2.6.
+" Portions Copyright (c) 2001-2010 Python Software Foundation;
+" All Rights Reserved.  Licensed under PSF License (see LICENSE.PSF file).
+"
+" Changes to original ConfigParser:
+"
+" - Special characters can be used in section names
+" - Octothorpe can be used for comments (not just at beginning of line)
+" - Only track INI options in sections that match target filename
+" - Stop parsing files with when ``root = true`` is found
 " }}}2
 
 let &cpo = s:saved_cpo

@@ -37,7 +37,7 @@ image:
 # === How to build ===
 
 cache:
-    - C:\vim -> appveyor.yml, fetch-vim.bat
+    - C:\vim -> .appveyor.yml, tests\fetch-vim.bat
 
 environment:
   VIM_EXE: C:\vim\vim\vim80\vim.exe
@@ -62,7 +62,7 @@ for:
     environment:
       VIM_EXE: UNDEFINED
     cache:
-      - $APPVEYOR_BUILD_FOLDER/vim -> appveyor.yml, fetch-vim.sh
+      - $APPVEYOR_BUILD_FOLDER/vim -> .appveyor.yml, tests/fetch-vim.sh
 
     # Plus, don't run Ubuntu if the commit message includes [ci-win]
     skip_commits:

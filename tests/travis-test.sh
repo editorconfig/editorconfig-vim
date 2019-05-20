@@ -1,4 +1,7 @@
 #!/bin/bash
+# travis-test.sh: Script for running editorconfig-vim tests under Travis CI.
+# Copyright (c) 2019 Chris White.  All rights reserved.
+# Licensed Apache, version 2.0 or any later version, at your option.
 
 # Error exit; debug output
 set -evx

@@ -1,5 +1,6 @@
 # editorconfig2.ps1: Editorconfig Vimscript core CLI, PowerShell version
-# Copyright (c) 2018 Chris White.  CC-BY-SA 3.0+.
+# Copyright (c) 2018--2019 Chris White.  All rights reserved.
+# Licensed CC-BY-SA, version 3.0 or any later version, at your option.
 # Thanks to https://cecs.wright.edu/~pmateti/Courses/233/Labs/Scripting/bashVsPowerShellTable.html
 # by Gallagher and Mateti.
 

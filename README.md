@@ -28,10 +28,12 @@ OR
 
   Then remember to call `:PluginInstall`.
 
-### No editorconfig core required!
+### No external editorconfig core library is required
 
-This plugin **includes** the "core", the code that can parse
-`.editorconfig` files.
+Previous versions of this plugin also required a Python "core".
+The core included the code to parse `.editorconfig` files.
+This plugin **includes** the core, so you don't need to download the
+core separately.
 
 ## Supported properties
 

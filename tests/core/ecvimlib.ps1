@@ -1,6 +1,8 @@
 # ecvimlib.ps1: Editorconfig Vimscript core CLI, PowerShell version,
 # library routines.
-# Copyright (c) 2018 Chris White.  CC-BY-SA 3.0.
+# Copyright (c) 2018--2019 Chris White.  All rights reserved.
+# Licensed CC-BY-SA, version 3.0 or any later version, at your option.
+#
 # N.B.: debug output uses Warning only because those are displayed by default.
 
 #Requires -Version 3
