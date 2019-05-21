@@ -1,23 +1,23 @@
 *editorconfig.txt*
 
 File: editorconfig.txt
-Version: 0.3.3
+Version: 1.0.0-beta
 Maintainer: EditorConfig Team <http://editorconfig.org>
 Description: EditorConfig vim plugin
 
 License:
-   Copyright (c) 2011-2015 EditorConfig Team
+   Copyright (c) 2011-2019 EditorConfig Team
    All rights reserved.
-   
+
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are met:
-   
+
    1. Redistributions of source code must retain the above copyright notice,
       this list of conditions and the following disclaimer.
    2. Redistributions in binary form must reproduce the above copyright notice,
       this list of conditions and the following disclaimer in the documentation
       and/or other materials provided with the distribution.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -50,13 +50,7 @@ This is the EditorConfig plugin for vim.
 INSTALLATION~
                                             *editorconfig-installation*
 ----------------------------------------------------------------------------
-Download the [EditorConfig core][] and follow the instructions in the README
-and INSTALL files to install it.
-
-Once EditorConfig core is installed, copy the `plugin/editorconfig.vim` file
-to your `~/.vim/plugin` directory, `autoload/editorconfig.vim` to
-`~/.vim/autoload`  and `doc/editorconfig.txt` to your `~/.vim/doc` directory
-to install the EditorConfig plugin.
+Follow the instructions in the README.md file to install this plugin.
 
 COMMANDS~
                                             *editorconfig-commands*
@@ -75,19 +69,12 @@ SETTINGS~
 ----------------------------------------------------------------------------
                                             *g:EditorConfig_core_mode*
 Specify the mode of EditorConfig core. Generally it is OK to leave this option
-empty. There are 3 modes currently: "external_command", "python_builtin",
-"python_external".
+empty. Currently, the only supported mode is "vim_core".
 
-    python_builtin:     Use the vim built-in python to run the python version
-                        EditorConfig Core. In this mode, Python 2.5 or higher
-                        is required.
-    python_external:    Use an external python interpreter to run the python
-                        version EditorConfig Core.
-    external_command:   Run external EditorConfig Core.
+    vim_core:           Use the included VimScript EditorConfig Core.
 
 If "g:EditorConfig_core_mode" is not specified, this plugin will automatically
-choose a mode that could work for you. The checking sequence is:
-python_builtin, external_command, python_external.
+choose "vim_core".
 
                                             *g:EditorConfig_exclude_patterns*
 This is a list contains file path patterns which will be ignored by
@@ -99,43 +86,6 @@ Example: Avoid loading EditorConfig for any remote files over ssh
 >
  let g:EditorConfig_exclude_patterns = ['scp://.*']
 <
-
-                                            *g:EditorConfig_exec_path*
-The file path to the EditorConfig core executable. You could set this value in
-your |vimrc| like this:
->
- let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
-<
-The default value is empty.
-
-This plugin will search through the following executables in order:
-
-On UNIX:
-    the value of g:EditorConfig_exec_path
-    editorconfig
-    /usr/local/bin/editorconfig
-    /usr/bin/editorconfig
-    /opt/bin/editorconfig
-    /opt/editorconfig/bin/editorconfig
-    editorconfig.py
-    /usr/local/bin/editorconfig.py
-    /usr/bin/editorconfig.py
-    /opt/bin/editorconfig.py
-    /opt/editorconfig/bin/editorconfig.py
-
-On Windows:
-    the value of g:EditorConfig_exec_path
-    editorconfig
-    C:\editorconfig\bin\editorconfig
-    D:\editorconfig\bin\editorconfig
-    E:\editorconfig\bin\editorconfig
-    F:\editorconfig\bin\editorconfig
-    C:\Program Files\editorconfig\bin\editorconfig
-    D:\Program Files\editorconfig\bin\editorconfig
-    E:\Program Files\editorconfig\bin\editorconfig
-    F:\Program Files\editorconfig\bin\editorconfig
-    editorconfig.py
-
                                             *g:EditorConfig_max_line_indicator*
 The way to show the line where the maximal length is reached. Accepted values
 are "line", "fill", otherwise there will be no max line indicator.
@@ -168,14 +118,6 @@ To set this option, add any of the following lines to your |vimrc| file:
 <
 
 Default to "line".
-
-                                            *g:EditorConfig_python_files_dir*
-If the EditorConfig core mode is python_builtin or python_external (see
-|g:EditorConfig_core_mode|), this variable is the directory where the plugin
-looks for the python scripts. This could either be an abosolute path, or a
-path relative to any of the directories in 'runtimepath'. The default value is
-"plugin/editorconfig-core-py", which means all "plugin/editorconfig-core-py"
-directory in 'runtimepath' will be searched.
 
                                             *g:EditorConfig_preserve_formatoptions*
 Set this to 1 if you don't want your formatoptions modified when

@@ -1,19 +1,12 @@
 # EditorConfig Vim Plugin
 
-[![Build Status](https://travis-ci.org/editorconfig/editorconfig-vim.svg?branch=master)](https://travis-ci.org/editorconfig/editorconfig-vim)
+[![Travis Build Status](https://img.shields.io/travis/cxw42/editorconfig-vim.svg?logo=travis)](https://travis-ci.org/editorconfig/editorconfig-vim)
+[![Appveyor Build Status](https://img.shields.io/appveyor/ci/cxw42/editorconfig-vim.svg?logo=appveyor)](https://ci.appveyor.com/project/cxw42/editorconfig-vim)
 
-This is an [EditorConfig][] plugin for Vim. This plugin could be found on both
+This is an [EditorConfig][] plugin for Vim. This plugin can be found on both
 [GitHub][] and [Vim online][].
 
 ## Installation
-
-If your Vim is not compiled with `+python` or `+python3` feature (You can verify
-if the `+python` or `+python3` feature is included by running `:ver`. Most Linux
-distributions and with the official Windows binary have the `+python` and
-`+python3` feature enabled), please first download the [EditorConfig core][] and
-follow the instructions in the README and INSTALL files to install it. This
-plugin would NOT work if neither `+python`/`+python3` nor EditorConfig core is
-available.
 
 To install this plugin, you can use one of the following ways:
 
@@ -35,6 +28,12 @@ OR
 
   Then remember to call `:PluginInstall`.
 
+### No external editorconfig core library is required
+
+Previous versions of this plugin also required a Python "core".
+The core included the code to parse `.editorconfig` files.
+This plugin **includes** the core, so you don't need to download the
+core separately.
 
 ## Supported properties
 
@@ -61,39 +60,31 @@ need to execute `:helptags ALL` so that Vim is aware of editorconfig.txt.
 To ensure that this plugin works well with [Tim Pope's fugitive][], use the
 following patterns array:
 
-> let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
+    let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
 
 If you wanted to avoid loading EditorConfig for any remote files over ssh:
 
-> let g:EditorConfig_exclude_patterns = ['scp://.\*']
+    let g:EditorConfig_exclude_patterns = ['scp://.\*']
 
 Of course these two items could be combined into the following:
 
-> let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
+    let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
 #### Disable rules
 
 You might want to override some project-specific EditorConfig rules in global
-or local vimrc in some cases, e.g., to resolve conflicts of trailing whitespace 
+or local vimrc in some cases, e.g., to resolve conflicts of trailing whitespace
 trimming and buffer autosaving.
 
-> let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+    let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
 You are able to disable any supported EditorConfig properties.
-
-#### Exec Path
-
-The file path to the EditorConfig core executable. You could set this value in
-your |vimrc| like this:
-
-> let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
 
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the
 [issue tracker][]. Be sure you have read the [contribution guideline][]!
 
-[EditorConfig core]: https://github.com/editorconfig/editorconfig-core
 [EditorConfig]: http://editorconfig.org
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550

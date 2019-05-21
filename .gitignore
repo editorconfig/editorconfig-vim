@@ -1,1 +1,3 @@
 tags
+tests/**/build
+tests/**/.bundle
