@@ -175,14 +175,14 @@ function! s:GetFilenames(path, filename) " {{{1
 endfunction " }}}1
 
 function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
-    let l:buffer_name = expand('%:p')
+    let l:buffer_name = resolve(expand('%:p'))
     " ignore buffers without a name
     if empty(l:buffer_name)
         return
     endif
 
     " Check if any .editorconfig does exist
-    let l:conf_files = s:GetFilenames(expand('%:p:h'), '.editorconfig')
+    let l:conf_files = s:GetFilenames(fnamemodify(l:buffer_name, ':p:h'), '.editorconfig')
     let l:conf_found = 0
     for conf_file in conf_files
         if filereadable(conf_file)
@@ -260,7 +260,7 @@ function! s:UseConfigFiles_VimCore()
 " Use the vimscript EditorConfig core
     try
         let l:config = editorconfig_core#handler#get_configurations(
-            \ { 'target': expand('%:p') } )
+            \ { 'target': resolve(expand('%:p')) } )
         call s:ApplyConfig(l:config)
         return 0    " success
     catch
