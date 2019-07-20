@@ -199,7 +199,7 @@ function! editorconfig_core#fnmatch#translate(pat, ...)
             endif
 
         elseif l:current_char ==# '?'
-            let l:result .= '\_.'
+            let l:result .= '\_[^/]'
 
         elseif l:current_char ==# '['
             if l:in_brackets
