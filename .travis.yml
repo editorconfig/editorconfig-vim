@@ -1,3 +1,6 @@
+# Make sure xvfb works - https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
+dist: trusty
+
 matrix:
   include:
     - name: "plugin"

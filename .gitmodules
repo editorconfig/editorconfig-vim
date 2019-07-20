@@ -3,4 +3,5 @@
 	url = https://github.com/editorconfig/editorconfig-plugin-tests.git
 [submodule "core_tests"]
 	path = tests/core/tests
-	url = https://github.com/editorconfig/editorconfig-core-test.git
+	url = https://github.com/cxw42/editorconfig-core-test.git
+	branch = cxwtest
