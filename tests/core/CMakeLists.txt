@@ -45,6 +45,7 @@ if(NOT WIN32)
 else()
     set(EDITORCONFIG_CMD "${CMAKE_SOURCE_DIR}/editorconfig.bat")
 endif()
+set(EDITORCONFIG_CMD_IS_TARGET FALSE)
 
 add_subdirectory(tests)
 
