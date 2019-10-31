@@ -19,6 +19,6 @@ else                                        # test core
     cd build
     cmake ..
     ctest . --output-on-failure -VV -C Debug
-    	# -C Debug: for Visual Studio builds, you have to specify
-	# a configuration.
+    # -C Debug: for Visual Studio builds, you have to specify
+    # a configuration.
 fi
