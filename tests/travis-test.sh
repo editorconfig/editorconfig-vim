@@ -14,5 +14,7 @@ else                                        # test core
     mkdir build
     cd build
     cmake ..
-    ctest . --output-on-failure
+    ctest . --output-on-failure -VV -C Debug
+    	# -C Debug: for Visual Studio builds, you have to specify
+	# a configuration.
 fi

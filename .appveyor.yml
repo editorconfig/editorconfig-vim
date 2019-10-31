@@ -94,7 +94,7 @@ build_script:
 
 test_script:
   # Run the core tests
-  - ctest . --output-on-failure
+  - ctest . --output-on-failure -C Debug
 
   # CTestCustom specifies skipping UTF-8 tests on Windows.
   - cmd: echo "Reminder - did not try UTF-8"
