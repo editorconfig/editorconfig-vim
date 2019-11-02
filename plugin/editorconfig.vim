@@ -127,7 +127,7 @@ function! s:InitializeExternalCommand()
     endif
 
     if g:EditorConfig_verbose
-        echo 'Checking for external command ' . s:editorconfig_exec_path
+        echo 'Checking for external command ' . s:editorconfig_exec_path . ' ...'
     endif
 
     if !executable(s:editorconfig_exec_path)
@@ -148,16 +148,20 @@ function! s:Initialize() " Initialize the plugin.  {{{1
 
     if s:editorconfig_core_mode ==? 'external_command'
         if s:InitializeExternalCommand()
+            echohl WarningMsg
             echo 'EditorConfig: Failed to initialize external_command mode.  ' .
                 \ 'Falling back to vim_core mode.'
+            echohl None
             let s:editorconfig_core_mode = 'vim_core'
         endif
     endif
 
     if s:editorconfig_core_mode ==? 'vim_core'
         if s:InitializeVimCore()
+            echohl ErrorMsg
             echo 'EditorConfig: Failed to initialize vim_core mode.  ' .
                 \ 'The plugin will not function.'
+            echohl None
             return 1
         endif
 
@@ -166,7 +170,9 @@ function! s:Initialize() " Initialize the plugin.  {{{1
         " external_command falling into the else clause.
 
     else    " neither external_command nor vim_core
+        echohl ErrorMsg
         echo "EditorConfig: I don't know how to use mode " . s:editorconfig_core_mode
+        echohl None
         return 1
     endif
 

@@ -78,6 +78,9 @@ empty. Currently, the supported modes are "vim_core" (default) and
 If "g:EditorConfig_core_mode" is not specified, this plugin will automatically
 choose "vim_core".
 
+If you choose "external_command" mode, you must also set
+|g:EditorConfig_exec_path|.
+
 Changes to "g:EditorConfig_core_mode" will not take effect until Vim
 is restarted.
 
@@ -93,7 +96,7 @@ Example: Avoid loading EditorConfig for any remote files over ssh
 <
 
                                             *g:EditorConfig_exec_path*
-The file path to the EditorConfig core executable. You could set this value in
+The file path to the EditorConfig core executable. You can set this value in
 your |vimrc| like this:
 >
  let g:EditorConfig_exec_path = 'Path to your EditorConfig Core executable'
