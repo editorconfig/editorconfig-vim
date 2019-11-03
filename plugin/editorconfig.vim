@@ -38,6 +38,8 @@ let s:saved_cpo = &cpo
 set cpo&vim
 
 " variables {{{1
+
+" Make sure the globals all exist
 if !exists('g:EditorConfig_exec_path')
     let g:EditorConfig_exec_path = ''
 endif
@@ -62,10 +64,18 @@ if !exists('g:EditorConfig_disable_rules')
     let g:EditorConfig_disable_rules = []
 endif
 
+" Copy some of the globals into script variables --- changes to these
+" globals won't affect the plugin until the plugin is reloaded.
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
     let s:editorconfig_core_mode = g:EditorConfig_core_mode
 else
     let s:editorconfig_core_mode = ''
+endif
+
+if exists('g:EditorConfig_exec_path') && !empty(g:EditorConfig_exec_path)
+    let s:editorconfig_exec_path = g:EditorConfig_exec_path
+else
+    let s:editorconfig_exec_path = ''
 endif
 
 let s:initialized = 0
@@ -107,50 +117,62 @@ function! s:InitializeVimCore()
     endtry
     return 0
 endfunction
+
+function! s:InitializeExternalCommand()
+" Initialize external_command mode
+
+    if empty(s:editorconfig_exec_path)
+        echo 'Please specify a g:EditorConfig_exec_path'
+        return 1
+    endif
+
+    if g:EditorConfig_verbose
+        echo 'Checking for external command ' . s:editorconfig_exec_path . ' ...'
+    endif
+
+    if !executable(s:editorconfig_exec_path)
+        echo 'File ' . s:editorconfig_exec_path . ' is not executable.'
+        return 1
+    endif
+
+    return 0
+endfunction
 " }}}1
 
 function! s:Initialize() " Initialize the plugin.  {{{1
     " Returns truthy on error, falsy on success.
 
-    " Do some initialization if the user has specified a core mode {{{2
-    if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
+    if empty(s:editorconfig_core_mode)
+        let s:editorconfig_core_mode = 'vim_core'   " Default core choice
+    endif
 
-        if s:editorconfig_core_mode ==? 'vim_core'
-            if s:InitializeVimCore()
-                echo 'EditorConfig: Failed to initialize vim_core mode'
-                return 1
-            endif
-        else
-            echo "EditorConfig: I don't know how to use mode " . s:editorconfig_core_mode
+    if s:editorconfig_core_mode ==? 'external_command'
+        if s:InitializeExternalCommand()
+            echohl WarningMsg
+            echo 'EditorConfig: Failed to initialize external_command mode.  ' .
+                \ 'Falling back to vim_core mode.'
+            echohl None
+            let s:editorconfig_core_mode = 'vim_core'
+        endif
+    endif
+
+    if s:editorconfig_core_mode ==? 'vim_core'
+        if s:InitializeVimCore()
+            echohl ErrorMsg
+            echo 'EditorConfig: Failed to initialize vim_core mode.  ' .
+                \ 'The plugin will not function.'
+            echohl None
             return 1
         endif
 
-    endif " }}}2
+    elseif s:editorconfig_core_mode ==? 'external_command'
+        " Nothing to do here, but this elseif is required to avoid
+        " external_command falling into the else clause.
 
-    " Determine the editorconfig_core_mode we should use {{{2
-    while 1
-        " If user has specified a mode, just break
-        if exists('s:editorconfig_core_mode') && !empty(s:editorconfig_core_mode)
-            break
-        endif
-
-        " Try the Vimscript core
-        try
-            let l:vim_core_ver = editorconfig_core#version()
-            let s:editorconfig_core_mode = 'vim_core'
-            break
-        catch
-            " if the Vim core wasn't loaded, we will report it below
-        endtry
-
-        break
-    endwhile " }}}2
-
-    " No EditorConfig Core is available
-    if empty(s:editorconfig_core_mode)
-        echo "EditorConfig: ".
-                    \ "No EditorConfig Core is available.  " .
-                    \ "The plugin won't work."
+    else    " neither external_command nor vim_core
+        echohl ErrorMsg
+        echo "EditorConfig: I don't know how to use mode " . s:editorconfig_core_mode
+        echohl None
         return 1
     endif
 
@@ -214,6 +236,8 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
 
     if s:editorconfig_core_mode ==? 'vim_core'
         call s:UseConfigFiles_VimCore()
+    elseif s:editorconfig_core_mode ==? 'external_command'
+        call s:UseConfigFiles_ExternalCommand()
     else
         echohl Error |
                     \ echo "Unknown EditorConfig Core: " .
@@ -267,6 +291,71 @@ function! s:UseConfigFiles_VimCore()
         return 1    " failure
     endtry
 endfunction
+
+function! s:UseConfigFiles_ExternalCommand()
+" Use external EditorConfig core (e.g., the C core)
+
+    call s:DisableShellSlash()
+    let l:exec_path = shellescape(s:editorconfig_exec_path)
+    call s:ResetShellSlash()
+
+    call s:SpawnExternalParser(l:exec_path)
+endfunction
+
+function! s:SpawnExternalParser(cmd) " {{{2
+" Spawn external EditorConfig. Used by s:UseConfigFiles_ExternalCommand()
+
+    let l:cmd = a:cmd
+
+    if empty(l:cmd)
+        throw 'No cmd provided'
+    endif
+
+    let l:config = {}
+
+    call s:DisableShellSlash()
+    let l:cmd = l:cmd . ' ' . shellescape(expand('%:p'))
+    call s:ResetShellSlash()
+
+    let l:parsing_result = split(system(l:cmd), '\v[\r\n]+')
+
+    " if editorconfig core's exit code is not zero, give out an error
+    " message
+    if v:shell_error != 0
+        echohl ErrorMsg
+        echo 'Failed to execute "' . l:cmd . '". Exit code: ' .
+                    \ v:shell_error
+        echo ''
+        echo 'Message:'
+        echo l:parsing_result
+        echohl None
+        return
+    endif
+
+    if g:EditorConfig_verbose
+        echo 'Output from EditorConfig core executable:'
+        echo l:parsing_result
+    endif
+
+    for one_line in l:parsing_result
+        let l:eq_pos = stridx(one_line, '=')
+
+        if l:eq_pos == -1 " = is not found. Skip this line
+            continue
+        endif
+
+        let l:eq_left = strpart(one_line, 0, l:eq_pos)
+        if l:eq_pos + 1 < strlen(one_line)
+            let l:eq_right = strpart(one_line, l:eq_pos + 1)
+        else
+            let l:eq_right = ''
+        endif
+
+        let l:config[l:eq_left] = l:eq_right
+    endfor
+
+    call s:ApplyConfig(l:config)
+endfunction " }}}2
 
 " }}}1
 

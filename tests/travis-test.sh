@@ -7,6 +7,10 @@
 set -evx
 
 if [[ $TEST_WHICH = 'plugin' ]]; then       # test plugin
+    # Use the standalone Vimscript EditorConfig core to test the plugin's
+    # external_command mode
+    export EDITORCONFIG_VIM_EXTERNAL_CORE=tests/core/editorconfig
+
     bundle exec rspec tests/plugin/spec/editorconfig_spec.rb
 
 else                                        # test core
@@ -15,6 +19,6 @@ else                                        # test core
     cd build
     cmake ..
     ctest . --output-on-failure -VV -C Debug
-    	# -C Debug: for Visual Studio builds, you have to specify
-	# a configuration.
+    # -C Debug: for Visual Studio builds, you have to specify
+    # a configuration.
 fi
