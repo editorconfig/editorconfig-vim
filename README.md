@@ -17,6 +17,17 @@ To install this plugin, you can use one of the following ways:
 
 OR
 
+- Install as a Vim 8 plugin. Note `local` can be any name, but some path
+  element must be present. On Windows, instead of `~/.vim` use
+  `$VIM_INSTALLATION_FOLDER\vimfiles`.
+```shell
+mkdir -p ~/.vim/pack/local/start
+cd ~/.vim/pack/local/start
+git clone https://github.com/editorconfig/editorconfig-vim.git
+```
+
+OR
+
 - Use [pathogen][] (the git repository of this plugin is
   https://github.com/editorconfig/editorconfig-vim.git)
 
