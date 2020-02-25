@@ -161,13 +161,6 @@ function! s:preprocess_values(job, opts)
         let a:opts['indent_size'] = 'tab'
     endif
 
-    " Set tab_width to indent_size if indent_size is specified and
-    " tab_width is unspecified
-    if has_key(a:opts, 'indent_size') && !has_key(a:opts, 'tab_width') &&
-                \ get(a:opts, 'indent_size', '') !=? "tab"
-        let a:opts['tab_width'] = a:opts['indent_size']
-    endif
-
     " Set indent_size to tab_width if indent_size is "tab"
     if has_key(a:opts, 'indent_size') && has_key(a:opts, 'tab_width') &&
                 \ get(a:opts, 'indent_size', '') ==? "tab"
