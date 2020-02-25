@@ -101,6 +101,14 @@ let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
 You are able to disable any supported EditorConfig properties.
 
+#### A note on 'softtabstop'
+
+Previously, this plugin set 'softtabstop' to the same value as 'shiftwidth'. It no
+longer does. If you want to continue having 'softtabstop' equal to 'shiftwidth', set
+'softtabstop' to a negative number in your vimrc.
+
+Refer to `:help 'softtabstop'`.
+
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the
