@@ -10,36 +10,48 @@ This is an [EditorConfig][] plugin for Vim. This plugin can be found on both
 
 To install this plugin, you can use one of the following ways:
 
-- Download the [archive][] and extract it into your Vim runtime directory
-  (`~/.vim` on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
-  You should have 3 sub-directories in this runtime directory now: "autoload",
-  "doc" and "plugin".
+### Install with the archive
 
-OR
+Download the [archive][] and extract it into your Vim runtime directory
+(`~/.vim` on UNIX/Linux and `$VIM_INSTALLATION_FOLDER\vimfiles` on windows).
+You should have 3 sub-directories in this runtime directory now: "autoload",
+"doc" and "plugin".
 
-- Install as a Vim 8 plugin. Note `local` can be any name, but some path
-  element must be present. On Windows, instead of `~/.vim` use
-  `$VIM_INSTALLATION_FOLDER\vimfiles`.
+### Install as Vim8 plugin
+
+Install as a Vim 8 plugin. Note `local` can be any name, but some path
+element must be present. On Windows, instead of `~/.vim` use
+`$VIM_INSTALLATION_FOLDER\vimfiles`.
 ```shell
 mkdir -p ~/.vim/pack/local/start
 cd ~/.vim/pack/local/start
 git clone https://github.com/editorconfig/editorconfig-vim.git
 ```
 
-OR
+### Install with [pathogen][]
 
-- Use [pathogen][] (the git repository of this plugin is
-  https://github.com/editorconfig/editorconfig-vim.git)
+Use pathogen (the git repository of this plugin is
+https://github.com/editorconfig/editorconfig-vim.git)
 
-OR
+### Install with [Vundle][]
 
-- Use [Vundle][] by adding to your `.vimrc` Vundle plugins section:
+Use Vundle by adding to your `.vimrc` Vundle plugins section:
 
-  ```viml
-  Plugin 'editorconfig/editorconfig-vim'
-  ```
+```viml
+Plugin 'editorconfig/editorconfig-vim'
+```
 
-  Then remember to call `:PluginInstall`.
+Then remember to call `:PluginInstall`.
+
+### Install with [vim-plug][]
+
+Use vim-plug by adding to your `.vimrc` in your plugin section:
+  
+```viml
+Plug 'editorconfig/editorconfig-vim'
+```
+  
+Then remember to call `:PlugInstall`.
 
 ### No external editorconfig core library is required
 
@@ -118,3 +130,4 @@ Feel free to submit bugs, feature requests, and other issues to the
 [pathogen]: https://github.com/tpope/vim-pathogen
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 [editorconfig.txt]: https://github.com/editorconfig/editorconfig-vim/blob/master/doc/editorconfig.txt
+[vim-plug]: https://github.com/junegunn/vim-plug
