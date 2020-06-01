@@ -41,6 +41,7 @@ cache:
 
 environment:
   VIM_EXE: C:\vim\vim\vim80\vim.exe
+  EDITORCONFIG_DEBUG: c:\windows\temp\ecdebug.txt
 
 for:
   # Don't run the Windows build if the commit message includes "[ci-linux]"
@@ -102,6 +103,7 @@ test_script:
 
 on_failure:
   - echo "failed"
+  - cmd: type c:\windows\temp\ecdebug.txt
   - cmd: type tests\core\build\Testing\Temporary\LastTest.log
   - sh: cat tests/core/build/Testing/Temporary/LastTest.log
 
