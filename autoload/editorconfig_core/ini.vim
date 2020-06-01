@@ -39,7 +39,7 @@ endif
 " Allow ``]`` and escaped ``;`` and ``#`` characters in section headers.
 " In fact, allow \ to escape any single character - it needs to cover at
 " least \ * ? [ ! ] { }.
-unlockvar s:SECTCRE s:OPTCRE s:MAX_SECTION_NAME s:MAX_PROPERTY_NAME s:MAX_PROPERTY_VALUE
+unlockvar s:SECTCRE s:OPTCRE
 let s:SECTCRE = '\v^\s*\[(%([^\\#;]|\\.)+)\]'
 
 " Regular expression for parsing option name/values.
@@ -48,11 +48,7 @@ let s:SECTCRE = '\v^\s*\[(%([^\\#;]|\\.)+)\]'
 " any characters to eol
 let s:OPTCRE = '\v\s*([^:=[:space:]][^:=]*)\s*([:=])\s*(.*)$'
 
-let s:MAX_SECTION_NAME = 4096
-let s:MAX_PROPERTY_NAME = 50
-let s:MAX_PROPERTY_VALUE = 255
-
-lockvar s:SECTCRE s:OPTCRE s:MAX_SECTION_NAME s:MAX_PROPERTY_NAME s:MAX_PROPERTY_VALUE
+lockvar s:SECTCRE s:OPTCRE
 
 " }}}2
 " === Main ============================================================== {{{1
@@ -123,13 +119,8 @@ function! s:parse(config_filename, target_filename, lines)
         if len(l:mo)
             let l:sectname = l:mo[1]
             let l:in_section = 1
-            if strlen(l:sectname) > s:MAX_SECTION_NAME
-                " Section name too long => ignore the section
-                let l:matching_section = 0
-            else
-                let l:matching_section = s:matches_filename(
-                    \ a:config_filename, a:target_filename, l:sectname)
-            endif
+            let l:matching_section = s:matches_filename(
+                \ a:config_filename, a:target_filename, l:sectname)
 
             if g:editorconfig_core_vimscript_debug
                 echom 'In section ' . l:sectname . ', which ' .
@@ -177,9 +168,7 @@ function! s:parse(config_filename, target_filename, lines)
                     echom printf('Saw opt <%s>=<%s>', l:optname, l:optval)
                 endif
 
-                if l:matching_section &&
-                            \ strlen(l:optname) <= s:MAX_PROPERTY_NAME &&
-                            \ strlen(l:optval) <= s:MAX_PROPERTY_VALUE
+                if l:matching_section
                     let l:options[l:optname] = l:optval
                 endif
             else
