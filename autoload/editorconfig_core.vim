@@ -1,7 +1,7 @@
 " autoload/editorconfig_core.vim: top-level functions for
 " editorconfig-core-vimscript and editorconfig-vim.
 
-" Copyright (c) 2018-2019 EditorConfig Team, including Chris White {{{1
+" Copyright (c) 2018-2020 EditorConfig Team, including Chris White {{{1
 " All rights reserved.
 "
 " Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ endif
 " The latest version of the specification that we support.
 " See discussion at https://github.com/editorconfig/editorconfig/issues/395
 function! editorconfig_core#version()
-    return [0,12,2]
+    return [0,13,0]
 endfunction
 
 " === CLI =============================================================== {{{1
