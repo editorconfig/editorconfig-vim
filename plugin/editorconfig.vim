@@ -186,7 +186,8 @@ function! s:GetFilenames(path, filename) " {{{1
     let l:path_list = []
     let l:path = a:path
     while 1
-        let l:path_list += [l:path . '/' . a:filename]
+        " the trailing /. avoids waste of time under mingw64 when l:path='/'
+        let l:path_list += [ '/.' . l:path . '/' . a:filename]
         let l:newpath = fnamemodify(l:path, ':h')
         if l:path == l:newpath
             break
