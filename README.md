@@ -101,6 +101,16 @@ Of course these two items could be combined into the following:
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 ```
 
+#### Disable for a specific filetype
+
+Since you can disable this plugin for a specific buffer, you can disable the
+plugin for all buffer of a specific filetype. For example, to disable
+EditorConfig for all git commit messages (filetype `gitcommit`):
+
+```viml
+au FileType gitcommit let b:EditorConfig_disable = 1
+```
+
 #### Disable rules
 
 You might want to override some project-specific EditorConfig rules in global
