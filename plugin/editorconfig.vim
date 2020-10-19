@@ -504,8 +504,11 @@ function! s:TrimTrailingWhitespace() " {{{1
 endfunction " }}}1
 
 function! s:IsRuleActive(name, config) " {{{1
-    return index(g:EditorConfig_disable_rules, a:name) < 0 &&
-                 \ has_key(a:config, a:name)
+    let l:globally_active = index(g:EditorConfig_disable_rules, a:name) < 0
+    let l:locally_active = exists("b:EditorConfig_disable_rules") &&
+                \ index(b:EditorConfig_disable_rules, a:name) < 0
+    let l:has_rule = has_key(a:config, a:name)
+    return l:has_rule && (l:globally_active || l:locally_active)
 endfunction "}}}1
 
 let &cpo = s:saved_cpo

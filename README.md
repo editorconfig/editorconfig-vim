@@ -113,6 +113,15 @@ let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 
 You are able to disable any supported EditorConfig properties.
 
+Additionally, you can also disable rules for a single buffer, which you can then
+use to disable rules for all buffers of a specific filetype. This can be used to
+prevent EditorConfig from producing broken Makefiles by replacing tabs with
+spaces.
+
+```viml
+au FileType make let b:EditorConfig_disable_rules = ['indent_style']
+```
+
 ## Bugs and Feature Requests
 
 Feel free to submit bugs, feature requests, and other issues to the

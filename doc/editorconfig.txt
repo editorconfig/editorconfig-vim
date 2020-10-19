@@ -95,6 +95,29 @@ Example: Avoid loading EditorConfig for any remote files over ssh
  let g:EditorConfig_exclude_patterns = ['scp://.*']
 <
 
+                                            *g:EditorConfig_disable_rules*
+This is a list that contains EditorConfig properties that should be ignored by
+the plugin. This setting only applies when |g:EditorConfig_core_mode| is set
+to "vim_core". The default is an empty list.
+
+Example: Prevent EditorConfig from trimming trailing whitespaces
+>
+ let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+<
+
+                                            *b:EditorConfig_disable_rules*
+This is a buffer-local version of |g:EditorConfig_disable_rules|. The
+default is an empty list.
+
+Example: Prevent EditorConfig from replacing tabs with spaces for a single
+buffer
+>
+ let b:EditorConfig_disable_rules = ['indent_style']
+<
+Example: Prevent EditorConfig from replacing tabs with spaces within Makefiles
+>
+ au FileType make let b:EditorConfig_disable_rules = ['indent_style']
+<
                                             *g:EditorConfig_exec_path*
 The file path to the EditorConfig core executable. You can set this value in
 your |vimrc| like this:
