@@ -203,6 +203,13 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
         return
     endif
 
+    if exists("b:EditorConfig_disable") && b:EditorConfig_disable
+        if g:EditorConfig_verbose
+            echo 'Skipping EditorConfig for buffer "' . l:buffer_name . '"'
+        endif
+        return
+    endif
+
     " Check if any .editorconfig does exist
     let l:conf_files = s:GetFilenames(expand('%:p:h'), '.editorconfig')
     let l:conf_found = 0
