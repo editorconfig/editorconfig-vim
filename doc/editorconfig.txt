@@ -88,11 +88,11 @@ is restarted.
 This is a buffer-local variable that disables the EditorConfig plugin for a
 single buffer.
 
-Example: Disable EditorConfig for a single buffer
+Example: Disable EditorConfig for the current buffer:
 >
  let b:EditorConfig_disable = 1
 <
-Example: Disable EditorConfig for all git commit messages
+Example: Disable EditorConfig for all git commit messages:
 >
  au FileType gitcommit let b:EditorConfig_disable = 1
 <
