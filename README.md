@@ -51,6 +51,12 @@ Use vim-plug by adding to your `.vimrc` in your plugin section:
 Plug 'editorconfig/editorconfig-vim'
 ```
 
+Source your `.vimrc`:
+
+```viml
+source .vimrc
+```
+
 Then call `:PlugInstall`.
 
 ### No external editorconfig core library is required
