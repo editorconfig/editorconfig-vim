@@ -51,11 +51,7 @@ Use vim-plug by adding to your `.vimrc` in your plugin section:
 Plug 'editorconfig/editorconfig-vim'
 ```
 
-Source your `.vimrc`:
-
-```viml
-source .vimrc
-```
+Source your `.vimrc` by calling `:source $MYVIMRC.`
 
 Then call `:PlugInstall`.
 
