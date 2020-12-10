@@ -189,10 +189,28 @@ file:
 
      return 0   " Return 0 to show no error happened
  endfunction
-
+<
+If the plugin is installed with a plugin manager that loads it while parsing
+the |vimrc|, then we can immediately add this hook:
+>
  call editorconfig#AddNewHook(function('FiletypeHook'))
 <
-And add the following code to your .editorconfig file:
+If the plugin is installed as part of a Vim 8 |package|, it will not be loaded
+until after the |vimrc| file has been parsed. This may be the case with some
+other plugin managers too. As a result, the above call to add the hook will not
+work as the function will not have been loaded yet. Instead, we can use the
+|SourcePost| autocommand event to add the hook after the plugin is loaded:
+>
+ autocmd SourcePost */plugin/editorconfig.vim call editorconfig#AddNewHook(function('FiletypeHook'))
+<
+Alternatively, to avoid the autocommand, or to work with versions of vim older
+than 8.1.0729 where |SourcePost| is not available, then we can add a
+plugin/editorconfig.vim file to an |after-directory|. This will be run at the
+end of vim startup, and should contain the original call command to add the
+hook. The definition of the FiletypeHook function can either remain in the
+|vimrc| or be moved to the after file.
+
+Now add the following code to your .editorconfig file:
 >
  [*.m]
  vim_filetype = objc
