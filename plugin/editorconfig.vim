@@ -473,7 +473,7 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         if exists('+colorcolumn')
             if l:max_line_length > 0
                 if g:EditorConfig_max_line_indicator == 'line'
-                    let &l:colorcolumn = l:max_line_length + 1
+                    setlocal colorcolumn+=+1
                 elseif g:EditorConfig_max_line_indicator == 'fill' &&
                             \ l:max_line_length < &l:columns
                     " Fill only if the columns of screen is large enough
