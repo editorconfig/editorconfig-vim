@@ -507,7 +507,7 @@ function! s:TrimTrailingWhitespace() " {{{1
         " don't lose user position when trimming trailing whitespace
         let s:view = winsaveview()
         try
-            silent! keeppatterns %s/\s\+$//e
+            silent! keeppatterns keepjumps %s/\s\+$//e
         finally
             call winrestview(s:view)
         endtry
