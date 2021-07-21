@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        vim_version:
+        - 'v8.2.0000'
+        - 'v8.1.0000'
+        - 'v8.0.0000'
+        - 'v7.4'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.2.4
+      - name: Setup Vim
+        uses: thinca/action-setup-vim@v1
+        with:
+          vim_version: ${{ matrix.vim_version }}
+
+      - name: Install dependencies
+        run: bundle install ./tests/plugin/Gemfile
+      - name: Before script
+        run: |
+          export DISPLAY=:99.0
+          sh -e /etc/init.d/xvfb start"
+      - name: Run tests
+        run: ./tests/travis-test.sh
