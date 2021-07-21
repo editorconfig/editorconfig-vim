@@ -23,7 +23,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.2.4
+          ruby-version: 2.2.10
       - name: Setup Vim
         uses: thinca/action-setup-vim@v1
         with:
