@@ -24,6 +24,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.2.10
+
       - name: Setup Vim
         uses: thinca/action-setup-vim@v1
         with:
@@ -31,9 +32,6 @@ jobs:
 
       - name: Install dependencies
         run: bundle install --gemfile="./tests/plugin/Gemfile"
-      - name: Before script
-        run: |
-          export DISPLAY=:99.0
-          sh -e /etc/init.d/xvfb start
+
       - name: Run tests
         run: ./tests/travis-test.sh
