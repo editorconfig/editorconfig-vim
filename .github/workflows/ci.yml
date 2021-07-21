@@ -30,7 +30,7 @@ jobs:
           vim_version: ${{ matrix.vim_version }}
 
       - name: Install dependencies
-        run: bundle install ./tests/plugin/Gemfile
+        run: bundle install --gemfile="./tests/plugin/Gemfile"
       - name: Before script
         run: |
           export DISPLAY=:99.0
