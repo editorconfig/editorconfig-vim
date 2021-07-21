@@ -24,12 +24,8 @@
 " POSSIBILITY OF SUCH DAMAGE.
 "
 
-if v:version < 700
-    finish
-endif
-
 " check whether this script is already loaded
-if exists("g:loaded_EditorConfig")
+if v:version < 700 || exists("g:loaded_EditorConfig")
     finish
 endif
 let g:loaded_EditorConfig = 1
