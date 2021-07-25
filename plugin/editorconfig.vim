@@ -24,7 +24,7 @@
 " POSSIBILITY OF SUCH DAMAGE.
 "
 
-" check whether this script is already loaded
+" check for Vim versions and duplicate script loading.
 if v:version < 700 || exists("g:loaded_EditorConfig")
     finish
 endif
