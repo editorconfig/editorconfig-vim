@@ -35,7 +35,7 @@ def test_instance(vim)
       it '3_space.py' do
         test_editorconfig vim, '3_space.txt',
           expandtab: '1',
-          shiftwidth: '3',
+          shiftwidth: '0',
           tabstop: '3'
       end
     end
@@ -43,14 +43,14 @@ def test_instance(vim)
     it '4_space.py' do
       test_editorconfig vim, '4_space.py',
         expandtab: '1',
-        shiftwidth: '4',
-        tabstop: '8'
+        shiftwidth: '0',
+        tabstop: '4'
     end
 
     it 'space.txt' do
       test_editorconfig vim, 'space.txt',
         expandtab: '1',
-        shiftwidth: vim.echo('&l:tabstop')
+        shiftwidth: '0'
     end
 
     it 'tab.txt' do
@@ -61,14 +61,14 @@ def test_instance(vim)
     it '4_tab.txt' do
       test_editorconfig vim, '4_tab.txt',
         expandtab: '0',
-        shiftwidth: '4',
+        shiftwidth: '0',
         tabstop: '4'
     end
 
     it '4_tab_width_of_8' do
       test_editorconfig vim, '4_tab_width_of_8.txt',
         expandtab: '0',
-        shiftwidth: '4',
+        shiftwidth: '0',
         tabstop: '8'
     end
 

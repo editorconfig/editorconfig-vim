@@ -384,25 +384,21 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         endif
     endif
 
-    if s:IsRuleActive('tab_width', a:config)
-        let &l:tabstop = str2nr(a:config["tab_width"])
-    endif
-
     if s:IsRuleActive('indent_size', a:config)
-        " if indent_size is 'tab', set shiftwidth to tabstop;
-        " if indent_size is a positive integer, set shiftwidth to the integer
-        " value
-        if a:config["indent_size"] == "tab"
-            let &l:shiftwidth = &l:tabstop
-            let &l:softtabstop = &l:shiftwidth
-        else
+        " When shiftwidth is 0 it uses the value of tabstop
+        let &l:shiftwidth = 0
+        if a:config["indent_size"] != "tab"
             let l:indent_size = str2nr(a:config["indent_size"])
             if l:indent_size > 0
-                let &l:shiftwidth = l:indent_size
-                let &l:softtabstop = &l:shiftwidth
+                let &l:tabstop = l:indent_size
             endif
         endif
+    endif
 
+    if s:IsRuleActive('tab_width', a:config)
+        if a:config["indent_style"] == "tab"
+            let &l:tabstop = str2nr(a:config["tab_width"])
+        endif
     endif
 
     if s:IsRuleActive('end_of_line', a:config) &&
