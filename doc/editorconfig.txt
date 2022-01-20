@@ -1,7 +1,7 @@
 *editorconfig.txt*
 
 File: editorconfig.txt
-Version: 1.1.0-beta
+Version: 1.1.1
 Maintainer: EditorConfig Team <http://editorconfig.org>
 Description: EditorConfig vim plugin
 
@@ -83,6 +83,19 @@ If you choose "external_command" mode, you must also set
 
 Changes to "g:EditorConfig_core_mode" will not take effect until Vim
 is restarted.
+
+                                            *b:EditorConfig_disable*
+This is a buffer-local variable that disables the EditorConfig plugin for a
+single buffer.
+
+Example: Disable EditorConfig for the current buffer:
+>
+ let b:EditorConfig_disable = 1
+<
+Example: Disable EditorConfig for all git commit messages:
+>
+ au FileType gitcommit let b:EditorConfig_disable = 1
+<
 
                                             *g:EditorConfig_exclude_patterns*
 This is a list contains file path patterns which will be ignored by

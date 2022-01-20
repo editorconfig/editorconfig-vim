@@ -24,12 +24,8 @@
 " POSSIBILITY OF SUCH DAMAGE.
 "
 
-if v:version < 700
-    finish
-endif
-
-" check whether this script is already loaded
-if exists("g:loaded_EditorConfig")
+" check for Vim versions and duplicate script loading.
+if v:version < 700 || exists("g:loaded_EditorConfig")
     finish
 endif
 let g:loaded_EditorConfig = 1
@@ -197,9 +193,17 @@ function! s:GetFilenames(path, filename) " {{{1
 endfunction " }}}1
 
 function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
+    let b:editorconfig_tried = 1
     let l:buffer_name = expand('%:p')
     " ignore buffers without a name
     if empty(l:buffer_name)
+        return
+    endif
+
+    if exists("b:EditorConfig_disable") && b:EditorConfig_disable
+        if g:EditorConfig_verbose
+            echo 'Skipping EditorConfig for buffer "' . l:buffer_name . '"'
+        endif
         return
     endif
 
@@ -235,9 +239,12 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
     endfor
 
     if s:editorconfig_core_mode ==? 'vim_core'
-        call s:UseConfigFiles_VimCore()
+        if s:UseConfigFiles_VimCore() == 0
+            let b:editorconfig_applied = 1
+        endif
     elseif s:editorconfig_core_mode ==? 'external_command'
         call s:UseConfigFiles_ExternalCommand()
+        let b:editorconfig_applied = 1
     else
         echohl Error |
                     \ echo "Unknown EditorConfig Core: " .
@@ -496,7 +503,7 @@ function! s:TrimTrailingWhitespace() " {{{1
         " don't lose user position when trimming trailing whitespace
         let s:view = winsaveview()
         try
-            silent! keeppatterns %s/\s\+$//e
+            silent! keeppatterns keepjumps %s/\s\+$//e
         finally
             call winrestview(s:view)
         endtry
