@@ -534,7 +534,7 @@ endfunction
 
 function! s:ApplyConfig(config) " {{{1
     " Only process normal buffers (do not treat help files as '.txt' files)
-    if !empty(&buftype)
+    if index(['', 'acwrite'], &buftype) == -1
         return
     endif
 
