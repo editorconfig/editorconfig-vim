@@ -71,6 +71,8 @@ function! editorconfig_core#ini#read_ini_file(config_filename, target_filename)
             if len(l:lines) > 0 && l:lines[0][:2] ==# "\xEF\xBB\xBF"
                 let l:lines[0] = l:lines[0][3:]
             endif
+            " convert from UTF-8 to 'encoding'
+            call map(l:lines, 'iconv(v:val, "utf-8", &encoding)')
         endif
         let result = s:parse(a:config_filename, a:target_filename, l:lines)
     catch
