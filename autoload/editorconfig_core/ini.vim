@@ -67,7 +67,8 @@ function! editorconfig_core#ini#read_ini_file(config_filename, target_filename)
     endif
 
     try     " so &encoding will always be reset
-        let &encoding = 'utf-8'     " so readfile() will strip BOM
+        " Note: 'let &enc' has side effects on &fenc
+        set encoding = 'utf-8'     " so readfile() will strip BOM
         let l:lines = readfile(a:config_filename)
         let result = s:parse(a:config_filename, a:target_filename, l:lines)
     catch
