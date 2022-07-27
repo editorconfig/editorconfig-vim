@@ -440,7 +440,8 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         autocmd! BufWritePre <buffer>
         if s:IsRuleActive('trim_trailing_whitespace', a:config) &&
                     \ get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
-            autocmd BufWritePre <buffer> call s:TrimTrailingWhitespace()
+            autocmd InsertEnter <buffer> let s:pos_on_insert_enter = getpos('.')
+            autocmd InsertLeave <buffer> call s:TrimTrailingWhitespace()
         endif
     augroup END
 
@@ -500,10 +501,14 @@ endfunction
 
 function! s:TrimTrailingWhitespace() " {{{1
     if &l:modifiable
+        let insert_end_pos = getpos('.')[1]
+        let insert_start_pos = get(s:, 'pos_on_insert_enter', insert_end_pos)[1]
+        echom insert_start_pos
+        echom insert_end_pos
         " don't lose user position when trimming trailing whitespace
         let s:view = winsaveview()
         try
-            silent! keeppatterns keepjumps %s/\s\+$//e
+            execute 'silent! keeppatterns keepjumps :' . insert_start_pos . ',' . insert_end_pos . 's/\s\+$//e'
         finally
             call winrestview(s:view)
         endtry
