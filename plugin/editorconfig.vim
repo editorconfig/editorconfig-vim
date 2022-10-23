@@ -445,6 +445,11 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
     augroup END
 
     if s:IsRuleActive('insert_final_newline', a:config)
+        if a:config["insert_final_newline"] == "false"
+            setl noendofline
+        else
+            setl endofline
+        endif
         if exists('+fixendofline')
             if a:config["insert_final_newline"] == "false"
                 setl nofixendofline
