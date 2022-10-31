@@ -49,8 +49,8 @@ let s:SECTCRE = '\v^\s*\[(%([^\\#;]|\\.)+)\]'
 let s:OPTCRE = '\v\s*([^:=[:space:]][^:=]*)\s*([:=])\s*(.*)$'
 
 let s:MAX_SECTION_NAME = 4096
-let s:MAX_PROPERTY_NAME = 50
-let s:MAX_PROPERTY_VALUE = 255
+let s:MAX_PROPERTY_NAME = 1024
+let s:MAX_PROPERTY_VALUE = 4096
 
 lockvar s:SECTCRE s:OPTCRE s:MAX_SECTION_NAME s:MAX_PROPERTY_NAME s:MAX_PROPERTY_VALUE
 
