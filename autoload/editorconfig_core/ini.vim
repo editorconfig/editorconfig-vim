@@ -155,18 +155,6 @@ function! s:parse(config_filename, target_filename, lines)
                     echom printf('Saw raw opt <%s>=<%s>', l:optname, l:optval)
                 endif
 
-                if l:optval =~# '\v[;#]'
-                    " ';' and '#' are comment delimiters only if
-                    " preceded by a spacing character
-                    let l:m = matchlist(l:optval, '\v(.{-})\s[;#]')
-                    if len(l:m)
-                        let l:optval = l:m[1]
-                    endif
-
-                    " ; and # can be escaped with backslash.
-                    let l:optval = substitute(l:optval, '\v\\([;#])', '\1', 'g')
-
-                endif
                 let l:optval = editorconfig_core#util#strip(l:optval)
                 " allow empty values
                 if l:optval ==? '""'
