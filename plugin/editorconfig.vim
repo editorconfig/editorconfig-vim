@@ -402,14 +402,18 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         " value
         if a:config["indent_size"] == "tab"
             let &l:shiftwidth = &l:tabstop
-            let &l:softtabstop = g:EditorConfig_softtabstop_tab > 0 ?
-                        \ &l:shiftwidth : g:EditorConfig_softtabstop_tab
+            if type(g:EditorConfig_softtabstop_tab) != type([])
+                let &l:softtabstop = g:EditorConfig_softtabstop_tab > 0 ?
+                            \ &l:shiftwidth : g:EditorConfig_softtabstop_tab
+            endif
         else
             let l:indent_size = str2nr(a:config["indent_size"])
             if l:indent_size > 0
                 let &l:shiftwidth = l:indent_size
-                let &l:softtabstop = g:EditorConfig_softtabstop_space > 0 ?
-                        \ &l:shiftwidth : g:EditorConfig_softtabstop_space
+                if type(g:EditorConfig_softtabstop_space) != type([])
+                    let &l:softtabstop = g:EditorConfig_softtabstop_space > 0 ?
+                            \ &l:shiftwidth : g:EditorConfig_softtabstop_space
+                endif
             endif
         endif
 
