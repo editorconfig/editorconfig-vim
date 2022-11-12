@@ -60,6 +60,14 @@ if !exists('g:EditorConfig_disable_rules')
     let g:EditorConfig_disable_rules = []
 endif
 
+if !exists('g:EditorConfig_softtabstop_space')
+    let g:EditorConfig_softtabstop_space = 1
+endif
+
+if !exists('g:EditorConfig_softtabstop_tab')
+    let g:EditorConfig_softtabstop_tab = 1
+endif
+
 " Copy some of the globals into script variables --- changes to these
 " globals won't affect the plugin until the plugin is reloaded.
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
@@ -394,12 +402,18 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         " value
         if a:config["indent_size"] == "tab"
             let &l:shiftwidth = &l:tabstop
-            let &l:softtabstop = &l:shiftwidth
+            if type(g:EditorConfig_softtabstop_tab) != type([])
+                let &l:softtabstop = g:EditorConfig_softtabstop_tab > 0 ?
+                            \ &l:shiftwidth : g:EditorConfig_softtabstop_tab
+            endif
         else
             let l:indent_size = str2nr(a:config["indent_size"])
             if l:indent_size > 0
                 let &l:shiftwidth = l:indent_size
-                let &l:softtabstop = &l:shiftwidth
+                if type(g:EditorConfig_softtabstop_space) != type([])
+                    let &l:softtabstop = g:EditorConfig_softtabstop_space > 0 ?
+                            \ &l:shiftwidth : g:EditorConfig_softtabstop_space
+                endif
             endif
         endif
 
