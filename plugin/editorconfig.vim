@@ -285,12 +285,6 @@ command! EditorConfigReload call s:UseConfigFiles() " Reload EditorConfig files
 " On startup, enable the autocommands
 call s:EditorConfigEnable(1)
 
-" Always set the filetype for .editorconfig files
-augroup editorconfig_dosini
-    autocmd!
-    autocmd BufNewFile,BufRead .editorconfig set filetype=dosini
-augroup END
-
 " }}}1
 
 " UseConfigFiles function for different modes {{{1
