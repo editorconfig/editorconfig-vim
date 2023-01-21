@@ -153,6 +153,15 @@ To set this option, add any of the following lines to your |vimrc| file:
 <
 The default value is "line".
 
+                                            *g:EditorConfig_enable_for_new_buf*
+Set this to 1 if you want EditorConfig plugin to set options
+for new empty buffers too.
+Path to .editorconfig will be determined based on CWD (see |getcwd()|)
+>
+ let g:EditorConfig_enable_for_new_buf = 1
+<
+This option defaults to 0.
+
                                             *g:EditorConfig_preserve_formatoptions*
 Set this to 1 if you don't want your formatoptions modified when
 max_line_length is set:
