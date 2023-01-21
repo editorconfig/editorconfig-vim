@@ -233,6 +233,17 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
         return
     endif
 
+    " Ignore specific patterns
+    for pattern in g:EditorConfig_exclude_patterns
+        if l:buffer_name =~ pattern
+            if g:EditorConfig_verbose
+                echo 'Skipping EditorConfig for buffer "' . l:buffer_name .
+                    \ '" based on pattern "' . pattern . '"'
+            endif
+            return
+        endif
+    endfor
+
     " Check if any .editorconfig does exist
     let l:conf_files = s:GetFilenames(expand('%:p:h'), '.editorconfig')
     let l:conf_found = 0
@@ -251,17 +262,6 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
             return
         endif
     endif
-
-    " Ignore specific patterns
-    for pattern in g:EditorConfig_exclude_patterns
-        if l:buffer_name =~ pattern
-            if g:EditorConfig_verbose
-                echo 'Skipping EditorConfig for buffer "' . l:buffer_name .
-                    \ '" based on pattern "' . pattern . '"'
-            endif
-            return
-        endif
-    endfor
 
     if g:EditorConfig_verbose
         echo 'Applying EditorConfig ' . s:editorconfig_core_mode .
