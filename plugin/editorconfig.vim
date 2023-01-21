@@ -403,7 +403,45 @@ endfunction " }}}2
 
 " }}}1
 
-function! s:ApplyConfig(bufnr, config) abort " Set the buffer options {{{1
+" Set the buffer options {{{1
+function! s:SetCharset(bufnr, charset) abort " apply config['charset']
+
+    " Remember the buffer's state so we can set `nomodifed` at the end
+    " if appropriate.
+    let l:orig_fenc = getbufvar(a:bufnr, "&fileencoding")
+    let l:orig_enc = getbufvar(a:bufnr, "&encoding")
+    let l:orig_modified = getbufvar(a:bufnr, "&modified")
+
+    if a:charset == "utf-8"
+        call setbufvar(a:bufnr, '&fileencoding', 'utf-8')
+        call setbufvar(a:bufnr, '&bomb', 0)
+    elseif a:charset == "utf-8-bom"
+        call setbufvar(a:bufnr, '&fileencoding', 'utf-8')
+        call setbufvar(a:bufnr, '&bomb', 1)
+    elseif a:charset == "latin1"
+        call setbufvar(a:bufnr, '&fileencoding', 'latin1')
+        call setbufvar(a:bufnr, '&bomb', 0)
+    elseif a:charset == "utf-16be"
+        call setbufvar(a:bufnr, '&fileencoding', 'utf-16be')
+        call setbufvar(a:bufnr, '&bomb', 1)
+    elseif a:charset == "utf-16le"
+        call setbufvar(a:bufnr, '&fileencoding', 'utf-16le')
+        call setbufvar(a:bufnr, '&bomb', 1)
+    endif
+
+    let l:new_fenc = getbufvar(a:bufnr, "&fileencoding")
+
+    " If all we did was change the fileencoding from the default to a copy
+    " of the default, we didn't actually modify the file.
+    if !l:orig_modified && (l:orig_fenc ==# '') && (l:new_fenc ==# l:orig_enc)
+        if g:EditorConfig_verbose
+            echo 'Setting nomodified on buffer ' . a:bufnr
+        endif
+        call setbufvar(a:bufnr, '&modified', 0)
+    endif
+endfunction
+
+function! s:ApplyConfig(bufnr, config) abort
     if g:EditorConfig_verbose
         echo 'Options: ' . string(a:config)
     endif
@@ -462,22 +500,7 @@ function! s:ApplyConfig(bufnr, config) abort " Set the buffer options {{{1
 
     if s:IsRuleActive('charset', a:config) &&
                 \ getbufvar(a:bufnr, '&modifiable')
-        if a:config["charset"] == "utf-8"
-            call setbufvar(a:bufnr, '&fileencoding', 'utf-8')
-            call setbufvar(a:bufnr, '&bomb', 0)
-        elseif a:config["charset"] == "utf-8-bom"
-            call setbufvar(a:bufnr, '&fileencoding', 'utf-8')
-            call setbufvar(a:bufnr, '&bomb', 1)
-        elseif a:config["charset"] == "latin1"
-            call setbufvar(a:bufnr, '&fileencoding', 'latin1')
-            call setbufvar(a:bufnr, '&bomb', 0)
-        elseif a:config["charset"] == "utf-16be"
-            call setbufvar(a:bufnr, '&fileencoding', 'utf-16be')
-            call setbufvar(a:bufnr, '&bomb', 1)
-        elseif a:config["charset"] == "utf-16le"
-            call setbufvar(a:bufnr, '&fileencoding', 'utf-16le')
-            call setbufvar(a:bufnr, '&bomb', 1)
-        endif
+        call s:SetCharset(a:bufnr, a:config["charset"])
     endif
 
     augroup editorconfig_trim_trailing_whitespace
