@@ -219,13 +219,16 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
         if g:EditorConfig_enable_for_new_buf
             let l:buffer_name = getcwd() . "/."
         else
+            if g:EditorConfig_verbose
+                echo 'Skipping EditorConfig for unnamed buffer'
+            endif
             return
         endif
     endif
 
     if exists("b:EditorConfig_disable") && b:EditorConfig_disable
         if g:EditorConfig_verbose
-            echo 'Skipping EditorConfig for buffer "' . l:buffer_name . '"'
+            echo 'EditorConfig disabled --- skipping buffer "' . l:buffer_name . '"'
         endif
         return
     endif
@@ -249,17 +252,21 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
         endif
     endif
 
+    " Ignore specific patterns
+    for pattern in g:EditorConfig_exclude_patterns
+        if l:buffer_name =~ pattern
+            if g:EditorConfig_verbose
+                echo 'Skipping EditorConfig for buffer "' . l:buffer_name .
+                    \ '" based on pattern "' . pattern . '"'
+            endif
+            return
+        endif
+    endfor
+
     if g:EditorConfig_verbose
         echo 'Applying EditorConfig ' . s:editorconfig_core_mode .
             \ ' on file "' . l:buffer_name . '"'
     endif
-
-    " Ignore specific patterns
-    for pattern in g:EditorConfig_exclude_patterns
-        if l:buffer_name =~ pattern
-            return
-        endif
-    endfor
 
     if s:editorconfig_core_mode ==? 'vim_core'
         if s:UseConfigFiles_VimCore(l:buffer_name) == 0
