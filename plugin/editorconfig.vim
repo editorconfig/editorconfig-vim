@@ -205,7 +205,7 @@ function! s:GetFilenames(path, filename) " {{{1
 endfunction " }}}1
 
 function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
-    let b:editorconfig_tried = 1
+    call setbufvar('%', 'editorconfig_tried', 1)
     let l:buffer_name = expand('%:p')
 
     " Only process normal buffers (do not treat help files as '.txt' files)
@@ -226,7 +226,7 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
         endif
     endif
 
-    if exists("b:EditorConfig_disable") && b:EditorConfig_disable
+    if getbufvar('%', 'EditorConfig_disable', 0)
         if g:EditorConfig_verbose
             echo 'EditorConfig disabled --- skipping buffer "' . l:buffer_name . '"'
         endif
@@ -270,11 +270,11 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
 
     if s:editorconfig_core_mode ==? 'vim_core'
         if s:UseConfigFiles_VimCore(l:buffer_name) == 0
-            let b:editorconfig_applied = 1
+            call setbufvar('%', 'editorconfig_applied', 1)
         endif
     elseif s:editorconfig_core_mode ==? 'external_command'
         call s:UseConfigFiles_ExternalCommand(l:buffer_name)
-        let b:editorconfig_applied = 1
+        call setbufvar('%', 'editorconfig_applied', 1)
     else
         echohl Error |
                     \ echo "Unknown EditorConfig Core: " .
