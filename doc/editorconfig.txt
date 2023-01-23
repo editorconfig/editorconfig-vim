@@ -128,12 +128,12 @@ are "line", "fill", "exceeding" and "fillexceeding", otherwise there will be
 no max line indicator.
 
     "line":          the right column of the max line length column will be
-                     highlighted, by adding "+1" to 'colorcolumn'.
+                     highlighted on all lines, by adding +1 to 'colorcolumn'.
 
     "fill":          all the columns to the right of the max line length
-                     column will be highlighted, by setting 'colorcolumn' to
-                     a list of numbers starting from "max_line_length + 1" to
-                     the number of columns on the screen.
+                     column will be highlighted on all lines, by setting
+                     'colorcolumn' to a list starting from "max_line_length +
+                     1" to the number of columns on the screen.
 
     "exceeding":     the right column of the max line length column will be
                      highlighted on lines that exceed the max line length, by
@@ -143,10 +143,9 @@ no max line indicator.
                      column will be highlighted on lines that exceed the max
                      line length, by adding a match for the ColorColumn group.
 
-    "none":          no max line length indicator will be shown. This is the
-                     recommended value when you do not want any indicator to
-                     be shown, but values other than "line" or "fill" would
-                     also work as "none".
+    "none":          no max line length indicator will be shown. Recommended
+                     when you do not want any indicator to be shown, but any
+                     value other than those listed above also work as "none".
 
 To set this option, add any of the following lines to your |vimrc| file:
 >
