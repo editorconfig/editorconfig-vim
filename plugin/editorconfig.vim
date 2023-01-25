@@ -519,6 +519,10 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         endif
     endif
 
+    if s:IsRuleActive('natural_language', a:config)
+        let &l:spelllang=a:config['natural_language']
+    endif
+
     call editorconfig#ApplyHooks(a:config)
 endfunction
 
