@@ -505,6 +505,15 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
                     endfor
                     call matchadd('ColorColumn',
                         \ '\%' . (l:max_line_length + 1) . 'v.', 100)
+                elseif g:EditorConfig_max_line_indicator == 'fillexceeding'
+                    let &l:colorcolumn = ''
+                    for l:match in getmatches()
+                        if get(l:match, 'group', '') == 'ColorColumn'
+                            call matchdelete(get(l:match, 'id'))
+                        endif
+                    endfor
+                    call matchadd('ColorColumn',
+                        \ '\%'. (l:max_line_length + 1) . 'v.\+', -1)
                 endif
             endif
         endif
