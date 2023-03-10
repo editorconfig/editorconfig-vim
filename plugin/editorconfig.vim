@@ -383,6 +383,11 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
         return
     endif
 
+    " Do not process netrw buffers
+    if &b:filetype == 'netrw'
+        return
+    endif
+
     if g:EditorConfig_verbose
         echo 'Options: ' . string(a:config)
     endif
