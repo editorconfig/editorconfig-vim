@@ -384,7 +384,7 @@ function! s:ApplyConfig(config) abort " Set the buffer options {{{1
     endif
 
     " Do not process netrw buffers
-    if &b:filetype == 'netrw'
+    if &filetype == 'netrw'
         return
     endif
 
