@@ -208,6 +208,13 @@ function! s:UseConfigFiles() abort " Apply config to the current buffer {{{1
     let b:editorconfig_tried = 1
     let l:buffer_name = expand('%:p')
 
+    " Only process normal buffers (do not treat help files as '.txt' files)
+    " When starting Vim with a directory, the buftype might not yet be set:
+    " Therefore, also check if buffer_name is a directory.
+    if index(['', 'acwrite'], &buftype) == -1 || isdirectory(l:buffer_name)
+        return
+    endif
+
     if empty(l:buffer_name)
         if g:EditorConfig_enable_for_new_buf
             let l:buffer_name = getcwd() . "/."
@@ -378,16 +385,6 @@ endfunction " }}}2
 " }}}1
 
 function! s:ApplyConfig(config) abort " Set the buffer options {{{1
-    " Only process normal buffers (do not treat help files as '.txt' files)
-    if index(['', 'acwrite'], &buftype) == -1
-        return
-    endif
-
-    " Do not process netrw buffers
-    if &filetype == 'netrw'
-        return
-    endif
-
     if g:EditorConfig_verbose
         echo 'Options: ' . string(a:config)
     endif
