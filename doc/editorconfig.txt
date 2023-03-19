@@ -152,6 +152,7 @@ To set this option, add any of the following lines to your |vimrc| file:
  let g:EditorConfig_max_line_indicator = "line"
  let g:EditorConfig_max_line_indicator = "fill"
  let g:EditorConfig_max_line_indicator = "exceeding"
+ let g:EditorConfig_max_line_indicator = "fillexceeding"
  let g:EditorConfig_max_line_indicator = "none"
 <
 The default value is "line".
