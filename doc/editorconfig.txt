@@ -235,4 +235,4 @@ License:
    POSSIBILITY OF SUCH DAMAGE.
 
 
-vim:ft=help:tw=78
+vim:ft=help:tw=78:cc=
