@@ -454,7 +454,8 @@ function! s:ApplyConfig(bufnr, config) abort
         endif
     endif
 
-    if s:IsRuleActive('tab_width', a:config)
+    " Set tabstop.  Skip this for terminal buffers, e.g., :FZF (#224).
+    if s:IsRuleActive('tab_width', a:config) && bufname(l:bufnr) !~# '^!\w*sh$'
         let l:tabstop = str2nr(a:config["tab_width"])
         call setbufvar(a:bufnr, '&tabstop', l:tabstop)
     else
