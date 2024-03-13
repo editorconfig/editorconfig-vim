@@ -586,6 +586,10 @@ function! s:ApplyConfig(bufnr, config) abort
         endif
     endif
 
+    if s:IsRuleActive('spelling_language', a:config)
+        let &l:spelllang=s:ConvertLanguage(a:config['spelling_language'])
+    endif
+
     call editorconfig#ApplyHooks(a:config)
 endfunction
 
@@ -612,4 +616,10 @@ endfunction "}}}1
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
 
+" {{{
+function! s:ConvertLanguage(language)
+    " Change en-GB (from the editorconfig specification) to en_gb (
+    return tolower(substitute(a:language, "-", "_", ""))
+endfunction
+" }}}
 " vim: fdm=marker fdc=3
