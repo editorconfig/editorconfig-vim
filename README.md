@@ -75,7 +75,7 @@ The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
   or [PreserveNoEOL][] is required for this property)
 * `trim_trailing_whitespace`
 * `max_line_length`
-* `natural_language`
+* `spelling_language`
 * `root` (only used by EditorConfig core)
 
 ## Selected Options
