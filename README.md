@@ -9,12 +9,11 @@ This is an [EditorConfig][] plugin for Vim. This plugin can be found on both
 ## Bundled versions
 
 Depending on which version of Vim or Neovim you are using, you might not need to
-install this plugin at all:
+specifically install this plugin at all:
 
-* Vim 9.0.1799 and above comes bundled with [a version of this plugin][].
+* Vim 9.0.1799 and above comes bundled with [a recent stable version of this
+  plugin][].
 * Neovim 0.9 and above comes with [its own Lua-based implementation][].
-
-Both support the usual [properties][], including `max_line_length`.
 
 ## Installation
 
@@ -148,7 +147,7 @@ Feel free to submit bugs, feature requests, and other issues to the
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
 [Tim Pope's fugitive]: https://github.com/tpope/vim-fugitive
 [Vim online]: http://www.vim.org/scripts/script.php?script_id=3934
-[a version of this plugin]: https://github.com/vim/vim/pull/12902
+[a recent stable version of this plugin]: https://github.com/vim/vim/pull/12902
 [its own Lua-based implementation]: https://github.com/neovim/neovim/commit/ab9a2c49253413dbbb31756a3eeddb354a663035
 [Vundle]: https://github.com/gmarik/Vundle.vim
 [archive]: https://github.com/editorconfig/editorconfig-vim/archive/master.zip
