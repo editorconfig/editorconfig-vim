@@ -1,4 +1,4 @@
-# editorconfig2.ps1: Editorconfig Vimscript core CLI, PowerShell version
+# editorconfig2.ps1: Editorconfig Vim script core CLI, PowerShell version
 # Copyright (c) 2018--2019 Chris White.  All rights reserved.
 # Licensed CC-BY-SA, version 3.0 or any later version, at your option.
 # Thanks to https://cecs.wright.edu/~pmateti/Courses/233/Labs/Scripting/bashVsPowerShellTable.html
@@ -90,7 +90,7 @@ if($debug) {
 }
 
 if($report_version) {
-    echo "EditorConfig VimScript Core Version 0.12.2"
+    echo "EditorConfig Vim script Core Version 0.12.2"
     exit
 }
 

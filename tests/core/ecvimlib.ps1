@@ -1,4 +1,4 @@
-# ecvimlib.ps1: Editorconfig Vimscript core CLI, PowerShell version,
+# ecvimlib.ps1: Editorconfig Vim script core CLI, PowerShell version,
 # library routines.
 # Copyright (c) 2018--2019 Chris White.  All rights reserved.
 # Licensed CC-BY-SA, version 3.0 or any later version, at your option.
