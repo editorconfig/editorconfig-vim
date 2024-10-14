@@ -35,7 +35,7 @@ if [[ "$TEST_WHICH" = 'plugin' ]]; then       # test plugin
         bundle install --jobs=3 --retry=3 --deployment
     fi
 
-    # Use the standalone Vimscript EditorConfig core to test the plugin's
+    # Use the standalone Vim script EditorConfig core to test the plugin's
     # external_command mode
     export EDITORCONFIG_VIM_EXTERNAL_CORE=tests/core/editorconfig
 

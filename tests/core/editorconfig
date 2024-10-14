@@ -1,11 +1,11 @@
 #!/bin/bash
-# editorconfig: Editorconfig Vimscript core CLI
+# editorconfig: Editorconfig Vim script core CLI
 # Copyright (c) 2018--2019 Chris White.  All rights reserved.
 # Licensed CC-BY-SA, version 3.0 or any later version, at your option.
 
 # Documentation {{{1
 helpstr=$(cat<<'EOF'
-editorconfig: command-line invoker for the Vimscript editorconfig core
+editorconfig: command-line invoker for the Vim script editorconfig core
 
 Normal usage:
     editorconfig [-f <config-file name>] [-b <version>]
@@ -117,7 +117,7 @@ done
 shift $(( $OPTIND - 1 ))
 
 if [[ $print_ver ]]; then
-    echo "EditorConfig VimScript Core Version 0.12.2"
+    echo "EditorConfig Vim script Core Version 0.12.2"
     exit 0
 fi
 
