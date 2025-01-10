@@ -71,6 +71,12 @@ The core included the code to parse `.editorconfig` files.
 This plugin **includes** the core, so you don't need to download the
 core separately.
 
+### Version Supported
+
+Vim v9.1.0543 and Neovim v0.10.x or earlier versions: This plugin after version
+1.2.1 will not automatically set `.editorconfig` filetype to `dosini`. Please
+install version 1.2.1 of this plugin if you would like to retain this behavior.
+
 ## Supported properties
 
 The EditorConfig Vim plugin supports the following EditorConfig [properties][]:
