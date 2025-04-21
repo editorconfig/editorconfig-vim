@@ -148,7 +148,7 @@ You are able to disable any supported EditorConfig properties.
 Feel free to submit bugs, feature requests, and other issues to the
 [issue tracker][]. Be sure you have read the [contribution guidelines][]!
 
-[EditorConfig]: http://editorconfig.org
+[EditorConfig]: https://editorconfig.org
 [GitHub]: https://github.com/editorconfig/editorconfig-vim
 [PreserveNoEOL]: http://www.vim.org/scripts/script.php?script_id=4550
 [Tim Pope's fugitive]: https://github.com/tpope/vim-fugitive
