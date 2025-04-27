@@ -580,6 +580,10 @@ function! s:ApplyConfig(bufnr, config) abort
         endif
     endif
 
+    if s:IsRuleActive('spelling_language', a:config)
+        let &l:spelllang=s:ConvertLanguage(a:config['spelling_language'])
+    endif
+
     call editorconfig#ApplyHooks(a:config)
 endfunction
 
@@ -606,4 +610,16 @@ endfunction "}}}1
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
 
+" {{{
+function! s:ConvertLanguage(language)
+    " Only accept xx or xx-YY language codes (as per editorconfig specification)
+    if a:language =~ '^[a-z]\{2}\(-[A-Z]\{2}\)\?$'
+        " Convert to vim-style xx_yy
+        return tolower(substitute(a:language, "-", "_", ""))
+    elseif g:EditorConfig_verbose
+        echom "'" . a:language . "'' does not match specification for spelling_language. Try 'en' or 'en-GB'"
+        return ""
+    endif
+endfunction
+" }}}
 " vim: fdm=marker fdc=3
