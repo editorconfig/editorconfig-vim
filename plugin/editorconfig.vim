@@ -355,7 +355,7 @@ function! s:SpawnExternalParser(bufnr, cmd, target) " {{{2
     let l:cmd = l:cmd . ' ' . shellescape(a:target)
     call s:ResetShellSlash(a:bufnr)
 
-    let l:parsing_result = split(system(l:cmd), '\v[\r\n]+')
+    silent let l:parsing_result = split(system(l:cmd), '\v[\r\n]+')
 
     " if editorconfig core's exit code is not zero, give out an error
     " message
