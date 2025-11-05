@@ -64,14 +64,6 @@ if !exists('g:EditorConfig_enable_for_new_buf')
     let g:EditorConfig_enable_for_new_buf = 0
 endif
 
-if !exists('g:EditorConfig_softtabstop_space')
-    let g:EditorConfig_softtabstop_space = 1
-endif
-
-if !exists('g:EditorConfig_softtabstop_tab')
-    let g:EditorConfig_softtabstop_tab = 1
-endif
-
 " Copy some of the globals into script variables --- changes to these
 " globals won't affect the plugin until the plugin is reloaded.
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)
@@ -448,38 +440,26 @@ function! s:ApplyConfig(bufnr, config) abort
         endif
     endif
 
-    " Set tabstop.  Skip this for terminal buffers, e.g., :FZF (#224).
-    if s:IsRuleActive('tab_width', a:config) && bufname(a:bufnr) !~# '^!\w*sh$'
-        let l:tabstop = str2nr(a:config["tab_width"])
-        call setbufvar(a:bufnr, '&tabstop', l:tabstop)
-    else
-        " Grab the current ts so we can use it below
-        let l:tabstop = getbufvar(a:bufnr, '&tabstop')
-    endif
-
-    if s:IsRuleActive('indent_size', a:config)
-        " if indent_size is 'tab', set shiftwidth to tabstop;
-        " if indent_size is a positive integer, set shiftwidth to the integer
-        " value
-        if a:config["indent_size"] == "tab"
-            call setbufvar(a:bufnr, '&shiftwidth', l:tabstop)
-            if type(g:EditorConfig_softtabstop_tab) != type([])
-                call setbufvar(a:bufnr, '&softtabstop',
-                            \ g:EditorConfig_softtabstop_tab > 0 ?
-                            \ l:tabstop : g:EditorConfig_softtabstop_tab)
-            endif
-        else
+    " Skip terminal buffers as setting tabstop affects cursor position (#224).
+    if s:IsRuleActive('indent_size', a:config) && bufname(a:bufnr) !~# '^!\w*sh$'
+        " When shiftwidth is 0 it uses the value of tabstop
+        call setbufvar(a:bufnr, '&shiftwidth', 0)
+        " Disable softtabstop so it doesn't conflict with editorconfig
+        " indentation settings
+        call setbufvar(a:bufnr, '&softtabstop', 0)
+        if a:config["indent_size"] != "tab"
             let l:indent_size = str2nr(a:config["indent_size"])
             if l:indent_size > 0
-                call setbufvar(a:bufnr, '&shiftwidth', l:indent_size)
-                if type(g:EditorConfig_softtabstop_space) != type([])
-                    call setbufvar(a:bufnr, '&softtabstop',
-                            \ g:EditorConfig_softtabstop_space > 0 ?
-                            \ l:indent_size : g:EditorConfig_softtabstop_space)
-                endif
+                call setbufvar(a:bufnr, '&tabstop', l:indent_size)
             endif
         endif
+    endif
 
+    " Set tabstop.  Skip this for terminal buffers, e.g., :FZF (#224).
+    if s:IsRuleActive('tab_width', a:config) && bufname(a:bufnr) !~# '^!\w*sh$'
+        if a:config["indent_style"] == "tab"
+            call setbufvar(a:bufnr, '&tabstop', str2nr(a:config["tab_width"]))
+        endif
     endif
 
     if s:IsRuleActive('end_of_line', a:config) &&
