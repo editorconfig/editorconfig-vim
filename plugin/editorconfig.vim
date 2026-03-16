@@ -195,7 +195,11 @@ function! s:GetFilenames(path, filename) " {{{1
     let l:path_list = []
     let l:path = a:path
     while 1
-        let l:path_list += [l:path . '/' . a:filename]
+        if l:path == '/'
+            let l:path_list += [ '/' . a:filename]
+        else
+            let l:path_list += [ l:path . '/' . a:filename]
+        endif
         let l:newpath = fnamemodify(l:path, ':h')
         if l:path == l:newpath
             break
