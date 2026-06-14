@@ -164,3 +164,7 @@ Feel free to submit bugs, feature requests, and other issues to the
 [properties]: http://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 [editorconfig.txt]: https://github.com/editorconfig/editorconfig-vim/blob/master/doc/editorconfig.txt
 [vim-plug]: https://github.com/junegunn/vim-plug
+
+### Issue #246
+- **Status:** Fix proposed in PR
+- **Description:** Conflict while using fzf.vim plugin
