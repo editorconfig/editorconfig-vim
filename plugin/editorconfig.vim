@@ -499,7 +499,7 @@ function! s:ApplyConfig(bufnr, config) abort
     endif
 
     augroup editorconfig_trim_trailing_whitespace
-        autocmd! BufWritePre <buffer>
+        execute 'autocmd! BufWritePre <buffer=' . a:bufnr . '>'
         if s:IsRuleActive('trim_trailing_whitespace', a:config) &&
                     \ get(a:config, 'trim_trailing_whitespace', 'false') ==# 'true'
             execute 'autocmd BufWritePre <buffer=' . a:bufnr . '> call s:TrimTrailingWhitespace()'
